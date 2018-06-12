@@ -11,7 +11,7 @@ using Android.Support.V7.App;
 
 namespace StudentList
 {
-    [Activity(Label = "@string/app_name", Theme = "@android:style/Theme.Material.Light.DarkActionBar", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@android:style/Theme.Material.Light", MainLauncher = true)]
     public class MainActivity : Activity
     {
         RecyclerView recyclerView;
@@ -81,7 +81,9 @@ namespace StudentList
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             StudentViewHolder vh = holder as StudentViewHolder;
-            vh.Info.Text = string.Format("Name: {0} Age: {1} \nUniversity: {2}\nGroup: {3}",studentsProvider[position].Name, studentsProvider[position].Age, studentsProvider[position].University,
+            vh.Info.Text = string.Format("Name: {0} Age: {1} \nUniversity: {2}\nGroup: {3}",
+                studentsProvider[position].Name, studentsProvider[position].Age, 
+                studentsProvider[position].University,
                 studentsProvider[position].GroupName);
         }
 

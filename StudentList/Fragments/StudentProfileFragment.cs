@@ -24,11 +24,6 @@ namespace StudentList.Fragments
             base.OnCreate(savedInstanceState);
         }
 
-        public override void OnResume()
-        {
-            base.OnResume();
-        }
-
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             studentProvider = new StudentsProvider();
@@ -41,12 +36,14 @@ namespace StudentList.Fragments
             var uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
             var groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
 
+
             if(StudentId==-1)
             {
                 nameEditText.Text = "";
                 ageEditText.Text = "";
                 uniEditText.Text = "";
                 groupEditText.Text = "";
+                saveButton.Text = "Add new student";
             }
             else
             {
@@ -59,10 +56,10 @@ namespace StudentList.Fragments
             
             saveButton.Click += (sender, e) =>
             {
-                var name = view.FindViewById<EditText>(Resource.Id.name_edittext).Text;
-                var age = Convert.ToInt32(view.FindViewById<EditText>(Resource.Id.age_edittext).Text);
-                var uni = view.FindViewById<EditText>(Resource.Id.uni_edittext).Text;
-                var group = view.FindViewById<EditText>(Resource.Id.uni_edittext).Text;
+                var name = nameEditText.Text;
+                var age = Convert.ToInt32(ageEditText.Text);
+                var uni = uniEditText.Text;
+                var group = groupEditText.Text;
 
                 if (StudentId == -1)
                 {

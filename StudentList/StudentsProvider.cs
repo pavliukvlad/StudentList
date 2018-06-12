@@ -32,7 +32,9 @@ namespace StudentList
                 return students[index];
             }
             set
-            { students[index] = value; }
+            {
+                students[index] = value;
+            }
         }
 
         public void AddNewStudent(Student student)

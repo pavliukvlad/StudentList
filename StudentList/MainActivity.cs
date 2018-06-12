@@ -42,13 +42,14 @@ namespace StudentList
 
         private void AddNewStudentButton_Click(object sender, EventArgs e)
         {
-            ShowStudentInfo(-1);
+            ShowStudentInfo(0, true);
         }
 
-        private void ShowStudentInfo(int position)
+        private void ShowStudentInfo(int position, bool newStudent = false)
         {
             var intent = new Intent(this, typeof(StudentProfileActivity));
             intent.PutExtra("student_id", position);
+            intent.PutExtra("new_student", newStudent);
             StartActivity(intent);
         }
     }

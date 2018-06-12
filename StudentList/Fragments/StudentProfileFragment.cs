@@ -17,7 +17,18 @@ namespace StudentList.Fragments
     public class StudentProfileFragment : Fragment
     {
         int StudentId => Arguments.GetInt("student_id", 0);
+        bool NewStudent => Arguments.GetBoolean("new_student", false);
+
         StudentsProvider studentProvider;
+
+        public static StudentProfileFragment NewInstance(int studentId, bool newStudent)
+        {
+            var bundle = new Bundle();
+            bundle.PutInt("student_id", studentId);
+            bundle.PutBoolean("new_student", newStudent);
+            var obj = new StudentProfileFragment() { Arguments = bundle };
+            return obj;
+        }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
@@ -37,23 +48,11 @@ namespace StudentList.Fragments
             var groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
 
 
-            if(StudentId==-1)
-            {
-                nameEditText.Text = "";
-                ageEditText.Text = "";
-                uniEditText.Text = "";
-                groupEditText.Text = "";
-                saveButton.Text = "Add new student";
-            }
-            else
-            {
-                nameEditText.Text = studentProvider[StudentId].Name;
-                ageEditText.Text = studentProvider[StudentId].Age.ToString();
-                uniEditText.Text = studentProvider[StudentId].University;
-                groupEditText.Text = studentProvider[StudentId].GroupName;
-            }
-            
-            
+            nameEditText.Text = NewStudent ? "" : studentProvider[StudentId].Name;
+            ageEditText.Text = NewStudent ? "" : studentProvider[StudentId].Age.ToString();
+            uniEditText.Text = NewStudent ? "" : studentProvider[StudentId].University;
+            groupEditText.Text = NewStudent ? "" : studentProvider[StudentId].GroupName;
+                        
             saveButton.Click += (sender, e) =>
             {
                 var name = nameEditText.Text;
@@ -61,7 +60,7 @@ namespace StudentList.Fragments
                 var uni = uniEditText.Text;
                 var group = groupEditText.Text;
 
-                if (StudentId == -1)
+                if (NewStudent)
                 {
                     var student = new Student() { Name = name, Age = age, University = uni, GroupName = group };
                     studentProvider.AddNewStudent(student);
@@ -74,20 +73,16 @@ namespace StudentList.Fragments
                     studentProvider[StudentId].University = uni;
                 }
 
-                var intent = new Intent(Activity, typeof(MainActivity));
-                Activity.StartActivity(intent);
-
+                ShowStudentList();
             };
 
             return view;
         }
 
-        public static StudentProfileFragment NewInstance(int? studentId)
+        private void ShowStudentList()
         {
-            var bundle = new Bundle();
-            bundle.PutInt("student_id", studentId ?? -1);
-            var obj = new StudentProfileFragment() { Arguments = bundle };
-            return obj;
+            var intent = new Intent(Activity, typeof(MainActivity));
+            Activity.StartActivity(intent);
         }
     }
 }

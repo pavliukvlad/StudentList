@@ -20,7 +20,8 @@ namespace StudentList
             base.OnCreate(savedInstanceState);
 
             var studentId = Intent.Extras.GetInt("student_id", 0);
-            var studentDetails = Fragments.StudentProfileFragment.NewInstance(studentId);
+            var newStudent = Intent.Extras.GetBoolean("new_student", false);
+            var studentDetails = Fragments.StudentProfileFragment.NewInstance(studentId, newStudent);
             FragmentManager.BeginTransaction().Replace(Android.Resource.Id.Content, studentDetails).Commit();
         }
     }

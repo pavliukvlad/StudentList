@@ -18,11 +18,9 @@ namespace StudentList
             new Student() { Age = 18, Name = "Vlad", GroupName = "MN", University = "Lviv Polytechnic" },
             new Student() { Age = 19, Name = "Sasha", GroupName = "MN", University = "Lviv Polytechnic" },
             new Student() { Age = 19, Name = "Dima", GroupName = "MN", University = "Lviv Polytechnic" },
-            new Student() { Age = 19, Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic" }};
+            new Student() { Age = 19, Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic" }
+        };
         
-        
-        public IEnumerable<Student> Students => students;
-
         public int Count => students.Count;
 
         public Student this[int index]

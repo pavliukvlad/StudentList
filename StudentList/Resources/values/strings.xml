@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">StudentList</string>
+    <string name="action_settings">Settings</string>
+    <string name="name_hint">Name:</string>
+    <string name="age_hint">Age:</string>
+    <string name="group_hint">Group:</string>
+    <string name="uni_hint">University: </string>
+    <string name="save_changes_text">Save changes</string>
+    <string name="add_new_student_text">Add new student</string>
+</resources>

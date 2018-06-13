@@ -39,7 +39,10 @@ namespace StudentList
         {
             students.Add(student);
         }
-        
+        public static StudentsProvider NewInstance()
+        {
+            return new StudentsProvider();
+        }
     }
 
     class Student   

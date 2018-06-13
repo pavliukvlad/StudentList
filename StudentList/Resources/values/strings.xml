@@ -7,4 +7,5 @@
     <string name="uni_hint">University</string>
     <string name="save_changes_text">Save changes</string>
     <string name="add_new_student_text">Add new student</string>
+    <string name="edit_student_btn">Edit student</string>
 </resources>

@@ -11,72 +11,84 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using StudentList;
+using StudentList.Constants;
 
 namespace StudentList.Fragments
 {
-    public class StudentProfileFragment : Fragment
+    public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        int StudentId => Arguments.GetInt("student_id", 0);
-        bool NewStudent => Arguments.GetBoolean("new_student", false);
+        private int StudentId => Arguments.GetInt(IntentConstant.StudentId, 0);
+        private bool NewStudent => Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
-        StudentsProvider studentProvider;
+        private StudentsProvider studentProvider;
+
+        private Button saveButton;
+        private EditText nameEditText;
+        private EditText ageEditText;
+        private EditText uniEditText;
+        private EditText groupEditText;
 
         public static StudentProfileFragment NewInstance(int studentId, bool newStudent)
         {
             var bundle = new Bundle();
-            bundle.PutInt("student_id", studentId);
-            bundle.PutBoolean("new_student", newStudent);
+            bundle.PutInt(IntentConstant.StudentId, studentId);
+            bundle.PutBoolean(IntentConstant.NewStudent, newStudent);
             var obj = new StudentProfileFragment() { Arguments = bundle };
             return obj;
         }
-
-        public override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-        }
-
+  
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            studentProvider = new StudentsProvider();
-
             var view = LayoutInflater.Inflate(Resource.Layout.student_profile, null);
+            return view;
+        }
+        public override void OnViewCreated(View view, Bundle savedInstanceState)
+        {
+             saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
+             nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
+             ageEditText = view.FindViewById<EditText>(Resource.Id.age_edittext);
+             uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
+             groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
 
-            var saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
-            var nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
-            var ageEditText = view.FindViewById<EditText>(Resource.Id.age_edittext);
-            var uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
-            var groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
-
+            studentProvider = StudentsProvider.NewInstance();
 
             nameEditText.Text = NewStudent ? "" : studentProvider[StudentId].Name;
             ageEditText.Text = NewStudent ? "" : studentProvider[StudentId].Age.ToString();
             uniEditText.Text = NewStudent ? "" : studentProvider[StudentId].University;
             groupEditText.Text = NewStudent ? "" : studentProvider[StudentId].GroupName;
-                        
-            saveButton.Click += (sender, e) =>
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            saveButton.Click += SaveButton_Click;
+        }
+        public override void OnStop()
+        {
+            base.OnStop();
+            saveButton.Click -= SaveButton_Click;
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            var name = nameEditText.Text;
+            var age = Convert.ToInt32(ageEditText.Text);
+            var uni = uniEditText.Text;
+            var group = groupEditText.Text;
+
+            if (NewStudent)
             {
-                var name = nameEditText.Text;
-                var age = Convert.ToInt32(ageEditText.Text);
-                var uni = uniEditText.Text;
-                var group = groupEditText.Text;
-
-                if (NewStudent)
-                {
-                    var student = new Student() { Name = name, Age = age, University = uni, GroupName = group };
-                    studentProvider.AddNewStudent(student);
-                }
-                else
-                {
-                    studentProvider[StudentId].Name = name;
-                    studentProvider[StudentId].Age = age;
-                    studentProvider[StudentId].GroupName = group;
-                    studentProvider[StudentId].University = uni;
-                }
-
-                ShowStudentList();
-            };
-
-            return view;
+                var student = new Student() { Name = name, Age = age, University = uni, GroupName = group };
+                studentProvider.AddNewStudent(student);
+            }
+            else
+            {
+                studentProvider[StudentId].Name = name;
+                studentProvider[StudentId].Age = age;
+                studentProvider[StudentId].GroupName = group;
+                studentProvider[StudentId].University = uni;
+            }
+            ShowStudentList();
         }
 
         private void ShowStudentList()

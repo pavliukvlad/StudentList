@@ -2,18 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_container"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <Button
-        style="@style/SaveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/add_new_student_btn"
-        android:text="@string/add_new_student_text" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+    android:layout_height="match_parent" />

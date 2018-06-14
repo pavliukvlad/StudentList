@@ -8,4 +8,5 @@
     <string name="save_changes_text">Save changes</string>
     <string name="add_new_student_text">Add new student</string>
     <string name="edit_student_btn">Edit student</string>
+    <string name="student_info_pattern">"Name: {0} Age: {1} \nUniversity: {2}\nGroup: {3}"</string>
 </resources>

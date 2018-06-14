@@ -55,16 +55,17 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Student.cs" />
+    <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="ViewHolder\StudentViewHolder.cs" />
     <Compile Include="Adapters\StudentAdapter.cs" />
-    <Compile Include="Adapters\StudentsListAdapter.cs" />
     <Compile Include="Constants\IntentConstant.cs" />
     <Compile Include="Fragments\StudentListFragment.cs" />
     <Compile Include="Fragments\StudentProfileFragment.cs" />
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\StudentsProvider.cs" />
+    <Compile Include="Repositories\StudentsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

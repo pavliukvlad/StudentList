@@ -12,6 +12,8 @@ using Android.Views;
 using Android.Widget;
 using StudentList;
 using StudentList.Constants;
+using StudentList.Model;
+using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
 {
@@ -20,7 +22,7 @@ namespace StudentList.Fragments
         private int StudentId => Arguments.GetInt(IntentConstant.StudentId, 0);
         private bool NewStudent => Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
-        private StudentsProvider studentProvider;
+        private IStudentRepository studentProvider;
 
         private Button saveButton;
         private EditText nameEditText;
@@ -39,8 +41,7 @@ namespace StudentList.Fragments
   
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = LayoutInflater.Inflate(Resource.Layout.student_profile, null);
-            return view;
+            return inflater.Inflate(Resource.Layout.student_profile, null); 
         }
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
@@ -50,7 +51,7 @@ namespace StudentList.Fragments
              uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
              groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
 
-            studentProvider = StudentsProvider.NewInstance();
+            studentProvider = new StudentsRepository();
 
             nameEditText.Text = NewStudent ? "" : studentProvider[StudentId].Name;
             ageEditText.Text = NewStudent ? "" : studentProvider[StudentId].Age.ToString();

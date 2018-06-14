@@ -1220,44 +1220,44 @@ namespace StudentList
 		public partial class Color
 		{
 			
-			// aapt resource value: 0x7f0a004f
-			public const int abc_background_cache_hint_selector_material_dark = 2131361871;
-			
-			// aapt resource value: 0x7f0a0050
-			public const int abc_background_cache_hint_selector_material_light = 2131361872;
-			
-			// aapt resource value: 0x7f0a0051
-			public const int abc_btn_colored_borderless_text_material = 2131361873;
-			
 			// aapt resource value: 0x7f0a0052
-			public const int abc_btn_colored_text_material = 2131361874;
+			public const int abc_background_cache_hint_selector_material_dark = 2131361874;
 			
 			// aapt resource value: 0x7f0a0053
-			public const int abc_color_highlight_material = 2131361875;
+			public const int abc_background_cache_hint_selector_material_light = 2131361875;
 			
 			// aapt resource value: 0x7f0a0054
-			public const int abc_hint_foreground_material_dark = 2131361876;
+			public const int abc_btn_colored_borderless_text_material = 2131361876;
 			
 			// aapt resource value: 0x7f0a0055
-			public const int abc_hint_foreground_material_light = 2131361877;
+			public const int abc_btn_colored_text_material = 2131361877;
+			
+			// aapt resource value: 0x7f0a0056
+			public const int abc_color_highlight_material = 2131361878;
+			
+			// aapt resource value: 0x7f0a0057
+			public const int abc_hint_foreground_material_dark = 2131361879;
+			
+			// aapt resource value: 0x7f0a0058
+			public const int abc_hint_foreground_material_light = 2131361880;
 			
 			// aapt resource value: 0x7f0a0004
 			public const int abc_input_method_navigation_guard = 2131361796;
 			
-			// aapt resource value: 0x7f0a0056
-			public const int abc_primary_text_disable_only_material_dark = 2131361878;
-			
-			// aapt resource value: 0x7f0a0057
-			public const int abc_primary_text_disable_only_material_light = 2131361879;
-			
-			// aapt resource value: 0x7f0a0058
-			public const int abc_primary_text_material_dark = 2131361880;
-			
 			// aapt resource value: 0x7f0a0059
-			public const int abc_primary_text_material_light = 2131361881;
+			public const int abc_primary_text_disable_only_material_dark = 2131361881;
 			
 			// aapt resource value: 0x7f0a005a
-			public const int abc_search_url_text = 2131361882;
+			public const int abc_primary_text_disable_only_material_light = 2131361882;
+			
+			// aapt resource value: 0x7f0a005b
+			public const int abc_primary_text_material_dark = 2131361883;
+			
+			// aapt resource value: 0x7f0a005c
+			public const int abc_primary_text_material_light = 2131361884;
+			
+			// aapt resource value: 0x7f0a005d
+			public const int abc_search_url_text = 2131361885;
 			
 			// aapt resource value: 0x7f0a0005
 			public const int abc_search_url_text_normal = 2131361797;
@@ -1268,29 +1268,29 @@ namespace StudentList
 			// aapt resource value: 0x7f0a0007
 			public const int abc_search_url_text_selected = 2131361799;
 			
-			// aapt resource value: 0x7f0a005b
-			public const int abc_secondary_text_material_dark = 2131361883;
-			
-			// aapt resource value: 0x7f0a005c
-			public const int abc_secondary_text_material_light = 2131361884;
-			
-			// aapt resource value: 0x7f0a005d
-			public const int abc_tint_btn_checkable = 2131361885;
-			
 			// aapt resource value: 0x7f0a005e
-			public const int abc_tint_default = 2131361886;
+			public const int abc_secondary_text_material_dark = 2131361886;
 			
 			// aapt resource value: 0x7f0a005f
-			public const int abc_tint_edittext = 2131361887;
+			public const int abc_secondary_text_material_light = 2131361887;
 			
 			// aapt resource value: 0x7f0a0060
-			public const int abc_tint_seek_thumb = 2131361888;
+			public const int abc_tint_btn_checkable = 2131361888;
 			
 			// aapt resource value: 0x7f0a0061
-			public const int abc_tint_spinner = 2131361889;
+			public const int abc_tint_default = 2131361889;
 			
 			// aapt resource value: 0x7f0a0062
-			public const int abc_tint_switch_track = 2131361890;
+			public const int abc_tint_edittext = 2131361890;
+			
+			// aapt resource value: 0x7f0a0063
+			public const int abc_tint_seek_thumb = 2131361891;
+			
+			// aapt resource value: 0x7f0a0064
+			public const int abc_tint_spinner = 2131361892;
+			
+			// aapt resource value: 0x7f0a0065
+			public const int abc_tint_switch_track = 2131361893;
 			
 			// aapt resource value: 0x7f0a0008
 			public const int accent_material_dark = 2131361800;
@@ -1349,17 +1349,26 @@ namespace StudentList
 			// aapt resource value: 0x7f0a004d
 			public const int colorAccent = 2131361869;
 			
+			// aapt resource value: 0x7f0a004e
+			public const int colorEditButton = 2131361870;
+			
+			// aapt resource value: 0x7f0a0050
+			public const int colorEditText = 2131361872;
+			
 			// aapt resource value: 0x7f0a004b
 			public const int colorPrimary = 2131361867;
 			
 			// aapt resource value: 0x7f0a004c
 			public const int colorPrimaryDark = 2131361868;
 			
+			// aapt resource value: 0x7f0a004f
+			public const int colorSaveButton = 2131361871;
+			
 			// aapt resource value: 0x7f0a0040
 			public const int design_bottom_navigation_shadow_color = 2131361856;
 			
-			// aapt resource value: 0x7f0a0063
-			public const int design_error = 2131361891;
+			// aapt resource value: 0x7f0a0066
+			public const int design_error = 2131361894;
 			
 			// aapt resource value: 0x7f0a0041
 			public const int design_fab_shadow_end_color = 2131361857;
@@ -1385,8 +1394,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0a0048
 			public const int design_snackbar_background_color = 2131361864;
 			
-			// aapt resource value: 0x7f0a0064
-			public const int design_tint_password_toggle = 2131361892;
+			// aapt resource value: 0x7f0a0067
+			public const int design_tint_password_toggle = 2131361895;
 			
 			// aapt resource value: 0x7f0a0016
 			public const int dim_foreground_disabled_material_dark = 2131361814;
@@ -1415,8 +1424,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0a001e
 			public const int highlighted_text_material_light = 2131361822;
 			
-			// aapt resource value: 0x7f0a004e
-			public const int ic_launcher_background = 2131361870;
+			// aapt resource value: 0x7f0a0051
+			public const int ic_launcher_background = 2131361873;
 			
 			// aapt resource value: 0x7f0a001f
 			public const int material_blue_grey_800 = 2131361823;
@@ -1511,11 +1520,11 @@ namespace StudentList
 			// aapt resource value: 0x7f0a003a
 			public const int switch_thumb_disabled_material_light = 2131361850;
 			
-			// aapt resource value: 0x7f0a0065
-			public const int switch_thumb_material_dark = 2131361893;
+			// aapt resource value: 0x7f0a0068
+			public const int switch_thumb_material_dark = 2131361896;
 			
-			// aapt resource value: 0x7f0a0066
-			public const int switch_thumb_material_light = 2131361894;
+			// aapt resource value: 0x7f0a0069
+			public const int switch_thumb_material_light = 2131361897;
 			
 			// aapt resource value: 0x7f0a003b
 			public const int switch_thumb_normal_material_dark = 2131361851;
@@ -2471,11 +2480,11 @@ namespace StudentList
 			// aapt resource value: 0x7f0800ad
 			public const int add_new_student_btn = 2131230893;
 			
-			// aapt resource value: 0x7f0800b3
-			public const int age_edittext = 2131230899;
+			// aapt resource value: 0x7f0800b4
+			public const int age_edittext = 2131230900;
 			
-			// aapt resource value: 0x7f0800b2
-			public const int age_layout = 2131230898;
+			// aapt resource value: 0x7f0800b3
+			public const int age_layout = 2131230899;
 			
 			// aapt resource value: 0x7f080070
 			public const int alertTitle = 2131230832;
@@ -2573,6 +2582,9 @@ namespace StudentList
 			// aapt resource value: 0x7f08007e
 			public const int edit_query = 2131230846;
 			
+			// aapt resource value: 0x7f0800b0
+			public const int edit_student_btn = 2131230896;
+			
 			// aapt resource value: 0x7f080030
 			public const int end = 2131230768;
 			
@@ -2612,11 +2624,11 @@ namespace StudentList
 			// aapt resource value: 0x7f08000a
 			public const int ghost_view = 2131230730;
 			
-			// aapt resource value: 0x7f0800b7
-			public const int group_edittext = 2131230903;
+			// aapt resource value: 0x7f0800b8
+			public const int group_edittext = 2131230904;
 			
-			// aapt resource value: 0x7f0800b6
-			public const int group_layout = 2131230902;
+			// aapt resource value: 0x7f0800b7
+			public const int group_layout = 2131230903;
 			
 			// aapt resource value: 0x7f080005
 			public const int home = 2131230725;
@@ -2666,14 +2678,14 @@ namespace StudentList
 			// aapt resource value: 0x7f08008b
 			public const int main_container = 2131230859;
 			
-			// aapt resource value: 0x7f0800bb
-			public const int masked = 2131230907;
+			// aapt resource value: 0x7f0800bc
+			public const int masked = 2131230908;
 			
 			// aapt resource value: 0x7f0800a0
 			public const int media_actions = 2131230880;
 			
-			// aapt resource value: 0x7f0800b9
-			public const int message = 2131230905;
+			// aapt resource value: 0x7f0800ba
+			public const int message = 2131230906;
 			
 			// aapt resource value: 0x7f080031
 			public const int middle = 2131230769;
@@ -2684,11 +2696,11 @@ namespace StudentList
 			// aapt resource value: 0x7f080028
 			public const int multiply = 2131230760;
 			
-			// aapt resource value: 0x7f0800b1
-			public const int name_edittext = 2131230897;
+			// aapt resource value: 0x7f0800b2
+			public const int name_edittext = 2131230898;
 			
-			// aapt resource value: 0x7f0800b0
-			public const int name_layout = 2131230896;
+			// aapt resource value: 0x7f0800b1
+			public const int name_layout = 2131230897;
 			
 			// aapt resource value: 0x7f080094
 			public const int navigation_header_container = 2131230868;
@@ -2744,8 +2756,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0800a4
 			public const int right_side = 2131230884;
 			
-			// aapt resource value: 0x7f0800b8
-			public const int save_changes_btn = 2131230904;
+			// aapt resource value: 0x7f0800b9
+			public const int save_changes_btn = 2131230905;
 			
 			// aapt resource value: 0x7f08000c
 			public const int save_image_matrix = 2131230732;
@@ -2924,11 +2936,11 @@ namespace StudentList
 			// aapt resource value: 0x7f080013
 			public const int transition_transform = 2131230739;
 			
-			// aapt resource value: 0x7f0800b5
-			public const int uni_edittext = 2131230901;
+			// aapt resource value: 0x7f0800b6
+			public const int uni_edittext = 2131230902;
 			
-			// aapt resource value: 0x7f0800b4
-			public const int uni_layout = 2131230900;
+			// aapt resource value: 0x7f0800b5
+			public const int uni_layout = 2131230901;
 			
 			// aapt resource value: 0x7f08002d
 			public const int uniform = 2131230765;
@@ -2942,8 +2954,8 @@ namespace StudentList
 			// aapt resource value: 0x7f080016
 			public const int view_offset_helper = 2131230742;
 			
-			// aapt resource value: 0x7f0800ba
-			public const int visible = 2131230906;
+			// aapt resource value: 0x7f0800bb
+			public const int visible = 2131230907;
 			
 			// aapt resource value: 0x7f08003c
 			public const int withText = 2131230780;
@@ -3374,6 +3386,9 @@ namespace StudentList
 			
 			// aapt resource value: 0x7f0b0026
 			public const int status_bar_notification_info_overflow = 2131427366;
+			
+			// aapt resource value: 0x7f0b0030
+			public const int student_info_pattern = 2131427376;
 			
 			// aapt resource value: 0x7f0b002c
 			public const int uni_hint = 2131427372;
@@ -3913,6 +3928,12 @@ namespace StudentList
 			// aapt resource value: 0x7f090003
 			public const int CardView_Light = 2131296259;
 			
+			// aapt resource value: 0x7f090185
+			public const int CustomTheme = 2131296645;
+			
+			// aapt resource value: 0x7f090187
+			public const int EditButton = 2131296647;
+			
 			// aapt resource value: 0x7f090022
 			public const int Platform_AppCompat = 2131296290;
 			
@@ -3997,8 +4018,8 @@ namespace StudentList
 			// aapt resource value: 0x7f09003c
 			public const int RtlUnderlay_Widget_AppCompat_ActionButton_Overflow = 2131296316;
 			
-			// aapt resource value: 0x7f090185
-			public const int SaveButton = 2131296645;
+			// aapt resource value: 0x7f090186
+			public const int SaveButton = 2131296646;
 			
 			// aapt resource value: 0x7f0900cb
 			public const int TextAppearance_AppCompat = 2131296459;

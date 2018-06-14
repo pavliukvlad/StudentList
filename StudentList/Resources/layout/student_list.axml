@@ -23,9 +23,11 @@
                 android:layout_marginLeft="4dp" />
             <Button
                 style="Widget.MaterialComponents.Button"
-                color="#A0BA"
+                android:backgroundTint="@color/colorEditButton"
                 android:layout_width="wrap_content"
+                android:id="@+id/edit_student_btn"
                 android:text="@string/edit_student_btn"
+                android:textColor="@color/colorEditText"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textView"
                 android:layout_alignParentRight="true" />

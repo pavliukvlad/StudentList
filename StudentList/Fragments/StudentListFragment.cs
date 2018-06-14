@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using StudentList.Adapters;
+using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
 {
@@ -20,7 +21,8 @@ namespace StudentList.Fragments
         private RecyclerView recyclerView;
         private RecyclerView.LayoutManager layoutManager;
         private StudentAdapter studentAdapter;
-        private StudentsProvider provider;
+        private IStudentRepository repository;
+
         private Button addNewStudentButton;
 
         public static StudentListFragment NewInstance()
@@ -34,8 +36,8 @@ namespace StudentList.Fragments
             addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
 
             layoutManager = new LinearLayoutManager(Activity);
-            provider = StudentsProvider.NewInstance();
-            studentAdapter = new StudentAdapter(provider);
+            repository = new StudentsRepository();
+            studentAdapter = new StudentAdapter(repository);
 
             recyclerView.SetLayoutManager(layoutManager);
             recyclerView.SetAdapter(studentAdapter);
@@ -43,8 +45,7 @@ namespace StudentList.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = inflater.Inflate(Resource.Layout.recycle_holder, container, false);
-            return view;
+            return inflater.Inflate(Resource.Layout.recycle_holder, container, false);
         }
 
         public override void OnStart()
@@ -53,6 +54,7 @@ namespace StudentList.Fragments
             addNewStudentButton.Click += AddNewStudentButton_Click;
             studentAdapter.ItemClick += StudentAdapter_ItemClick;
         }
+
         public override void OnStop()
         {
             base.OnStop();
@@ -72,7 +74,7 @@ namespace StudentList.Fragments
         private void ShowStudentInfo(int studentId, bool newStudent = false)
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).Commit();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
 
         }
     }

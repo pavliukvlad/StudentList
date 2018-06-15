@@ -22,7 +22,7 @@ namespace StudentList
             
             SetContentView(Resource.Layout.activity_main);
 
-            var studentList = StudentListFragment.NewInstance();
+            var studentList = new StudentListFragment();
 
             SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, studentList).Commit();
         }     

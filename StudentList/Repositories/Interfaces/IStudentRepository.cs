@@ -16,7 +16,9 @@ namespace StudentList.Providers.Interfaces
     interface IStudentRepository
     {
         void AddNewStudent(Student student);
-
+        void ChangeStudentById(int studentId, string name, DateTime birthdate, string group, string uni);
+       
+        IList<Student> Students { get; }
         int Count { get; }
         Student this[int index] { get; set; }
     }

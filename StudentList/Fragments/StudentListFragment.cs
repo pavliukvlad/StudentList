@@ -12,6 +12,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using StudentList.Adapters;
+using StudentList.Model;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
@@ -21,24 +22,29 @@ namespace StudentList.Fragments
         private RecyclerView recyclerView;
         private RecyclerView.LayoutManager layoutManager;
         private StudentAdapter studentAdapter;
-        private IStudentRepository repository;
+   
+        private IList<Student> students;
 
         private Button addNewStudentButton;
+        private Button filterStudentsButton;
 
-        public static StudentListFragment NewInstance()
+        public StudentListFragment()
         {
-            return new StudentListFragment();
+            students = new StudentsRepository().Students;
+        }
+        public StudentListFragment(IList<Student> students)
+        {
+            this.students = students;
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
+            filterStudentsButton = view.FindViewById<Button>(Resource.Id.filter_students_btn);
 
             layoutManager = new LinearLayoutManager(Activity);
-            repository = new StudentsRepository();
-            studentAdapter = new StudentAdapter(repository);
-
+            studentAdapter = new StudentAdapter(students);
             recyclerView.SetLayoutManager(layoutManager);
             recyclerView.SetAdapter(studentAdapter);
         }
@@ -53,6 +59,13 @@ namespace StudentList.Fragments
             base.OnStart();
             addNewStudentButton.Click += AddNewStudentButton_Click;
             studentAdapter.ItemClick += StudentAdapter_ItemClick;
+            filterStudentsButton.Click += FilterStudentsButton_Click;
+        }
+
+        private void FilterStudentsButton_Click(object sender, EventArgs e)
+        {
+            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
         }
 
         public override void OnStop()
@@ -75,7 +88,6 @@ namespace StudentList.Fragments
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
-
         }
     }
 }

@@ -22,11 +22,11 @@ namespace StudentList.Fragments
         private int StudentId => Arguments.GetInt(IntentConstant.StudentId, 0);
         private bool NewStudent => Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
-        private IStudentRepository studentProvider;
+        private IStudentRepository studentRepository;
 
         private Button saveButton;
         private EditText nameEditText;
-        private EditText ageEditText;
+        private EditText birthdateEditText;
         private EditText uniEditText;
         private EditText groupEditText;
 
@@ -41,22 +41,24 @@ namespace StudentList.Fragments
   
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            return inflater.Inflate(Resource.Layout.student_profile, null); 
+            var view =  inflater.Inflate(Resource.Layout.student_profile, null);
+
+            saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
+            nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
+            birthdateEditText = view.FindViewById<EditText>(Resource.Id.birthdate_edittext);
+            uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
+            groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
+
+            return view;
         }
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-             saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
-             nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
-             ageEditText = view.FindViewById<EditText>(Resource.Id.age_edittext);
-             uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
-             groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
+            studentRepository = new StudentsRepository();
 
-            studentProvider = new StudentsRepository();
-
-            nameEditText.Text = NewStudent ? "" : studentProvider[StudentId].Name;
-            ageEditText.Text = NewStudent ? "" : studentProvider[StudentId].Age.ToString();
-            uniEditText.Text = NewStudent ? "" : studentProvider[StudentId].University;
-            groupEditText.Text = NewStudent ? "" : studentProvider[StudentId].GroupName;
+            nameEditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
+            birthdateEditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
+            uniEditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
+            groupEditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
         }
 
         public override void OnStart()
@@ -73,21 +75,18 @@ namespace StudentList.Fragments
         private void SaveButton_Click(object sender, EventArgs e)
         {
             var name = nameEditText.Text;
-            var age = Convert.ToInt32(ageEditText.Text);
+            var birthdate = Convert.ToDateTime(birthdateEditText.Text);
             var uni = uniEditText.Text;
             var group = groupEditText.Text;
 
             if (NewStudent)
             {
-                var student = new Student() { Name = name, Age = age, University = uni, GroupName = group };
-                studentProvider.AddNewStudent(student);
+                var student = new Student() { Name = name, Birthdate = birthdate, University = uni, GroupName = group };
+                studentRepository.AddNewStudent(student);
             }
             else
             {
-                studentProvider[StudentId].Name = name;
-                studentProvider[StudentId].Age = age;
-                studentProvider[StudentId].GroupName = group;
-                studentProvider[StudentId].University = uni;
+                studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni);
             }
             ShowStudentList();
         }

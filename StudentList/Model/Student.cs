@@ -12,9 +12,9 @@ using Android.Widget;
 
 namespace StudentList.Model
 {
-    class Student
+    public class Student
     {
-        public int Age { get; set; }
+        public DateTime Birthdate { get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
         public string University { get; set; }

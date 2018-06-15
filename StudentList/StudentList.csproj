@@ -55,6 +55,8 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fragments\DatePickerFragment.cs" />
+    <Compile Include="Fragments\FilterStudentsFragment.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="ViewHolder\StudentViewHolder.cs" />
@@ -127,6 +129,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\recycle_holder.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\filter_students.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

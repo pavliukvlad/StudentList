@@ -11,6 +11,7 @@ using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using StudentList.Activities;
+using StudentList.Model;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList.Adapters
@@ -19,24 +20,25 @@ namespace StudentList.Adapters
     {
         public event EventHandler<int> ItemClick;
 
-        private IStudentRepository studentsProvider;
+        private IList<Student> students;
         private Context parentContext;
 
-        public StudentAdapter(IStudentRepository studentsProvider)
+        public StudentAdapter(IList<Student> students)
         {
-            this.studentsProvider = studentsProvider;
+            this.students = students;
         }
-
-        public override int ItemCount => studentsProvider.Count;
+        
+        public override int ItemCount => students.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             StudentViewHolder vh = holder as StudentViewHolder;
+
             vh.Info.Text = string.Format(parentContext.GetString(Resource.String.student_info_pattern),
-                studentsProvider[position].Name, 
-                studentsProvider[position].Age,
-                studentsProvider[position].University,
-                studentsProvider[position].GroupName);
+                students[position].Name, 
+                students[position].Birthdate.ToShortDateString(),
+                students[position].University,
+                students[position].GroupName);
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

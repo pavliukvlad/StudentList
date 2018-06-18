@@ -51,6 +51,7 @@ namespace StudentList.Fragments
 
             return view;
         }
+
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
             studentRepository = new StudentsRepository();
@@ -66,6 +67,7 @@ namespace StudentList.Fragments
             base.OnStart();
             saveButton.Click += SaveButton_Click;
         }
+
         public override void OnStop()
         {
             base.OnStop();

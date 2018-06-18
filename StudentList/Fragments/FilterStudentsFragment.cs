@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using StudentList.Model;
 
 namespace StudentList.Fragments
 {
@@ -18,7 +19,7 @@ namespace StudentList.Fragments
         private EditText nameEditText;
         private Spinner groupSpinner;
         private Button selectBirthdateButton;
-        private TextView selectedDateTextView;
+        private TextView showDateTextView;
         private Button confirmButton;
 
         private DateTime birthdate;
@@ -30,7 +31,7 @@ namespace StudentList.Fragments
             nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
             groupSpinner = view.FindViewById<Spinner>(Resource.Id.group_spinner);
             selectBirthdateButton = view.FindViewById<Button>(Resource.Id.select_birthdate_btn);
-            selectedDateTextView = view.FindViewById<TextView>(Resource.Id.selected_date_textview);
+            showDateTextView = view.FindViewById<TextView>(Resource.Id.show_date_textview);
             confirmButton = view.FindViewById<Button>(Resource.Id.confirm_filter_btn);
 
             return view;
@@ -42,40 +43,40 @@ namespace StudentList.Fragments
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             groupSpinner.Adapter = adapter;
 
-            selectedDateTextView.Text = DateTime.Now.ToShortDateString();
+            showDateTextView.Text = view.Context.GetString(Resource.String.show_date_textview);
         }
 
         public override void OnStart()
         {
             base.OnStart();
-            selectBirthdateButton.Click += ChooseBirthdayButton_Click;
-            confirmButton.Click += ConfirmButton_Click;
+            selectBirthdateButton.Click += DateOfBirthEditTextClick;
+            confirmButton.Click += ConfirmButtonClick;
         }
 
         public override void OnStop()
         {
             base.OnStop();
-            selectBirthdateButton.Click -= ChooseBirthdayButton_Click;
-            confirmButton.Click -= ConfirmButton_Click;
+            selectBirthdateButton.Click -= DateOfBirthEditTextClick;
+            confirmButton.Click -= ConfirmButtonClick;
         }
 
-        private void ChooseBirthdayButton_Click(object sender, EventArgs e)
+        private void DateOfBirthEditTextClick(object sender, EventArgs e)
         {
-            DatePickerFragment datePickerFrag = DatePickerFragment.NewInstance( date => 
-            {
-                selectedDateTextView.Text = date.ToShortDateString();
-                birthdate = date;
-            });
-            datePickerFrag.Show(FragmentManager, datePickerFrag.Tag);
+            var datePickerDialog = new DatePickerDialog(Context, DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+            datePickerDialog.Show();
         }
-        private void ConfirmButton_Click(object sender, EventArgs e)
+
+        private void DateOfBirthDatePickerDialogDateSet(object sender, DatePickerDialog.DateSetEventArgs args)
         {
-            string name = nameEditText.Text;
-            string group = groupSpinner.SelectedItem.ToString();
+            birthdate = args.Date;
+            showDateTextView.Text = args.Date.ToShortDateString();
+        }
 
-            var filteringStudents = new StudentsRepository().GetFilteringStudents(name, group, birthdate);
+        private void ConfirmButtonClick(object sender, EventArgs e)
+        {
+            StudentFilter studentFilter = new StudentFilter() { Name = nameEditText.Text, Group = groupSpinner.SelectedItem.ToString(), Birthdate = birthdate };
 
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(filteringStudents)).Commit();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(studentFilter)).Commit();
         }
     }
 }

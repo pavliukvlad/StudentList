@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -22,31 +25,50 @@ namespace StudentList.Fragments
         private RecyclerView recyclerView;
         private RecyclerView.LayoutManager layoutManager;
         private StudentAdapter studentAdapter;
-   
+
         private IList<Student> students;
+        private StudentFilter studentFilter;
 
         private Button addNewStudentButton;
         private Button filterStudentsButton;
+        private TextView filteringResultTextView;
+        private ProgressBar loadingProgressBar;
+        private Button resetButton;
+
+        private bool matchesFound;
 
         public StudentListFragment()
         {
-            students = new StudentsRepository().Students;
-        }
-        public StudentListFragment(IList<Student> students)
-        {
-            this.students = students;
+
         }
 
-        public override void OnViewCreated(View view, Bundle savedInstanceState)
+        public StudentListFragment(StudentFilter studentFilter)
+        {
+            this.studentFilter = studentFilter;
+        }
+
+        public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
             filterStudentsButton = view.FindViewById<Button>(Resource.Id.filter_students_btn);
+            filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
+            loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
+            resetButton = view.FindViewById<Button>(Resource.Id.reset_btn);
 
             layoutManager = new LinearLayoutManager(Activity);
-            studentAdapter = new StudentAdapter(students);
+            studentAdapter = new StudentAdapter();
+
+            students = await GetStudentsAsync(studentFilter);
+            loadingProgressBar.Visibility = ViewStates.Invisible;
+
+            studentAdapter.SetItems(students);
+         
             recyclerView.SetLayoutManager(layoutManager);
             recyclerView.SetAdapter(studentAdapter);
+
+            matchesFound = students.Count > 0 ? true : false;
+            filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -57,9 +79,15 @@ namespace StudentList.Fragments
         public override void OnStart()
         {
             base.OnStart();
-            addNewStudentButton.Click += AddNewStudentButton_Click;
-            studentAdapter.ItemClick += StudentAdapter_ItemClick;
+            addNewStudentButton.Click += AddNewStudentButtonClick;
+            studentAdapter.ItemClick += StudentAdapterItemClick;
             filterStudentsButton.Click += FilterStudentsButton_Click;
+            resetButton.Click += ResetButtonClick;
+        }
+
+        private void ResetButtonClick(object sender, EventArgs e)
+        {
+            
         }
 
         private void FilterStudentsButton_Click(object sender, EventArgs e)
@@ -71,17 +99,28 @@ namespace StudentList.Fragments
         public override void OnStop()
         {
             base.OnStop();
-            addNewStudentButton.Click -= AddNewStudentButton_Click;
-            studentAdapter.ItemClick -= StudentAdapter_ItemClick;
+            addNewStudentButton.Click -= AddNewStudentButtonClick;
+            studentAdapter.ItemClick -= StudentAdapterItemClick;
         }
 
-        private void StudentAdapter_ItemClick(object sender, int e)
+        private void StudentAdapterItemClick(object sender, int e)
         {
             ShowStudentInfo(e);
         }
-        private void AddNewStudentButton_Click(object sender, EventArgs e)
+
+        private void AddNewStudentButtonClick(object sender, EventArgs e)
         {
             ShowStudentInfo(0, true);
+        }
+
+        private async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
+        {
+            var repository = new StudentsRepository();
+
+            if (studentFilter == null)
+                return await repository.GetStudentsAsync();
+            else
+                return await repository.GetStudentsAsync(studentFilter.Name, studentFilter.Group, studentFilter.Birthdate);
         }
 
         private void ShowStudentInfo(int studentId, bool newStudent = false)

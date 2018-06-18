@@ -19,4 +19,6 @@
    </string-array>
   <string name="birthdate_btn">Choose a birthdate</string>
   <string name="confirm_filter_btn">Confirm</string>
+  <string name="show_date_textview">birthdate isn\'t selected</string>
+  <string name="no_match_found_txt">No student match found...Try again</string>
 </resources>

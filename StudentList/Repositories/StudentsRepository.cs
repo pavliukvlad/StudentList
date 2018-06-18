@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -40,27 +41,35 @@ namespace StudentList
             }
         }
 
-        public IList<Student> GetFilteringStudents(string name, string group, DateTime birthdate)
-        {
-            IEnumerable<Student> temp = students;
-
-            if (!String.IsNullOrEmpty(name))
-                temp = temp.Where(s => s.Name == name);
-            if (!String.IsNullOrEmpty(group))
-                temp = temp.Where(s => s.GroupName == group);
-           
-            temp = temp.Where(s => s.Birthdate == birthdate);
-            return temp.ToList<Student>();
-        }
-
         public void AddNewStudent(Student student)
         {
             students.Add(student);
         }
+
         public void ChangeStudentById(int studentId, string name, DateTime birthdate, string group, string uni)
         {
             Student student = new Student() { Name = name, Birthdate = birthdate, GroupName = group, University = uni };
             students[studentId] = student;
+        }
+
+        public async Task<IList<Student>> GetStudentsAsync()
+        {
+            await Task.Delay(5000);
+            return students;
+        }
+
+        public async Task<IList<Student>> GetStudentsAsync(string name, string group, DateTime birthdate)
+        {
+            IEnumerable<Student> temp = students;
+
+            if (!String.IsNullOrWhiteSpace(name))
+                temp = temp.Where(s => s.Name.ToLower() == name.ToLower());
+            if (!String.IsNullOrWhiteSpace(group))
+                temp = temp.Where(s => s.GroupName.ToLower() == group.ToLower());
+            if(birthdate!=default(DateTime))
+                temp = temp.Where(s => s.Birthdate == birthdate);
+            await Task.Delay(1000);
+            return temp.ToList();
         }
     }
 }

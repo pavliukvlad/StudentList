@@ -16,18 +16,14 @@ using StudentList.Providers.Interfaces;
 
 namespace StudentList.Adapters
 {
-    class StudentAdapter : RecyclerView.Adapter
+    public class StudentAdapter : RecyclerView.Adapter
     {
         public event EventHandler<int> ItemClick;
 
         private IList<Student> students;
+
         private Context parentContext;
 
-        public StudentAdapter(IList<Student> students)
-        {
-            this.students = students;
-        }
-        
         public override int ItemCount => students.Count;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -47,6 +43,14 @@ namespace StudentList.Adapters
             View itemView = LayoutInflater.From(parentContext).Inflate(Resource.Layout.student_list, parent, false);
             StudentViewHolder viewHolder = new StudentViewHolder(itemView, OnClick);
             return viewHolder;
+        }
+
+        public void SetItems(IList<Student> items)
+        {
+            if (students == null)
+                students = items;
+
+            NotifyDataSetChanged();
         }
 
         private void OnClick(int position)

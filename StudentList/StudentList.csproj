@@ -55,9 +55,9 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fragments\DatePickerFragment.cs" />
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
     <Compile Include="Model\Student.cs" />
+    <Compile Include="Model\StudentFilter.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="ViewHolder\StudentViewHolder.cs" />
     <Compile Include="Adapters\StudentAdapter.cs" />

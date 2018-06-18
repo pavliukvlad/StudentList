@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -15,11 +15,14 @@ namespace StudentList.Providers.Interfaces
 {
     interface IStudentRepository
     {
-        void AddNewStudent(Student student);
-        void ChangeStudentById(int studentId, string name, DateTime birthdate, string group, string uni);
-       
         IList<Student> Students { get; }
         int Count { get; }
         Student this[int index] { get; set; }
+
+        void AddNewStudent(Student student);
+        void ChangeStudentById(int studentId, string name, DateTime birthdate, string group, string uni);
+
+        Task<IList<Student>> GetStudentsAsync();
+        Task<IList<Student>> GetStudentsAsync(string name, string group, DateTime birthdate);
     }
 }

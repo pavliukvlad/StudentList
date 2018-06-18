@@ -46,7 +46,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/start_or_end_margin"
         android:layout_marginRight="@dimen/start_or_end_margin"
-        android:id="@+id/selected_date_textview"
+        android:id="@+id/show_date_textview"
         android:textSize="20dp" />
     <Button
         android:layout_width="match_parent"

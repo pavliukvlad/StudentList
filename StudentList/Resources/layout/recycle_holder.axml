@@ -19,10 +19,32 @@
         android:layout_alignParentRight="true"
         android:id="@+id/filter_students_btn"
         android:text="@string/filter_students_btn" />
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Reset"
+        android:layout_below="@id/add_new_student_btn"
+        android:layout_alignParentLeft="@id/filter_students_btn"
+        android:id="@+id/reset_btn" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/filter_students_btn" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/filter_result_textview"
+        android:text="@string/no_match_found_txt"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/loading_progress_bar" />
 </RelativeLayout>

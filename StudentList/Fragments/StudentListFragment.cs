@@ -37,10 +37,7 @@ namespace StudentList.Fragments
 
         private bool matchesFound;
 
-        public StudentListFragment()
-        {
-
-        }
+        public StudentListFragment() { }
 
         public StudentListFragment(StudentFilter studentFilter)
         {
@@ -49,15 +46,8 @@ namespace StudentList.Fragments
 
         public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
-            addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
-            filterStudentsButton = view.FindViewById<Button>(Resource.Id.filter_students_btn);
-            filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
-            loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
-            resetButton = view.FindViewById<Button>(Resource.Id.reset_btn);
-
             layoutManager = new LinearLayoutManager(Activity);
-            studentAdapter = new StudentAdapter();
+            studentAdapter = new StudentAdapter(recyclerView);
 
             students = await GetStudentsAsync(studentFilter);
             loadingProgressBar.Visibility = ViewStates.Invisible;
@@ -73,7 +63,15 @@ namespace StudentList.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            return inflater.Inflate(Resource.Layout.recycle_holder, container, false);
+            var view = inflater.Inflate(Resource.Layout.recycle_holder, container, false);
+
+            recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
+            addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
+            filterStudentsButton = view.FindViewById<Button>(Resource.Id.filter_students_btn);
+            filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
+            loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
+            resetButton = view.FindViewById<Button>(Resource.Id.reset_btn);
+            return view;
         }
 
         public override void OnStart()
@@ -85,23 +83,27 @@ namespace StudentList.Fragments
             resetButton.Click += ResetButtonClick;
         }
 
-        private void ResetButtonClick(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void FilterStudentsButton_Click(object sender, EventArgs e)
-        {
-            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
-        }
-
         public override void OnStop()
         {
             base.OnStop();
             addNewStudentButton.Click -= AddNewStudentButtonClick;
             studentAdapter.ItemClick -= StudentAdapterItemClick;
         }
+
+        private async void ResetButtonClick(object sender, EventArgs e)
+        {
+            studentFilter = null;
+            loadingProgressBar.Visibility = ViewStates.Visible;
+            students = await GetStudentsAsync(studentFilter);
+            loadingProgressBar.Visibility = ViewStates.Invisible;
+            studentAdapter.SetItems(students);
+        }
+
+        private void FilterStudentsButton_Click(object sender, EventArgs e)
+        {
+            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
+            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
+        }      
 
         private void StudentAdapterItemClick(object sender, int e)
         {

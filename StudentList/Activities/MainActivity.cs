@@ -5,7 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Android.Support.V7.Widget;
+
 using System.Collections.Generic;
 using Android.Support.V7.App;
 using StudentList.Fragments;
@@ -22,11 +22,26 @@ namespace StudentList
             base.OnCreate(savedInstanceState);
             
             SetContentView(Resource.Layout.activity_main);
-   
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetActionBar(toolbar);
+            ActionBar.Title = "";
+            toolbar.InflateMenu(Resource.Menu.top_menu);
             var studentList = new StudentListFragment();
 
             SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, studentList).Commit();
-        }     
+        }
+
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menu, menu);
+            return base.OnCreateOptionsMenu(menu);
+        }
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            Toast.MakeText(this, "Action selected: " + item.TitleFormatted,
+            ToastLength.Short).Show();
+            return base.OnOptionsItemSelected(item);
+        }
     }
 }
 

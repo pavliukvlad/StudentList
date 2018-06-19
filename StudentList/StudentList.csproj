@@ -55,12 +55,12 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\StudentAdapter.cs" />
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
     <Compile Include="Model\Student.cs" />
     <Compile Include="Model\StudentFilter.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="ViewHolder\StudentViewHolder.cs" />
-    <Compile Include="Adapters\StudentAdapter.cs" />
     <Compile Include="Constants\IntentConstant.cs" />
     <Compile Include="Fragments\StudentListFragment.cs" />
     <Compile Include="Fragments\StudentProfileFragment.cs" />
@@ -75,6 +75,7 @@
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidResource Include="Resources\menu\top_menu.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
@@ -136,6 +137,14 @@
     <AndroidResource Include="Resources\layout\filter_students.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\toolbar.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\add_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -23,8 +23,14 @@ namespace StudentList.Adapters
         private IList<Student> students;
 
         private Context parentContext;
-
+        private RecyclerView recyclerView;
+       
         public override int ItemCount => students.Count;
+
+        public StudentAdapter(RecyclerView recyclerView)
+        {
+            this.recyclerView = recyclerView;
+        }
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
@@ -49,8 +55,11 @@ namespace StudentList.Adapters
         {
             if (students == null)
                 students = items;
-
-            NotifyDataSetChanged();
+            else
+            {
+                students = items;
+                NotifyDataSetChanged();
+            }         
         }
 
         private void OnClick(int position)

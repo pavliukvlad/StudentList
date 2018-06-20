@@ -18,12 +18,14 @@ namespace StudentList.Activities
         public TextView Info { get; set; }
         public Button EditButton { get; set; }
 
-        public StudentViewHolder(View itemView, Action<int> listener) : base(itemView)
+        public string Id { get; set; }
+
+        public StudentViewHolder(View itemView, Action<string> listener) : base(itemView)
         {
             Info = itemView.FindViewById<TextView>(Resource.Id.textView);
             EditButton = itemView.FindViewById<Button>(Resource.Id.edit_student_btn);
 
-            EditButton.Click += (sender, e) => listener(base.LayoutPosition);
+            EditButton.Click += (sender, e) => listener(Id);
         }
 
     }

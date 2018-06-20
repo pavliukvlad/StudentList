@@ -18,7 +18,7 @@ namespace StudentList.Adapters
 {
     public class StudentAdapter : RecyclerView.Adapter
     {
-        public event EventHandler<int> ItemClick;
+        public event EventHandler<string> ItemClick;
 
         private IList<Student> students;
 
@@ -41,6 +41,7 @@ namespace StudentList.Adapters
                 students[position].Birthdate.ToShortDateString(),
                 students[position].University,
                 students[position].GroupName);
+            vh.Id = students[position].Id;
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -53,21 +54,16 @@ namespace StudentList.Adapters
 
         public void SetItems(IList<Student> items)
         {
-            if (students == null)
+            if (items != null)
                 students = items;
-            else
-            {
-                students = items;
-                NotifyDataSetChanged();
-            }         
         }
 
-        private void OnClick(int position)
+        private void OnClick(string id)
         {
-            EventHandler<int> handler = ItemClick;
+            EventHandler<string> handler = ItemClick;
 
             if (handler != null)
-                handler(this, position);
+                handler(this, id);
         }
     }
 }

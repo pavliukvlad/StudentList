@@ -17,10 +17,10 @@ namespace StudentList.Providers.Interfaces
     {
         IList<Student> Students { get; }
         int Count { get; }
-        Student this[int index] { get; set; }
+        Student this[string index] { get; set; }
 
         void AddNewStudent(Student student);
-        void ChangeStudentById(int studentId, string name, DateTime birthdate, string group, string uni);
+        void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni);
 
         Task<IList<Student>> GetStudentsAsync();
         Task<IList<Student>> GetStudentsAsync(string name, string group, DateTime birthdate);

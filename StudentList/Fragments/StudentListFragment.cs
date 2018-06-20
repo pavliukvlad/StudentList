@@ -103,16 +103,16 @@ namespace StudentList.Fragments
         {
             FilterStudentsFragment filterStudents = new FilterStudentsFragment();
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
-        }      
+        }
 
-        private void StudentAdapterItemClick(object sender, int e)
+        private void StudentAdapterItemClick(object sender, string e)
         {
             ShowStudentInfo(e);
         }
 
         private void AddNewStudentButtonClick(object sender, EventArgs e)
         {
-            ShowStudentInfo(0, true);
+            ShowStudentInfo(string.Empty, true);
         }
 
         private async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
@@ -125,7 +125,7 @@ namespace StudentList.Fragments
                 return await repository.GetStudentsAsync(studentFilter.Name, studentFilter.Group, studentFilter.Birthdate);
         }
 
-        private void ShowStudentInfo(int studentId, bool newStudent = false)
+        private void ShowStudentInfo(string studentId, bool newStudent = false)
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();

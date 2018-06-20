@@ -22,19 +22,45 @@ namespace StudentList
             base.OnCreate(savedInstanceState);
             
             SetContentView(Resource.Layout.activity_main);
-            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetActionBar(toolbar);
-            toolbar.InflateMenu(Resource.Menu.top_menu);
+            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(toolbar);
+            //toolbar.InflateMenu(Resource.Menu.top_menu);
             var studentList = new StudentListFragment();
 
             SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, studentList).Commit();
         }
 
+       
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            MenuInflater.Inflate(Resource.Menu.top_menu, menu);
+            return true;
+        }
+
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            Toast.MakeText(this, "Action selected: " + item.TitleFormatted,
-            ToastLength.Short).Show();
+            switch (item.ItemId)
+            {
+                case Resource.Id.menu_add_student:
+                    ShowStudentInfo(string.Empty, true);
+                    break;
+                case Resource.Id.menu_search:
+                    FilterStudents();
+                    break;
+            }
             return base.OnOptionsItemSelected(item);
+        }
+
+        private void ShowStudentInfo(string studentId, bool newStudent = false)
+        {
+            var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
+            SupportFragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
+        }
+
+        private void FilterStudents()
+        {
+            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
+            SupportFragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
         }
     }
 }

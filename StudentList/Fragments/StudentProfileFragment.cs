@@ -19,7 +19,7 @@ namespace StudentList.Fragments
 {
     public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        private int StudentId => Arguments.GetInt(IntentConstant.StudentId, 0);
+        private string StudentId => Arguments.GetString(IntentConstant.StudentId, "");
         private bool NewStudent => Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
         private IStudentRepository studentRepository;
@@ -30,10 +30,10 @@ namespace StudentList.Fragments
         private EditText uniEditText;
         private EditText groupEditText;
 
-        public static StudentProfileFragment NewInstance(int studentId, bool newStudent)
+        public static StudentProfileFragment NewInstance(string studentId, bool newStudent)
         {
             var bundle = new Bundle();
-            bundle.PutInt(IntentConstant.StudentId, studentId);
+            bundle.PutString(IntentConstant.StudentId, studentId);
             bundle.PutBoolean(IntentConstant.NewStudent, newStudent);
             var obj = new StudentProfileFragment() { Arguments = bundle };
             return obj;
@@ -76,6 +76,7 @@ namespace StudentList.Fragments
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
+            var id = Guid.NewGuid().ToString();
             var name = nameEditText.Text;
             var birthdate = Convert.ToDateTime(birthdateEditText.Text);
             var uni = uniEditText.Text;
@@ -83,7 +84,7 @@ namespace StudentList.Fragments
 
             if (NewStudent)
             {
-                var student = new Student() { Name = name, Birthdate = birthdate, University = uni, GroupName = group };
+                var student = new Student() { Id = id, Name = name, Birthdate = birthdate, University = uni, GroupName = group };
                 studentRepository.AddNewStudent(student);
             }
             else

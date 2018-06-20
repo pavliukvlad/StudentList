@@ -1,5 +1,5 @@
 <resources>
-   <string name="app_name">StudentList</string>
+   <string name="app_name">Student List</string>
    <string name="action_settings">Settings</string>
    <string name="name_hint">Name</string>
    <string name="birthdate_hint">Birthdate</string>

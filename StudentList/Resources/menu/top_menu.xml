@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item
-       android:id="@+id/menu_edit"
+       android:id="@+id/menu_add_student"
        android:icon="@drawable/add_icon"
-       android:showAsAction="ifRoom"
-       android:title="Edit" />
+       android:showAsAction="always"
+       android:title="Add student" />
+  <item
+    android:id="@+id/menu_search"
+    android:icon="@drawable/search_icon"
+    android:showAsAction="always"
+    android:title="Search"/>
 </menu>

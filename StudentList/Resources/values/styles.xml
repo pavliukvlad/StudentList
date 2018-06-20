@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>-->
-    <style name="CustomTheme" parent="Theme.AppCompat.Light">
+    <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
       <item name="windowNoTitle">true</item>
       <item name="windowActionBar">false</item>
       <item name="colorPrimary">#2E7D32</item>

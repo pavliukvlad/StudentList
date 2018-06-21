@@ -56,6 +56,7 @@ namespace StudentList.Adapters
         {
             if (items != null)
                 students = items;
+            NotifyDataSetChanged();
         }
 
         private void OnClick(string id)

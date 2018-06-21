@@ -56,9 +56,11 @@
             android:hint="@string/group_hint" />
     </android.support.design.widget.TextInputLayout>
     <Button
-        style="@style/SaveButton"
+        style="Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/save_changes_btn"
-        android:text="@string/save_changes_text" />
+        android:text="@string/save_changes_text"
+        android:textColor="@color/textColor"
+        android:backgroundTint="@color/colorSaveButton" />
 </LinearLayout>

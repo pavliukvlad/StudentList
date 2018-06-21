@@ -22,7 +22,6 @@ namespace StudentList.Providers.Interfaces
         void AddNewStudent(Student student);
         void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni);
 
-        Task<IList<Student>> GetStudentsAsync();
-        Task<IList<Student>> GetStudentsAsync(string name, string group, DateTime birthdate);
+        Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter);
     }
 }

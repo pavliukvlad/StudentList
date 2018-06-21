@@ -38,7 +38,8 @@
         android:layout_marginLeft="@dimen/start_or_end_margin"
         android:layout_marginRight="@dimen/start_or_end_margin"
         android:id="@+id/select_birthdate_btn"
-        android:text="@string/birthdate_btn" />
+        android:text="@string/birthdate_btn"
+        android:textColor="@android:color/darker_gray" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,5 +57,6 @@
         android:layout_marginRight="@dimen/start_or_end_margin"
         android:backgroundTint="@color/colorSaveButton"
         android:id="@+id/confirm_filter_btn"
-        android:text="@string/confirm_filter_btn" />
+        android:text="@string/confirm_filter_btn"
+        android:textColor="@color/textColor" />
 </LinearLayout>

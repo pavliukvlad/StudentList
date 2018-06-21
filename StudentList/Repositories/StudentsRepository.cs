@@ -57,22 +57,22 @@ namespace StudentList
             student.University = uni;
         }
 
-        public async Task<IList<Student>> GetStudentsAsync()
-        {
-            await Task.Delay(5000);
-            return students;
-        }
-
-        public async Task<IList<Student>> GetStudentsAsync(string name, string group, DateTime birthdate)
+        public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
         {
             IEnumerable<Student> temp = students;
 
-            if (!String.IsNullOrWhiteSpace(name))
-                temp = temp.Where(s => s.Name.ToLower() == name.ToLower());
-            if (!String.IsNullOrWhiteSpace(group))
-                temp = temp.Where(s => s.GroupName.ToLower() == group.ToLower());
-            if(birthdate!=default(DateTime))
-                temp = temp.Where(s => s.Birthdate == birthdate);
+            if (studentFilter == null)
+            {
+                await Task.Delay(1000);
+                return students;
+            }
+
+            if (!String.IsNullOrWhiteSpace(studentFilter.Name))
+                temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
+            if (!String.IsNullOrWhiteSpace(studentFilter.Group))
+                temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower());
+            if (studentFilter.Birthdate!= default(DateTime))
+                temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
             await Task.Delay(1000);
             return temp.ToList();
         }

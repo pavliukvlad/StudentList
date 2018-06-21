@@ -5,7 +5,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 using System.Collections.Generic;
 using Android.Support.V7.App;
 using StudentList.Fragments;
@@ -22,11 +22,11 @@ namespace StudentList
             base.OnCreate(savedInstanceState);
             
             SetContentView(Resource.Layout.activity_main);
-            var toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-            //toolbar.InflateMenu(Resource.Menu.top_menu);
-            var studentList = new StudentListFragment();
 
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            SetSupportActionBar(toolbar);
+       
+            var studentList = new StudentListFragment();
             SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, studentList).Commit();
         }
 

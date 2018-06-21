@@ -75,7 +75,6 @@ namespace StudentList.Fragments
         private void ConfirmButtonClick(object sender, EventArgs e)
         {
             StudentFilter studentFilter = new StudentFilter() { Name = nameEditText.Text, Group = groupSpinner.SelectedItem.ToString(), Birthdate = birthdate };
-
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(studentFilter)).Commit();
         }
     }

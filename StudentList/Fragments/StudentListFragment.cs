@@ -28,9 +28,8 @@ namespace StudentList.Fragments
 
         private IList<Student> students;
         private StudentFilter studentFilter;
+        private IStudentRepository repository;
 
-        private Button addNewStudentButton;
-        private Button filterStudentsButton;
         private TextView filteringResultTextView;
         private ProgressBar loadingProgressBar;
         private Button resetButton;
@@ -48,8 +47,9 @@ namespace StudentList.Fragments
         {
             layoutManager = new LinearLayoutManager(Activity);
             studentAdapter = new StudentAdapter(recyclerView);
+            repository = new StudentsRepository();
 
-            students = await GetStudentsAsync(studentFilter);
+            students = await repository.GetStudentsAsync(studentFilter);
             loadingProgressBar.Visibility = ViewStates.Invisible;
 
             studentAdapter.SetItems(students);
@@ -59,6 +59,7 @@ namespace StudentList.Fragments
 
             matchesFound = students.Count > 0 ? true : false;
             filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
+            resetButton.Enabled = studentFilter == null ? false : true;          
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -66,8 +67,6 @@ namespace StudentList.Fragments
             var view = inflater.Inflate(Resource.Layout.recycle_holder, container, false);
 
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
-            addNewStudentButton = view.FindViewById<Button>(Resource.Id.add_new_student_btn);
-            filterStudentsButton = view.FindViewById<Button>(Resource.Id.filter_students_btn);
             filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
             loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
             resetButton = view.FindViewById<Button>(Resource.Id.reset_btn);
@@ -77,24 +76,24 @@ namespace StudentList.Fragments
         public override void OnStart()
         {
             base.OnStart();
-            addNewStudentButton.Click += AddNewStudentButtonClick;
             studentAdapter.ItemClick += StudentAdapterItemClick;
-            filterStudentsButton.Click += FilterStudentsButton_Click;
             resetButton.Click += ResetButtonClick;
         }
 
         public override void OnStop()
         {
             base.OnStop();
-            addNewStudentButton.Click -= AddNewStudentButtonClick;
             studentAdapter.ItemClick -= StudentAdapterItemClick;
+            resetButton.Click -= ResetButtonClick;
         }
 
         private async void ResetButtonClick(object sender, EventArgs e)
         {
             studentFilter = null;
             loadingProgressBar.Visibility = ViewStates.Visible;
-            students = await GetStudentsAsync(studentFilter);
+            filteringResultTextView.Visibility = ViewStates.Invisible;
+            resetButton.Enabled = false;
+            students = await repository.GetStudentsAsync(studentFilter);
             loadingProgressBar.Visibility = ViewStates.Invisible;
             studentAdapter.SetItems(students);
         }
@@ -108,21 +107,6 @@ namespace StudentList.Fragments
         private void StudentAdapterItemClick(object sender, string e)
         {
             ShowStudentInfo(e);
-        }
-
-        private void AddNewStudentButtonClick(object sender, EventArgs e)
-        {
-            ShowStudentInfo(string.Empty, true);
-        }
-
-        private async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
-        {
-            var repository = new StudentsRepository();
-
-            if (studentFilter == null)
-                return await repository.GetStudentsAsync();
-            else
-                return await repository.GetStudentsAsync(studentFilter.Name, studentFilter.Group, studentFilter.Birthdate);
         }
 
         private void ShowStudentInfo(string studentId, bool newStudent = false)

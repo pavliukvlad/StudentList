@@ -4,34 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
-        style="@style/SaveButton"
-        android:backgroundTint="@color/colorSaveButton"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/add_new_student_btn"
-        android:text="@string/add_new_student_text" />
-    <Button
-        style="@style/SaveButton"
-        android:backgroundTint="@color/colorSaveButton"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_below="@id/add_new_student_btn"
-        android:layout_alignParentRight="true"
-        android:id="@+id/filter_students_btn"
-        android:text="@string/filter_students_btn" />
-    <Button
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Reset"
-        android:layout_below="@id/add_new_student_btn"
-        android:layout_alignParentLeft="@id/filter_students_btn"
-        android:id="@+id/reset_btn" />
+        android:text="@string/reset_btn"
+        android:id="@+id/reset_btn"
+        android:enabled="false" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/filter_students_btn" />
+        android:layout_below="@id/reset_btn" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

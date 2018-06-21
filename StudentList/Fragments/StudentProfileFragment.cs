@@ -91,7 +91,7 @@ namespace StudentList.Fragments
             {
                 studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni);
             }
-            ShowStudentList();
+            ShowStudentList(); 
         }
 
         private void ShowStudentList()

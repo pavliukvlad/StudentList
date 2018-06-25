@@ -32,7 +32,6 @@ namespace StudentList.Fragments
 
         private TextView filteringResultTextView;
         private ProgressBar loadingProgressBar;
-        private Button resetButton;
 
         private bool matchesFound;
 
@@ -53,13 +52,12 @@ namespace StudentList.Fragments
             loadingProgressBar.Visibility = ViewStates.Invisible;
 
             studentAdapter.SetItems(students);
-         
+ 
             recyclerView.SetLayoutManager(layoutManager);
             recyclerView.SetAdapter(studentAdapter);
 
             matchesFound = students.Count > 0 ? true : false;
             filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
-            resetButton.Enabled = studentFilter == null ? false : true;          
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -69,50 +67,70 @@ namespace StudentList.Fragments
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
             loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
-            resetButton = view.FindViewById<Button>(Resource.Id.reset_btn);
+            HasOptionsMenu = true;
+           
             return view;
+        }
+
+        public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
+        {
+            base.OnCreateOptionsMenu(menu, inflater);
+        }
+
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case Resource.Id.menu_reset:
+                    Reset();
+                    return true;
+                case Resource.Id.menu_add_student:
+                    ShowStudentInfo(string.Empty, true);
+                    return true;
+                case Resource.Id.menu_search:
+                    FilterStudents();
+                    return true;
+            }
+
+            return base.OnOptionsItemSelected(item);
         }
 
         public override void OnStart()
         {
             base.OnStart();
             studentAdapter.ItemClick += StudentAdapterItemClick;
-            resetButton.Click += ResetButtonClick;
         }
 
         public override void OnStop()
         {
             base.OnStop();
             studentAdapter.ItemClick -= StudentAdapterItemClick;
-            resetButton.Click -= ResetButtonClick;
         }
-
-        private async void ResetButtonClick(object sender, EventArgs e)
+   
+        public async void Reset()
         {
-            studentFilter = null;
             loadingProgressBar.Visibility = ViewStates.Visible;
             filteringResultTextView.Visibility = ViewStates.Invisible;
-            resetButton.Enabled = false;
             students = await repository.GetStudentsAsync(studentFilter);
             loadingProgressBar.Visibility = ViewStates.Invisible;
             studentAdapter.SetItems(students);
         }
 
-        private void FilterStudentsButton_Click(object sender, EventArgs e)
+        private void FilterStudents()
         {
             FilterStudentsFragment filterStudents = new FilterStudentsFragment();
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
-        }
-
-        private void StudentAdapterItemClick(object sender, string e)
-        {
-            ShowStudentInfo(e);
         }
 
         private void ShowStudentInfo(string studentId, bool newStudent = false)
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
+        }
+
+        private void StudentAdapterItemClick(object sender, string e)
+        {
+            ShowStudentInfo(e);
         }
     }
 }

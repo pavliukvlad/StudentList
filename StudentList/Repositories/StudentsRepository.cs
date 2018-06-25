@@ -14,12 +14,12 @@ using Android.Widget;
 using StudentList.Model;
 using StudentList.Providers.Interfaces;
 
-
 namespace StudentList
 {
-    class StudentsRepository : IStudentRepository
+    public class StudentsRepository : IStudentRepository
     {
-        private static IList<Student> students = new List<Student>() {
+        private static IList<Student> students = new List<Student>()
+        {
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1999, 08, 01), Name = "Vlad", GroupName = "MN", University = "Lviv Polytechnic" },
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 01, 19), Name = "Sasha", GroupName = "MN", University = "Lviv Polytechnic" },
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 12, 25), Name = "Dima", GroupName = "MN", University = "Lviv Polytechnic" },
@@ -34,11 +34,12 @@ namespace StudentList
         {
             get
             {
-                return students.Where(s=>s.Id==index).FirstOrDefault();
+                return students.Where(s => s.Id == index).FirstOrDefault();
             }
+
             set
             {
-                var student = students.Where(s=>s.Id==index).FirstOrDefault();
+                var student = students.Where(s => s.Id == index).FirstOrDefault();
                 student = value;
             }
         }
@@ -67,11 +68,11 @@ namespace StudentList
                 return students;
             }
 
-            if (!String.IsNullOrWhiteSpace(studentFilter.Name))
+            if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
-            if (!String.IsNullOrWhiteSpace(studentFilter.Group))
+            if (!string.IsNullOrWhiteSpace(studentFilter.Group))
                 temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower());
-            if (studentFilter.Birthdate!= default(DateTime))
+            if (studentFilter.Birthdate != default(DateTime))
                 temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
             await Task.Delay(1000);
             return temp.ToList();

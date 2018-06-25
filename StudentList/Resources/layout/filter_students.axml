@@ -1,62 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/name_layout"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="@dimen/start_or_end_margin"
-        android:layout_marginRight="@dimen/start_or_end_margin">
-        <android.support.design.widget.TextInputEditText
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_layout"
             android:layout_width="match_parent"
-            android:hint="@string/name_hint"
             android:layout_height="wrap_content"
-            android:id="@+id/name_edittext" />
-    </android.support.design.widget.TextInputLayout>
-    <TextView
-        android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginLeft="@dimen/start_or_end_margin"
+            android:layout_marginRight="@dimen/start_or_end_margin">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:hint="@string/name_hint"
+                android:layout_height="wrap_content"
+                android:id="@+id/name_edittext" />
+        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="@dimen/start_or_end_margin"
+            android:text="@string/group_prompt"
+            android:textSize="15dp" />
+        <Spinner
+            android:id="@+id/group_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/group_prompt"
+            android:layout_marginLeft="@dimen/start_or_end_margin"
+            android:layout_marginRight="@dimen/start_or_end_margin" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginLeft="@dimen/start_or_end_margin"
+            android:layout_marginRight="@dimen/start_or_end_margin"
+            app:hintEnabled="false">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:hint="@string/birthdate_hint"
+                android:layout_height="wrap_content"
+                android:id="@+id/choose_birthdate" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/confirm_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="@dimen/start_or_end_margin"
-        android:text="@string/group_prompt"
-        android:textSize="15dp" />
-    <Spinner
-        android:id="@+id/group_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:prompt="@string/group_prompt"
-        android:layout_marginLeft="@dimen/start_or_end_margin"
-        android:layout_marginRight="@dimen/start_or_end_margin" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="@dimen/start_or_end_margin"
-        android:layout_marginRight="@dimen/start_or_end_margin"
-        android:id="@+id/select_birthdate_btn"
-        android:text="@string/birthdate_btn"
-        android:textColor="@android:color/darker_gray" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/start_or_end_margin"
-        android:layout_marginRight="@dimen/start_or_end_margin"
-        android:id="@+id/show_date_textview"
-        android:textSize="20dp" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginLeft="@dimen/start_or_end_margin"
-        android:layout_marginRight="@dimen/start_or_end_margin"
-        android:backgroundTint="@color/colorSaveButton"
-        android:id="@+id/confirm_filter_btn"
-        android:text="@string/confirm_filter_btn"
-        android:textColor="@color/textColor" />
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/confirm_icon"
+        app:fabSize="normal"
+        android:layout_margin="@dimen/start_or_end_margin" />
+</RelativeLayout>

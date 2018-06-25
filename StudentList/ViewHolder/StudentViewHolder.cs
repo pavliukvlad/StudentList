@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace StudentList.Activities
 {
-    class StudentViewHolder : RecyclerView.ViewHolder
+    public class StudentViewHolder : RecyclerView.ViewHolder
     {
         public TextView Info { get; set; }
         public Button EditButton { get; set; }
@@ -27,6 +27,5 @@ namespace StudentList.Activities
 
             EditButton.Click += (sender, e) => listener(Id);
         }
-
     }
 }

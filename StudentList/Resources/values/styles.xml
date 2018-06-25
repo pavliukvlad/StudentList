@@ -1,9 +1,14 @@
   <resources>
-    <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="CustomTheme" parent="Theme.AppCompat.Light">
       <item name="windowNoTitle">true</item>
       <item name="windowActionBar">false</item>
       <item name="colorPrimary">#2E7D32</item>
-    </style>  
+    </style>
+
+    <style name="StudentList.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+      <item name="colorControlNormal">#000000</item>
+    </style>
+      
     <style name="SaveButton" parent="Widget.AppCompat.Button.Colored"/>
     <style name="EditButton" parent="Widget.AppCompat.Button.Colored"/>
 </resources>

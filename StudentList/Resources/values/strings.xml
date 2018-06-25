@@ -22,4 +22,6 @@
   <string name="show_date_textview">birthdate isn\'t selected</string>
   <string name="no_match_found_txt">No student match found...Try again</string>
   <string name="reset_btn">Reset</string>
+  <string name="action_confirm">Confirm</string>
+  <string name="action_reset">Reset</string>
 </resources>

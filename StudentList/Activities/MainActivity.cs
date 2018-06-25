@@ -1,68 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
-using Android.OS;
-using Toolbar = Android.Support.V7.Widget.Toolbar;
-using System.Collections.Generic;
-using Android.Support.V7.App;
 using StudentList.Fragments;
-using System.Threading.Tasks;
+using StudentList.Providers.Interfaces;
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace StudentList
 {
-    //"@android:style/Theme.Material.Light"
     [Activity(Label = "@string/app_name", Theme = "@style/CustomTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            
             SetContentView(Resource.Layout.activity_main);
 
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
-       
-            var studentList = new StudentListFragment();
-            SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, studentList).Commit();
+            ShowStudentList();
         }
 
-       
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.top_menu, menu);
-            return true;
+            return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            switch (item.ItemId)
-            {
-                case Resource.Id.menu_add_student:
-                    ShowStudentInfo(string.Empty, true);
-                    break;
-                case Resource.Id.menu_search:
-                    FilterStudents();
-                    break;
-            }
             return base.OnOptionsItemSelected(item);
         }
 
-        private void ShowStudentInfo(string studentId, bool newStudent = false)
+        private void ShowStudentList()
         {
-            var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
-            SupportFragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
-        }
-
-        private void FilterStudents()
-        {
-            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
-            SupportFragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
+            var listFragment = new StudentListFragment();
+            SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, listFragment).Commit();
         }
     }
 }
-
-

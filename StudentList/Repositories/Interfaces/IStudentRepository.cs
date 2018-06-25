@@ -13,7 +13,7 @@ using StudentList.Model;
 
 namespace StudentList.Providers.Interfaces
 {
-    interface IStudentRepository
+    public interface IStudentRepository
     {
         IList<Student> Students { get; }
         int Count { get; }

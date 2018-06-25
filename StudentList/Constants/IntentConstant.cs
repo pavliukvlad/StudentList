@@ -14,7 +14,7 @@ namespace StudentList.Constants
 {
     public static class IntentConstant
     {
-        public static string StudentId = "student_id";
-        public static string NewStudent = "new_student";
+        public const string StudentId = "student_id";
+        public const string NewStudent = "new_student";
     }
 }

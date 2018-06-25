@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Support.V7.Widget;
 using Android.Views;
-using Android.Widget;
 using StudentList.Activities;
 using StudentList.Model;
-using StudentList.Providers.Interfaces;
 
 namespace StudentList.Adapters
 {
@@ -24,7 +16,7 @@ namespace StudentList.Adapters
 
         private Context parentContext;
         private RecyclerView recyclerView;
-       
+
         public override int ItemCount => students.Count;
 
         public StudentAdapter(RecyclerView recyclerView)
@@ -37,7 +29,7 @@ namespace StudentList.Adapters
             StudentViewHolder vh = holder as StudentViewHolder;
 
             vh.Info.Text = string.Format(parentContext.GetString(Resource.String.student_info_pattern),
-                students[position].Name, 
+               students[position].Name,
                 students[position].Birthdate.ToShortDateString(),
                 students[position].University,
                 students[position].GroupName);
@@ -61,10 +53,7 @@ namespace StudentList.Adapters
 
         private void OnClick(string id)
         {
-            EventHandler<string> handler = ItemClick;
-
-            if (handler != null)
-                handler(this, id);
+            ItemClick?.Invoke(this, id);
         }
     }
 }

@@ -3,4 +3,6 @@
   <dimen name="start_or_end_margin">16dp</dimen>
   <dimen name="vertical_margin">16dp</dimen>
   <dimen name="top_margin">20dp</dimen>
+  <dimen name="top_margin_txtview">5dp</dimen>
+  <dimen name="start_or_end_margin_txtview">7dp</dimen>
 </resources>

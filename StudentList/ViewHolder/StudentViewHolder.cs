@@ -20,7 +20,8 @@ namespace StudentList.Activities
 
         public string Id { get; set; }
 
-        public StudentViewHolder(View itemView, Action<string> listener) : base(itemView)
+        public StudentViewHolder(View itemView, Action<string> listener)
+            : base(itemView)
         {
             Info = itemView.FindViewById<TextView>(Resource.Id.textView);
             EditButton = itemView.FindViewById<Button>(Resource.Id.edit_student_btn);

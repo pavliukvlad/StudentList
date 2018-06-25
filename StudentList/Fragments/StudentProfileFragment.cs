@@ -7,14 +7,18 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.Design.Widget;
 using Android.Support.V7.App;
+using Android.Text;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Java.Lang;
 using StudentList;
 using StudentList.Constants;
 using StudentList.Model;
 using StudentList.Providers.Interfaces;
+using StudentList.Validator;
 
 namespace StudentList.Fragments
 {
@@ -25,12 +29,12 @@ namespace StudentList.Fragments
 
         private IStudentRepository studentRepository;
 
-        private Button saveButton;
-        private EditText nameEditText;
-        private EditText birthdateEditText;
-        private EditText uniEditText;
-        private EditText groupEditText;
-
+        private FloatingActionButton saveButton;
+        private TextInputLayout nameEditText;
+        private TextInputLayout birthdateEditText;
+        private TextInputLayout universityEditText;
+        private TextInputLayout groupEditText;
+        
         public static StudentProfileFragment NewInstance(string studentId, bool newStudent)
         {
             var bundle = new Bundle();
@@ -50,11 +54,11 @@ namespace StudentList.Fragments
         {
             var view = inflater.Inflate(Resource.Layout.student_profile, null);
 
-            saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
-            nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
-            birthdateEditText = view.FindViewById<EditText>(Resource.Id.birthdate_edittext);
-            uniEditText = view.FindViewById<EditText>(Resource.Id.uni_edittext);
-            groupEditText = view.FindViewById<EditText>(Resource.Id.group_edittext);
+            saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.save_changes_fab);
+            nameEditText = view.FindViewById<TextInputLayout>(Resource.Id.name_layout);
+            birthdateEditText = view.FindViewById<TextInputLayout>(Resource.Id.birthdate_layout);
+            universityEditText = view.FindViewById<TextInputLayout>(Resource.Id.uni_layout);
+            groupEditText = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
 
             return view;
         }
@@ -63,10 +67,11 @@ namespace StudentList.Fragments
         {
             studentRepository = new StudentsRepository();
 
-            nameEditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
-            birthdateEditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
-            uniEditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
-            groupEditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
+            nameEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
+            birthdateEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
+            universityEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
+            groupEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
+
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -78,7 +83,7 @@ namespace StudentList.Fragments
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            switch(item.ItemId)
+            switch (item.ItemId)
             {
                 case Resource.Id.action_confirm:
                     Confirm();
@@ -110,32 +115,18 @@ namespace StudentList.Fragments
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            var id = Guid.NewGuid().ToString();
-            var name = nameEditText.Text;
-            var birthdate = Convert.ToDateTime(birthdateEditText.Text);
-            var uni = uniEditText.Text;
-            var group = groupEditText.Text;
-
-            if (NewStudent)
-            {
-                var student = new Student() { Id = id, Name = name, Birthdate = birthdate, University = uni, GroupName = group };
-                studentRepository.AddNewStudent(student);
-            }
-            else
-            {
-                studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni);
-            }
-
-            ShowStudentList();
+            Confirm();
         }
 
         private void Confirm()
         {
+            if (Validate(nameEditText, birthdateEditText, groupEditText, universityEditText))
+                return;
             var id = Guid.NewGuid().ToString();
-            var name = nameEditText.Text;
-            var birthdate = Convert.ToDateTime(birthdateEditText.Text);
-            var uni = uniEditText.Text;
-            var group = groupEditText.Text;
+            var name = nameEditText.EditText.Text;
+            var birthdate = Convert.ToDateTime(birthdateEditText.EditText.Text);
+            var uni = universityEditText.EditText.Text;
+            var group = groupEditText.EditText.Text;
 
             if (NewStudent)
             {
@@ -158,15 +149,38 @@ namespace StudentList.Fragments
                 ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(canback);
             }
             else
+            {
                 ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger);
+            }
         }
 
         private void Reset()
         {
-            nameEditText.Text = string.Empty;
-            groupEditText.Text = string.Empty;
-            birthdateEditText.Text = string.Empty;
-            uniEditText.Text = string.Empty;
+            nameEditText.EditText.Text = string.Empty;
+            groupEditText.EditText.Text = string.Empty;
+            birthdateEditText.EditText.Text = string.Empty;
+            universityEditText.EditText.Text = string.Empty;
+        }
+
+        public bool Validate(params TextInputLayout[] inputLayout)
+        {
+            bool validation = false;
+
+            for (int i = 0; i < inputLayout.Length; i++)
+            {
+                if (string.IsNullOrEmpty(inputLayout[i].EditText.Text))
+                {
+                    inputLayout[i].Error = "Empty field!";
+                    validation = true;
+                }
+                else
+                {
+                    inputLayout[i].Error = string.Empty;
+                    validation = false;
+                }
+            }
+
+            return validation;
         }
 
         private void ShowStudentList()

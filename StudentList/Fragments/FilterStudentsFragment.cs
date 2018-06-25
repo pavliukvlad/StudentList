@@ -21,7 +21,7 @@ namespace StudentList.Fragments
         private EditText nameEditText;
         private Spinner groupSpinner;
         private TextView chooseBirthdate;
-        FloatingActionButton confirmButton;
+        private FloatingActionButton confirmButton;
 
         private DateTime birthdate;
 
@@ -124,7 +124,9 @@ namespace StudentList.Fragments
                 ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(canback);
             }
             else
+            {
                 ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger);
+            }
         }
 
         private void Reset()

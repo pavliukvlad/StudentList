@@ -32,6 +32,7 @@ namespace StudentList.Fragments
 
         private TextView filteringResultTextView;
         private ProgressBar loadingProgressBar;
+        private TextView studentsCountTextView;
 
         private bool matchesFound;
 
@@ -52,12 +53,13 @@ namespace StudentList.Fragments
             loadingProgressBar.Visibility = ViewStates.Invisible;
 
             studentAdapter.SetItems(students);
- 
+
             recyclerView.SetLayoutManager(layoutManager);
             recyclerView.SetAdapter(studentAdapter);
 
             matchesFound = students.Count > 0 ? true : false;
             filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
+            studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,8 +69,9 @@ namespace StudentList.Fragments
             recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
             loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
+            studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
             HasOptionsMenu = true;
-           
+
             return view;
         }
 
@@ -106,7 +109,7 @@ namespace StudentList.Fragments
             base.OnStop();
             studentAdapter.ItemClick -= StudentAdapterItemClick;
         }
-   
+
         public async void Reset()
         {
             loadingProgressBar.Visibility = ViewStates.Visible;

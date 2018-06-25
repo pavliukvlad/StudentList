@@ -1,66 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/name_layout"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginStart="@dimen/start_or_end_margin"
-        android:layout_marginEnd="@dimen/start_or_end_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:hint="@string/name_hint"
-            android:layout_height="wrap_content"
-            android:id="@+id/name_edittext" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/birthdate_layout"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginStart="@dimen/start_or_end_margin"
-        android:layout_marginEnd="@dimen/start_or_end_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/birthdate_edittext"
-            android:hint="@string/birthdate_hint" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/uni_layout"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginStart="@dimen/start_or_end_margin"
-        android:layout_marginEnd="@dimen/start_or_end_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/uni_edittext"
-            android:hint="@string/uni_hint" />
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/group_layout"
-        android:layout_marginTop="@dimen/top_margin"
-        android:layout_marginStart="@dimen/start_or_end_margin"
-        android:layout_marginEnd="@dimen/start_or_end_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/group_edittext"
-            android:hint="@string/group_hint" />
-    </android.support.design.widget.TextInputLayout>
-    <Button
-        style="Widget.MaterialComponents.Button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/save_changes_btn"
-        android:text="@string/save_changes_text"
-        android:textColor="@color/textColor"
-        android:backgroundTint="@color/colorSaveButton" />
-</LinearLayout>
+        android:orientation="vertical">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/name_layout"
+            android:layout_marginTop="@dimen/top_margin"
+            android:layout_marginStart="@dimen/start_or_end_margin"
+            android:layout_marginEnd="@dimen/start_or_end_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name_hint"
+                android:id="@+id/name_edittext"
+                android:imeOptions="actionNext"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/birthdate_layout"
+            android:layout_marginStart="@dimen/start_or_end_margin"
+            android:layout_marginEnd="@dimen/start_or_end_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/birthdate_edittext"
+                android:hint="@string/birthdate_hint"
+                android:imeOptions="actionNext"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/uni_layout"
+            android:layout_marginStart="@dimen/start_or_end_margin"
+            android:layout_marginEnd="@dimen/start_or_end_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/uni_edittext"
+                android:hint="@string/uni_hint"
+                android:imeOptions="actionNext"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/group_layout"
+            android:layout_marginStart="@dimen/start_or_end_margin"
+            android:layout_marginEnd="@dimen/start_or_end_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorEnabled="true">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/group_edittext"
+                android:hint="@string/group_hint"
+                android:imeOptions="actionDone"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/save_changes_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/confirm_icon"
+        app:fabSize="normal"
+        android:layout_margin="@dimen/start_or_end_margin" />
+</RelativeLayout>

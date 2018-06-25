@@ -24,4 +24,5 @@
   <string name="reset_btn">Reset</string>
   <string name="action_confirm">Confirm</string>
   <string name="action_reset">Reset</string>
+  <string name="student_count_pattern">Students count: {0}</string>
 </resources>

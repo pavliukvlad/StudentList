@@ -12,7 +12,7 @@ namespace StudentList.Adapters
     {
         public event EventHandler<string> ItemClick;
 
-        private IList<Student> students;
+        public IList<Student> students { get; set; }
 
         private Context parentContext;
         private RecyclerView recyclerView;
@@ -46,8 +46,7 @@ namespace StudentList.Adapters
 
         public void SetItems(IList<Student> items)
         {
-            if (items != null)
-                students = items;
+            students = items;
             NotifyDataSetChanged();
         }
 

@@ -34,6 +34,7 @@ namespace StudentList.Fragments
         private ProgressBar loadingProgressBar;
         private TextView studentsCountTextView;
 
+        private int studentsCount;
         private bool matchesFound;
 
         public StudentListFragment() { }
@@ -114,7 +115,9 @@ namespace StudentList.Fragments
         {
             loadingProgressBar.Visibility = ViewStates.Visible;
             filteringResultTextView.Visibility = ViewStates.Invisible;
-            students = await repository.GetStudentsAsync(studentFilter);
+            students = await repository.GetStudentsAsync(null);
+            studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
+            studentsCount = students.Count;
             loadingProgressBar.Visibility = ViewStates.Invisible;
             studentAdapter.SetItems(students);
         }

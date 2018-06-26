@@ -40,7 +40,8 @@
                 android:imeOptions="actionNext"
                 android:singleLine="true"
                 android:drawableLeft="@drawable/birthdate_icon"
-                android:drawablePadding="@dimen/icon_padding" />
+                android:drawablePadding="@dimen/icon_padding"
+                android:editable="false" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/uni_layout"

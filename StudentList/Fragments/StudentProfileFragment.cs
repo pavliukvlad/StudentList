@@ -102,6 +102,7 @@ namespace StudentList.Fragments
             base.OnStart();
             saveButton.Click += SaveButton_Click;
             birthdateEditText.EditText.Touch += BirthdateEditTextTouch;
+            birthdateEditText.EditText.FocusChange += BirthdateEditTextTouch;
             DisplayHomeUp(true);
         }
 
@@ -113,12 +114,25 @@ namespace StudentList.Fragments
             DisplayHomeUp(false);
         }
 
-        private void BirthdateEditTextTouch(object sender, View.TouchEventArgs e)
+        private void BirthdateEditTextTouch(object sender, EventArgs e)
         {
-            if (e.Event.Action == MotionEventActions.Down)
+            var datePicker = new DatePickerDialog(Context, DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+
+            if (e is View.TouchEventArgs)
             {
-                var datePicker = new DatePickerDialog(Context, DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
-                datePicker.Show();
+                var args = (View.TouchEventArgs)e;
+                if (args.Event.Action == MotionEventActions.Down)
+                {
+                    datePicker.Show();
+                }
+            }
+            else
+            {
+                var args = (View.FocusChangeEventArgs)e;
+                if (args.HasFocus)
+                {
+                    datePicker.Show();
+                }
             }
         }
 
@@ -182,7 +196,7 @@ namespace StudentList.Fragments
 
             for (int i = 0; i < inputLayout.Length; i++)
             {
-                if (string.IsNullOrEmpty(inputLayout[i].EditText.Text))
+                if (string.IsNullOrWhiteSpace(inputLayout[i].EditText.Text))
                 {
                     inputLayout[i].Error = " ";
                     validation = true;

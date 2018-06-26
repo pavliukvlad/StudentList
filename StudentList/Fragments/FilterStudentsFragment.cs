@@ -78,7 +78,7 @@ namespace StudentList.Fragments
         public override void OnStart()
         {
             base.OnStart();
-            chooseBirthdate.Touch += ChooseBirthdateClick;
+            chooseBirthdate.Touch += ChooseBirthdateTouch;
             confirmButton.Click += ConfirmButtonClick;
             DisplayHomeUp(true);
         }
@@ -101,7 +101,7 @@ namespace StudentList.Fragments
             Confirm();
         }
 
-        private void ChooseBirthdateClick(object sender, View.TouchEventArgs e)
+        private void ChooseBirthdateTouch(object sender, View.TouchEventArgs e)
         {
             if (e.Event.Action == MotionEventActions.Down)
             {

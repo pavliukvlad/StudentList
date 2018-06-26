@@ -6,4 +6,5 @@
     <color name="colorEditButton">#43A047</color>
     <color name="colorSaveButton">#2E7D32</color>
     <color name="textColor">#FFFFFF</color>
+    <color name="cart_text_color">#333333</color>
 </resources>

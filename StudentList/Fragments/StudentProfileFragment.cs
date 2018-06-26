@@ -18,13 +18,12 @@ using StudentList;
 using StudentList.Constants;
 using StudentList.Model;
 using StudentList.Providers.Interfaces;
-using StudentList.Validator;
 
 namespace StudentList.Fragments
 {
     public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        private string StudentId => Arguments.GetString(IntentConstant.StudentId, "");
+        private string StudentId => Arguments.GetString(IntentConstant.StudentId, string.Empty);
         private bool NewStudent => Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
         private IStudentRepository studentRepository;
@@ -34,7 +33,7 @@ namespace StudentList.Fragments
         private TextInputLayout birthdateEditText;
         private TextInputLayout universityEditText;
         private TextInputLayout groupEditText;
-        
+
         public static StudentProfileFragment NewInstance(string studentId, bool newStudent)
         {
             var bundle = new Bundle();
@@ -71,7 +70,6 @@ namespace StudentList.Fragments
             birthdateEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
             universityEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
             groupEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
-
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -103,6 +101,7 @@ namespace StudentList.Fragments
         {
             base.OnStart();
             saveButton.Click += SaveButton_Click;
+            birthdateEditText.EditText.Touch += BirthdateEditTextTouch;
             DisplayHomeUp(true);
         }
 
@@ -110,7 +109,22 @@ namespace StudentList.Fragments
         {
             base.OnStop();
             saveButton.Click -= SaveButton_Click;
+            birthdateEditText.Touch -= BirthdateEditTextTouch;
             DisplayHomeUp(false);
+        }
+
+        private void BirthdateEditTextTouch(object sender, View.TouchEventArgs e)
+        {
+            if (e.Event.Action == MotionEventActions.Down)
+            {
+                var datePicker = new DatePickerDialog(Context, DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+                datePicker.Show();
+            }
+        }
+
+        private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
+        {
+            birthdateEditText.EditText.Text = e.Date.ToShortDateString();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -123,10 +137,10 @@ namespace StudentList.Fragments
             if (Validate(nameEditText, birthdateEditText, groupEditText, universityEditText))
                 return;
             var id = Guid.NewGuid().ToString();
-            var name = nameEditText.EditText.Text;
+            var name = nameEditText.EditText.Text.TrimEnd(); ;
             var birthdate = Convert.ToDateTime(birthdateEditText.EditText.Text);
-            var uni = universityEditText.EditText.Text;
-            var group = groupEditText.EditText.Text;
+            var uni = universityEditText.EditText.Text.TrimEnd();
+            var group = groupEditText.EditText.Text.TrimEnd();
 
             if (NewStudent)
             {
@@ -138,7 +152,7 @@ namespace StudentList.Fragments
                 studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni);
             }
 
-            ShowStudentList();
+            Activity.OnBackPressed();
         }
 
         private void DisplayHomeUp(bool trigger)
@@ -170,7 +184,7 @@ namespace StudentList.Fragments
             {
                 if (string.IsNullOrEmpty(inputLayout[i].EditText.Text))
                 {
-                    inputLayout[i].Error = "Empty field!";
+                    inputLayout[i].Error = " ";
                     validation = true;
                 }
                 else
@@ -181,12 +195,6 @@ namespace StudentList.Fragments
             }
 
             return validation;
-        }
-
-        private void ShowStudentList()
-        {
-            var intent = new Intent(Activity, typeof(MainActivity));
-            Activity.StartActivity(intent);
         }
     }
 }

@@ -5,4 +5,8 @@
   <dimen name="top_margin">20dp</dimen>
   <dimen name="top_margin_txtview">5dp</dimen>
   <dimen name="start_or_end_margin_txtview">7dp</dimen>
+  <dimen name="icon_padding">10dp</dimen>
+  <dimen name="cart_margin">15dp</dimen>
+  <dimen name="cart_text_size">16dp</dimen>
+  <dimen name="cart_evelation">5dp</dimen>
 </resources>

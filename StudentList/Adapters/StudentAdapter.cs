@@ -39,7 +39,7 @@ namespace StudentList.Adapters
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             parentContext = parent.Context;
-            View itemView = LayoutInflater.From(parentContext).Inflate(Resource.Layout.student_list, parent, false);
+            View itemView = LayoutInflater.From(parentContext).Inflate(Resource.Layout.student_cart, parent, false);
             StudentViewHolder viewHolder = new StudentViewHolder(itemView, OnClick);
             return viewHolder;
         }

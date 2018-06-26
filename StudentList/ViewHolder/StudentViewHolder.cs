@@ -16,7 +16,6 @@ namespace StudentList.Activities
     public class StudentViewHolder : RecyclerView.ViewHolder
     {
         public TextView Info { get; set; }
-        public Button EditButton { get; set; }
 
         public string Id { get; set; }
 
@@ -24,9 +23,7 @@ namespace StudentList.Activities
             : base(itemView)
         {
             Info = itemView.FindViewById<TextView>(Resource.Id.textView);
-            EditButton = itemView.FindViewById<Button>(Resource.Id.edit_student_btn);
-
-            EditButton.Click += (sender, e) => listener(Id);
+            itemView.Click += (sender, e) => { listener(Id); };
         }
     }
 }

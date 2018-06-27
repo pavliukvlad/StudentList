@@ -19,5 +19,6 @@ namespace StudentList.Model
         public string Name { get; set; }
         public string GroupName { get; set; }
         public string University { get; set; }
+        public string Phone { get; set; }
     }
 }

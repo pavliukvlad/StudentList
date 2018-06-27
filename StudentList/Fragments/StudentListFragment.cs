@@ -33,6 +33,7 @@ namespace StudentList.Fragments
         private TextView filteringResultTextView;
         private ProgressBar loadingProgressBar;
         private TextView studentsCountTextView;
+        private ImageView phoneImageView;
 
         private int studentsCount;
         private bool matchesFound;
@@ -46,21 +47,23 @@ namespace StudentList.Fragments
 
         public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            layoutManager = new LinearLayoutManager(Activity);
-            studentAdapter = new StudentAdapter(recyclerView);
-            repository = new StudentsRepository();
+            this.layoutManager = new LinearLayoutManager(Activity);
+            this.studentAdapter = new StudentAdapter(recyclerView);
+            this.repository = new StudentsRepository();
 
-            students = await repository.GetStudentsAsync(studentFilter);
-            loadingProgressBar.Visibility = ViewStates.Invisible;
+            this.students = await this.repository.GetStudentsAsync(studentFilter);
+            this.studentFilter = null;
 
-            studentAdapter.SetItems(students);
+            this.loadingProgressBar.Visibility = ViewStates.Invisible;
 
-            recyclerView.SetLayoutManager(layoutManager);
-            recyclerView.SetAdapter(studentAdapter);
+            this.studentAdapter.SetItems(this.students);
 
-            matchesFound = students.Count > 0 ? true : false;
-            filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
-            studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
+            this.recyclerView.SetLayoutManager(this.layoutManager);
+            this.recyclerView.SetAdapter(this.studentAdapter);
+
+            this.matchesFound = students.Count > 0 ? true : false;
+            this.filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
+            this.studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -71,6 +74,7 @@ namespace StudentList.Fragments
             filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
             loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
             studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
+            //phoneImageView = view.FindViewById<ImageView>(Resource.Id.phone_image);
             HasOptionsMenu = true;
 
             return view;
@@ -117,7 +121,6 @@ namespace StudentList.Fragments
             filteringResultTextView.Visibility = ViewStates.Invisible;
             students = await repository.GetStudentsAsync(null);
             studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
-            studentsCount = students.Count;
             loadingProgressBar.Visibility = ViewStates.Invisible;
             studentAdapter.SetItems(students);
         }

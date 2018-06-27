@@ -20,7 +20,7 @@ namespace StudentList.Providers.Interfaces
         Student this[string index] { get; set; }
 
         void AddNewStudent(Student student);
-        void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni);
+        void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone);
 
         Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter);
     }

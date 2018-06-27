@@ -118,15 +118,7 @@ namespace StudentList.Fragments
 
         private void DisplayHomeUp(bool trigger)
         {
-            if (trigger)
-            {
-                bool canback = Activity.SupportFragmentManager.BackStackEntryCount > 0;
-                ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(canback);
-            }
-            else
-            {
-                ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger);
-            }
+            ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && Activity.SupportFragmentManager.BackStackEntryCount > 0);
         }
 
         private void Reset()

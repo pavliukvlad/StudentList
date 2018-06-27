@@ -20,10 +20,10 @@ namespace StudentList
     {
         private static IList<Student> students = new List<Student>()
         {
-            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1999, 08, 01), Name = "Vlad", GroupName = "MN", University = "Lviv Polytechnic" },
-            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 01, 19), Name = "Sasha", GroupName = "MN", University = "Lviv Polytechnic" },
-            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 12, 25), Name = "Dima", GroupName = "MN", University = "Lviv Polytechnic" },
-            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic" }
+            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1999, 08, 01), Name = "Vlad", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380995323774" },
+            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 01, 19), Name = "Sasha", GroupName = "MN", University = "Lviv Polytechnic", Phone = null },
+            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 12, 25), Name = "Dima", GroupName = "MN", University = "Lviv Polytechnic", Phone = null },
+            new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
         public IList<Student> Students => students;
@@ -49,13 +49,14 @@ namespace StudentList
             students.Add(student);
         }
 
-        public void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni)
+        public void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone)
         {
             var student = students.Where(s => s.Id == studentId).FirstOrDefault();
             student.Name = name;
             student.Birthdate = birthdate;
             student.GroupName = group;
             student.University = uni;
+            student.Phone = phone;
         }
 
         public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)

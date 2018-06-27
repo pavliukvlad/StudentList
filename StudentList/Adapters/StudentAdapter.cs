@@ -34,6 +34,7 @@ namespace StudentList.Adapters
                 students[position].University,
                 students[position].GroupName);
             vh.Id = students[position].Id;
+            vh.SetPhoneIconVisible(students[position].Phone);
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

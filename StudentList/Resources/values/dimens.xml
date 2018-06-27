@@ -9,4 +9,7 @@
   <dimen name="cart_margin">15dp</dimen>
   <dimen name="cart_text_size">16dp</dimen>
   <dimen name="cart_evelation">5dp</dimen>
+  <dimen name="confirm_btn_height">70dp</dimen>
+  <dimen name="cart_height">150dp</dimen>
+  <dimen name="phone_icon_height_and_width">36dp</dimen>
 </resources>

@@ -28,11 +28,12 @@ namespace StudentList.Fragments
 
         private IStudentRepository studentRepository;
 
-        private FloatingActionButton saveButton;
+        private Button saveButton;
         private TextInputLayout nameEditText;
         private TextInputLayout birthdateEditText;
         private TextInputLayout universityEditText;
         private TextInputLayout groupEditText;
+        private TextInputLayout phoneEditText;
 
         public static StudentProfileFragment NewInstance(string studentId, bool newStudent)
         {
@@ -53,11 +54,12 @@ namespace StudentList.Fragments
         {
             var view = inflater.Inflate(Resource.Layout.student_profile, null);
 
-            saveButton = view.FindViewById<FloatingActionButton>(Resource.Id.save_changes_fab);
+            saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
             nameEditText = view.FindViewById<TextInputLayout>(Resource.Id.name_layout);
             birthdateEditText = view.FindViewById<TextInputLayout>(Resource.Id.birthdate_layout);
             universityEditText = view.FindViewById<TextInputLayout>(Resource.Id.uni_layout);
             groupEditText = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
+            phoneEditText = view.FindViewById<TextInputLayout>(Resource.Id.phone_layout);
 
             return view;
         }
@@ -66,10 +68,12 @@ namespace StudentList.Fragments
         {
             studentRepository = new StudentsRepository();
 
+            saveButton.Text = NewStudent ? GetString(Resource.String.add_new_student_text) : GetString(Resource.String.save_changes_text);
             nameEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
             birthdateEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
             universityEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
             groupEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
+            phoneEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Phone;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -101,8 +105,8 @@ namespace StudentList.Fragments
         {
             base.OnStart();
             saveButton.Click += SaveButton_Click;
-            birthdateEditText.EditText.Touch += OnBirthdateEditText;
-            birthdateEditText.EditText.FocusChange += OnBirthdateEditText;
+            birthdateEditText.EditText.Touch += OnBirthdateEditTextTouch;
+            birthdateEditText.EditText.FocusChange += OnBirthdateEditTextFocus;
             DisplayHomeUp(true);
         }
 
@@ -110,26 +114,26 @@ namespace StudentList.Fragments
         {
             base.OnStop();
             saveButton.Click -= SaveButton_Click;
-            birthdateEditText.Touch -= OnBirthdateEditText;
-            birthdateEditText.EditText.FocusChange -= OnBirthdateEditText;
+            birthdateEditText.Touch -= OnBirthdateEditTextTouch;
+            birthdateEditText.EditText.FocusChange -= OnBirthdateEditTextFocus;
             DisplayHomeUp(false);
         }
 
-        private void OnBirthdateEditText(object sender, EventArgs e)
+        private void OnBirthdateEditTextTouch(object sender, View.TouchEventArgs e)
         {
             var datePicker = new DatePickerDialog(Context, DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
-
-            if (e is View.TouchEventArgs)
+            if (e.Event.Action == MotionEventActions.Down)
             {
-                var args = (View.TouchEventArgs)e;
-                if (args.Event.Action == MotionEventActions.Down)
-                    datePicker.Show();
+                datePicker.Show();
             }
-            else
+        }
+
+        private void OnBirthdateEditTextFocus(object sender, View.FocusChangeEventArgs e)
+        {
+            if (e.HasFocus)
             {
-                var args = (View.FocusChangeEventArgs)e;
-                if (args.HasFocus)
-                    datePicker.Show();
+                var datePicker = new DatePickerDialog(Context, DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+                datePicker.Show();
             }
         }
 
@@ -147,20 +151,21 @@ namespace StudentList.Fragments
         {
             if (Validate(nameEditText, birthdateEditText, groupEditText, universityEditText))
                 return;
-            var id = Guid.NewGuid().ToString();
-            var name = nameEditText.EditText.Text.TrimEnd(); ;
-            var birthdate = Convert.ToDateTime(birthdateEditText.EditText.Text);
-            var uni = universityEditText.EditText.Text.TrimEnd();
-            var group = groupEditText.EditText.Text.TrimEnd();
+            string id = Guid.NewGuid().ToString();
+            string name = nameEditText.EditText.Text.TrimEnd();
+            DateTime birthdate = Convert.ToDateTime(birthdateEditText.EditText.Text);
+            string uni = universityEditText.EditText.Text.TrimEnd();
+            string group = groupEditText.EditText.Text.TrimEnd();
+            string phone = phoneEditText.EditText.Text.TrimEnd().Length == 0 ? null : phoneEditText.EditText.Text.TrimEnd();
 
             if (NewStudent)
             {
-                var student = new Student() { Id = id, Name = name, Birthdate = birthdate, University = uni, GroupName = group };
+                var student = new Student() { Id = id, Name = name, Birthdate = birthdate, University = uni, GroupName = group, Phone = phone };
                 studentRepository.AddNewStudent(student);
             }
             else
             {
-                studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni);
+                studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni, phone);
             }
 
             Activity.OnBackPressed();
@@ -168,15 +173,7 @@ namespace StudentList.Fragments
 
         private void DisplayHomeUp(bool trigger)
         {
-            if (trigger)
-            {
-                bool canback = Activity.SupportFragmentManager.BackStackEntryCount > 0;
-                ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(canback);
-            }
-            else
-            {
-                ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger);
-            }
+            ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && Activity.SupportFragmentManager.BackStackEntryCount > 0);
         }
 
         private void Reset()
@@ -185,6 +182,7 @@ namespace StudentList.Fragments
             groupEditText.EditText.Text = string.Empty;
             birthdateEditText.EditText.Text = string.Empty;
             universityEditText.EditText.Text = string.Empty;
+            phoneEditText.EditText.Text = string.Empty;
         }
 
         private bool Validate(params TextInputLayout[] inputLayout)
@@ -193,7 +191,7 @@ namespace StudentList.Fragments
 
             for (int i = 0; i < inputLayout.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(inputLayout[i].EditText.Text))
+                if (string.IsNullOrWhiteSpace(inputLayout[i].EditText.Text) || string.IsNullOrEmpty(inputLayout[i].EditText.Text))
                 {
                     inputLayout[i].Error = " ";
                     validation = true;
@@ -201,7 +199,6 @@ namespace StudentList.Fragments
                 else
                 {
                     inputLayout[i].Error = string.Empty;
-                    validation = false;
                 }
             }
 

@@ -5,6 +5,7 @@
    <string name="birthdate_hint">Birthdate</string>
    <string name="group_hint">Group</string>
    <string name="uni_hint">University</string>
+  <string name="phone_hint">Phone</string>
    <string name="save_changes_text">Save changes</string>
    <string name="add_new_student_text">Add new student</string>
    <string name="edit_student_btn">Edit student</string>
@@ -13,6 +14,7 @@
    <string name="filter_textview">Filter by:</string>
    <string name="group_prompt">Choose a group:</string>
    <string-array name="group_array">
+     <item>Any</item>
      <item>MN</item>
      <item>PZ</item>
      <item>KN</item>

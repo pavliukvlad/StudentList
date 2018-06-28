@@ -68,6 +68,7 @@ namespace StudentList.Fragments
         {
             studentRepository = new StudentsRepository();
 
+            ((AppCompatActivity)Activity).SupportActionBar.Title = NewStudent ? GetString(Resource.String.create_student_title) : GetString(Resource.String.edit_student_title) + "" + studentRepository[StudentId].Name;
             saveButton.Text = NewStudent ? GetString(Resource.String.add_new_student_text) : GetString(Resource.String.save_changes_text);
             nameEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
             birthdateEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
@@ -168,7 +169,7 @@ namespace StudentList.Fragments
                 studentRepository.ChangeStudentById(StudentId, name, birthdate, group, uni, phone);
             }
 
-            Activity.OnBackPressed();
+            this.Activity.OnBackPressed();
         }
 
         private void DisplayHomeUp(bool trigger)

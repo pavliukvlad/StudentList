@@ -27,4 +27,8 @@
   <string name="action_confirm">Confirm</string>
   <string name="action_reset">Reset</string>
   <string name="student_count_pattern">Students count: {0}</string>
+
+  <string name="create_student_title">Create new student</string>
+  <string name="edit_student_title">Edit student </string>
+  <string name="filter_title">Filter students</string>
 </resources>

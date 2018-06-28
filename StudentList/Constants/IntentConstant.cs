@@ -16,5 +16,6 @@ namespace StudentList.Constants
     {
         public const string StudentId = "student_id";
         public const string NewStudent = "new_student";
+        public const string FilterValues = "filter_values";
     }
 }

@@ -1,53 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using StudentList.Model;
+using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 namespace StudentList.Fragments
 {
     public class FilterStudentsFragment : Android.Support.V4.App.Fragment
     {
-        private EditText nameEditText;
-        private Spinner groupSpinner;
-        private TextView chooseBirthdate;
+        private TextInputLayout nameLayout;
+        private TextInputLayout birthdateLayout;
+        private TextInputLayout groupLayout;
         private FloatingActionButton confirmButton;
 
+        private AlertDialog.Builder groupDialog;
+        private DatePickerDialog birthdatePickerDialog;
+
         private DateTime birthdate;
+        private StudentFilter studentFilter;
+
+        public FilterStudentsFragment(StudentFilter studentFilter)
+        {
+            this.studentFilter = studentFilter;
+        }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            HasOptionsMenu = true;
+            this.HasOptionsMenu = true;
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             var view = inflater.Inflate(Resource.Layout.filter_students, container, false);
 
-            nameEditText = view.FindViewById<EditText>(Resource.Id.name_edittext);
-            groupSpinner = view.FindViewById<Spinner>(Resource.Id.group_spinner);
-            chooseBirthdate = view.FindViewById<TextInputEditText>(Resource.Id.choose_birthdate);
-            confirmButton = view.FindViewById<FloatingActionButton>(Resource.Id.confirm_fab);
+            this.nameLayout = view.FindViewById<TextInputLayout>(Resource.Id.name_layout);
+            this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
+            this.birthdateLayout = view.FindViewById<TextInputLayout>(Resource.Id.birthdate_layout);
+            this.confirmButton = view.FindViewById<FloatingActionButton>(Resource.Id.confirm_fab);
 
             return view;
         }
 
         public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            var adapter = ArrayAdapter.CreateFromResource(Activity, Resource.Array.group_array, Android.Resource.Layout.SimpleSpinnerItem);
-            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            groupSpinner.Adapter = adapter;
+            base.OnViewCreated(view, savedInstanceState);
+
+            if (this.studentFilter != null)
+            {
+                this.nameLayout.EditText.Text = this.studentFilter.Name;
+                this.groupLayout.EditText.Text = this.studentFilter.Group;
+                this.birthdateLayout.EditText.Text = this.studentFilter.Birthdate == default(DateTime) ? string.Empty : this.studentFilter.Birthdate.ToShortDateString();
+            }
+
+            ((AppCompatActivity)Activity).SupportActionBar.Title = GetString(Resource.String.filter_title);
+
+            this.groupDialog = new AlertDialog.Builder(this.Context);
+            var adapter = ArrayAdapter.CreateFromResource(this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
+            this.groupDialog.SetAdapter(adapter, this.OnItemClick);
+
+            this.birthdatePickerDialog = new DatePickerDialog(this.Context, this.DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+            this.birthdateLayout.EditText.Touch += this.BirthdateEditTextTouch;
+            this.birthdateLayout.EditText.FocusChange += this.BirthdateEditTextFocusChange;
+            this.confirmButton.Click += this.ConfirmButtonClick;
+            this.groupLayout.EditText.Touch += this.GroupEditTextTouch;
+            this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
+            this.DisplayHomeUp(true);
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -62,69 +90,94 @@ namespace StudentList.Fragments
             switch (item.ItemId)
             {
                 case Resource.Id.action_confirm:
-                    Confirm();
+                    this.Confirm();
                     return true;
                 case Resource.Id.action_reset:
-                    Reset();
+                    this.Reset();
                     return true;
                 case Android.Resource.Id.Home:
-                    Activity.OnBackPressed();
+                    this.Activity.OnBackPressed();
                     return true;
             }
 
             return base.OnOptionsItemSelected(item);
         }
 
-        public override void OnStart()
-        {
-            base.OnStart();
-            chooseBirthdate.Touch += ChooseBirthdateTouch;
-            confirmButton.Click += ConfirmButtonClick;
-            DisplayHomeUp(true);
-        }
-
         public override void OnStop()
         {
             base.OnStop();
-            DisplayHomeUp(false);
-            confirmButton.Click -= ConfirmButtonClick;
+            this.birthdateLayout.EditText.Touch -= this.BirthdateEditTextTouch;
+            this.birthdateLayout.EditText.FocusChange -= this.BirthdateEditTextFocusChange;
+            this.confirmButton.Click -= this.ConfirmButtonClick;
+            this.groupLayout.EditText.Touch -= this.GroupEditTextTouch;
+            this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
+            this.DisplayHomeUp(false);
         }
 
-        private void DateOfBirthDatePickerDialogDateSet(object sender, DatePickerDialog.DateSetEventArgs args)
+        private void BirthdateEditTextTouch(object sender, View.TouchEventArgs e)
         {
-            birthdate = args.Date;
-            chooseBirthdate.Text = args.Date.ToShortDateString();
+            if (e.Event.Action == MotionEventActions.Down)
+            {
+                this.birthdatePickerDialog.Show();
+            }
+        }
+
+        private void BirthdateEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
+        {
+            if (e.HasFocus)
+            {
+                this.birthdatePickerDialog.Show();
+            }
+        }
+
+        private void GroupEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
+        {
+            if (e.HasFocus)
+            {
+                this.groupDialog.Show();
+            }
+        }
+
+        private void GroupEditTextTouch(object sender, View.TouchEventArgs e)
+        {
+            if (e.Event.Action == MotionEventActions.Down)
+            {
+                this.groupDialog.Show();
+            }
         }
 
         private void ConfirmButtonClick(object sender, EventArgs e)
         {
-            Confirm();
+            this.Confirm();
         }
 
-        private void ChooseBirthdateTouch(object sender, View.TouchEventArgs e)
+        private void OnItemClick(object sender, DialogClickEventArgs e)
         {
-            if (e.Event.Action == MotionEventActions.Down)
-            {
-                var datePickerDialog = new DatePickerDialog(Context, DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
-                datePickerDialog.Show();
-            }
+            this.groupLayout.EditText.Text = this.Resources.GetStringArray(Resource.Array.group_array)[e.Which];
+        }
+
+        private void DateOfBirthDatePickerDialogDateSet(object sender, DatePickerDialog.DateSetEventArgs args)
+        {
+            this.birthdate = args.Date;
+            this.birthdateLayout.EditText.Text = args.Date.ToShortDateString();
         }
 
         private void Confirm()
         {
-            StudentFilter studentFilter = new StudentFilter() { Name = nameEditText.Text, Group = groupSpinner.SelectedItem.ToString(), Birthdate = birthdate };
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(studentFilter)).Commit();
+            StudentFilter studentFilter = new StudentFilter() { Name = this.nameLayout.EditText.Text, Group = this.groupLayout.EditText.Text, Birthdate = this.birthdate };
+            this.FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(studentFilter)).Commit();
         }
 
         private void DisplayHomeUp(bool trigger)
         {
-            ((AppCompatActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && Activity.SupportFragmentManager.BackStackEntryCount > 0);
+            ((AppCompatActivity)this.Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && this.Activity.SupportFragmentManager.BackStackEntryCount > 0);
         }
 
         private void Reset()
         {
-            nameEditText.Text = string.Empty;
-            chooseBirthdate.Text = string.Empty;
+            this.nameLayout.EditText.Text = string.Empty;
+            this.groupLayout.EditText.Text = string.Empty;
+            this.birthdateLayout.EditText.Text = string.Empty;
         }
     }
 }

@@ -10,6 +10,7 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Util;
 using Android.Views;
@@ -35,7 +36,7 @@ namespace StudentList.Fragments
         private TextView studentsCountTextView;
         private ImageView phoneImageView;
 
-        private int studentsCount;
+        private bool newStudent;
         private bool matchesFound;
 
         public StudentListFragment() { }
@@ -43,27 +44,6 @@ namespace StudentList.Fragments
         public StudentListFragment(StudentFilter studentFilter)
         {
             this.studentFilter = studentFilter;
-        }
-
-        public override async void OnViewCreated(View view, Bundle savedInstanceState)
-        {
-            this.layoutManager = new LinearLayoutManager(Activity);
-            this.studentAdapter = new StudentAdapter(recyclerView);
-            this.repository = new StudentsRepository();
-
-            this.students = await this.repository.GetStudentsAsync(studentFilter);
-            this.studentFilter = null;
-
-            this.loadingProgressBar.Visibility = ViewStates.Invisible;
-
-            this.studentAdapter.SetItems(this.students);
-
-            this.recyclerView.SetLayoutManager(this.layoutManager);
-            this.recyclerView.SetAdapter(this.studentAdapter);
-
-            this.matchesFound = students.Count > 0 ? true : false;
-            this.filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
-            this.studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,10 +54,40 @@ namespace StudentList.Fragments
             filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
             loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
             studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
-            //phoneImageView = view.FindViewById<ImageView>(Resource.Id.phone_image);
+
             HasOptionsMenu = true;
 
+            ((AppCompatActivity)Activity).SupportActionBar.Title = GetString(Resource.String.app_name);
+
             return view;
+        }
+
+        public override async void OnViewCreated(View view, Bundle savedInstanceState)
+        {
+            this.layoutManager = new LinearLayoutManager(this.Activity);
+            this.studentAdapter = new StudentAdapter(this.recyclerView);
+            this.repository = new StudentsRepository();
+
+            if (this.students == null)
+            {
+                this.students = await this.repository.GetStudentsAsync(this.studentFilter);
+            }
+            else if (newStudent)
+            {
+                this.students = await this.repository.GetStudentsAsync(null);
+                this.newStudent = false;
+            }
+
+            this.loadingProgressBar.Visibility = ViewStates.Invisible;
+
+            this.studentAdapter.SetItems(this.students);
+
+            this.recyclerView.SetLayoutManager(this.layoutManager);
+            this.recyclerView.SetAdapter(this.studentAdapter);
+
+            this.matchesFound = this.students.Count > 0 ? true : false;
+            this.filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
+            this.studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -94,6 +104,7 @@ namespace StudentList.Fragments
                     return true;
                 case Resource.Id.menu_add_student:
                     ShowStudentInfo(string.Empty, true);
+                    newStudent = true;
                     return true;
                 case Resource.Id.menu_search:
                     FilterStudents();
@@ -127,7 +138,7 @@ namespace StudentList.Fragments
 
         private void FilterStudents()
         {
-            FilterStudentsFragment filterStudents = new FilterStudentsFragment();
+            FilterStudentsFragment filterStudents = new FilterStudentsFragment(studentFilter);
             FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
         }
 
@@ -140,6 +151,11 @@ namespace StudentList.Fragments
         private void StudentAdapterItemClick(object sender, string e)
         {
             ShowStudentInfo(e);
+        }
+
+        public override void OnDestroy()
+        {
+            System.Diagnostics.Debug.Write("destroy");
         }
     }
 }

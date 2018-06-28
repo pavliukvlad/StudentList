@@ -72,7 +72,7 @@ namespace StudentList
             if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
             if (!string.IsNullOrWhiteSpace(studentFilter.Group))
-                temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower());
+                temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower() | studentFilter.Group == "Any");
             if (studentFilter.Birthdate != default(DateTime))
                 temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
             await Task.Delay(1000);

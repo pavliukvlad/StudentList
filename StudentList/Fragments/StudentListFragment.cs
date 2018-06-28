@@ -92,6 +92,7 @@ namespace StudentList.Fragments
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
+            inflater.Inflate(Resource.Menu.top_menu, menu);
             base.OnCreateOptionsMenu(menu, inflater);
         }
 

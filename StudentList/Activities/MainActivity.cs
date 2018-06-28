@@ -21,28 +21,18 @@ namespace StudentList
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            SetContentView(Resource.Layout.activity_main);
 
-            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-            ShowStudentList();
-        }
+            this.SetContentView(Resource.Layout.activity_main);
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
-        {
-            MenuInflater.Inflate(Resource.Menu.top_menu, menu);
-            return base.OnCreateOptionsMenu(menu);
-        }
-
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            return base.OnOptionsItemSelected(item);
+            var toolbar = this.FindViewById<Toolbar>(Resource.Id.toolbar);
+            this.SetSupportActionBar(toolbar);
+            this.ShowStudentList();
         }
 
         private void ShowStudentList()
         {
             var listFragment = new StudentListFragment();
-            SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, listFragment).Commit();
+            this.SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, listFragment).Commit();
         }
     }
 }

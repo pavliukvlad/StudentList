@@ -13,11 +13,12 @@ using Android.Widget;
 
 namespace StudentList.Model
 {
-    [Serializable]
     public class StudentFilter
     {
         public string Name { get; set; }
+
         public string Group { get; set; }
+
         public DateTime Birthdate { get; set; }
     }
 }

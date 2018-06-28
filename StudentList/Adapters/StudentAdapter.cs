@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Android.Content;
 using Android.Support.V7.Widget;
 using Android.Views;
@@ -12,12 +13,12 @@ namespace StudentList.Adapters
     {
         public event EventHandler<string> ItemClick;
 
-        public IList<Student> students { get; set; }
+        private IList<Student> students;
 
         private Context parentContext;
-        private RecyclerView recyclerView;
+        private readonly RecyclerView recyclerView;
 
-        public override int ItemCount => students.Count;
+        public override int ItemCount => this.students.Count;
 
         public StudentAdapter(RecyclerView recyclerView)
         {
@@ -28,32 +29,36 @@ namespace StudentList.Adapters
         {
             StudentViewHolder vh = holder as StudentViewHolder;
 
-            vh.Info.Text = string.Format(parentContext.GetString(Resource.String.student_info_pattern),
-               students[position].Name,
-                students[position].Birthdate.ToShortDateString(),
-                students[position].University,
-                students[position].GroupName);
-            vh.Id = students[position].Id;
-            vh.SetPhoneIconVisible(students[position].Phone);
+            var cultureSettings = new CultureInfo("en-Us");
+            vh.Info.Text = string.Format(
+                cultureSettings,
+                this.parentContext.GetString(Resource.String.student_info_pattern),
+               this.students[position].Name,
+                this.students[position].Birthdate.ToShortDateString(),
+                this.students[position].University,
+                this.students[position].GroupName);
+
+            vh.Id = this.students[position].Id;
+            vh.SetPhoneIconVisible(this.students[position].Phone);
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            parentContext = parent.Context;
-            View itemView = LayoutInflater.From(parentContext).Inflate(Resource.Layout.student_cart, parent, false);
-            StudentViewHolder viewHolder = new StudentViewHolder(itemView, OnClick);
+            this.parentContext = parent.Context;
+            var itemView = LayoutInflater.From(this.parentContext).Inflate(Resource.Layout.student_cart, parent, false);
+            var viewHolder = new StudentViewHolder(itemView, this.OnClick);
             return viewHolder;
         }
 
         public void SetItems(IList<Student> items)
         {
-            students = items;
-            NotifyDataSetChanged();
+            this.students = items;
+            this.NotifyDataSetChanged();
         }
 
         private void OnClick(string id)
         {
-            ItemClick?.Invoke(this, id);
+            this.ItemClick?.Invoke(this, id);
         }
     }
 }

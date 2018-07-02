@@ -11,6 +11,12 @@
         <RelativeLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
+            <ImageView
+                android:layout_height="70dp"
+                android:layout_width="70dp"
+                android:layout_marginTop="@dimen/cart_margin"
+                android:id="@+id/profile_photo"
+                android:src="@drawable/person_photo" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -19,6 +25,7 @@
                 android:textSize="@dimen/cart_text_size"
                 android:id="@+id/textView"
                 android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@id/profile_photo"
                 android:layout_margin="@dimen/cart_margin" />
             <ImageView
                 android:layout_width="@dimen/phone_icon_height_and_width"

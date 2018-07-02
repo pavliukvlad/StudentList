@@ -35,7 +35,6 @@ namespace StudentList.Fragments
         private TextView filteringResultTextView;
         private ProgressBar loadingProgressBar;
         private TextView studentsCountTextView;
-        private ImageView phoneImageView;
 
         private bool matchesFound;
 

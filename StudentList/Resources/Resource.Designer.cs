@@ -2041,6 +2041,9 @@ namespace StudentList
 			// aapt resource value: 0x7f0700a9
 			public const int phone_icon_height_and_width = 2131165353;
 			
+			// aapt resource value: 0x7f0700aa
+			public const int profile_photo_height_and_width = 2131165354;
+			
 			// aapt resource value: 0x7f07009e
 			public const int start_or_end_margin = 2131165342;
 			

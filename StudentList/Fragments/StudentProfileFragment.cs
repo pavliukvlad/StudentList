@@ -235,9 +235,9 @@ namespace StudentList.Fragments
 
         private void IsEmptyOrWhiteSpace(string targetText, TextInputLayout targetLayout, ref bool validation)
         {
-            if (string.IsNullOrEmpty(targetText) || string.IsNullOrWhiteSpace(targetText))
+            if (string.IsNullOrWhiteSpace(targetText))
             {
-                targetLayout.Error = " ";
+                targetLayout.Error = null;
                 validation = true;
             }
             else
@@ -245,25 +245,5 @@ namespace StudentList.Fragments
                 targetLayout.Error = string.Empty;
             }
         }
-
-        //private bool Validate(params TextInputLayout[] inputLayout)
-        //{
-        //    bool validation = false;
-
-        //    for (int i = 0; i < inputLayout.Length; i++)
-        //    {
-        //        if (string.IsNullOrWhiteSpace(inputLayout[i].EditText.Text) || string.IsNullOrEmpty(inputLayout[i].EditText.Text))
-        //        {
-        //            inputLayout[i].Error = " ";
-        //            validation = true;
-        //        }
-        //        else
-        //        {
-        //            inputLayout[i].Error = string.Empty;
-        //        }
-        //    }
-
-        //    return validation;
-        //}
     }
 }

@@ -61,10 +61,10 @@
   <ItemGroup>
     <Compile Include="Adapters\StudentAdapter.cs" />
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
-    <Compile Include="Model\Student.cs" />
-    <Compile Include="Model\StudentFilter.cs" />
+    <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\StudentFilter.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
-    <Compile Include="ViewHolder\StudentViewHolder.cs" />
+    <Compile Include="ViewHolders\StudentViewHolder.cs" />
     <Compile Include="Constants\IntentConstant.cs" />
     <Compile Include="Fragments\StudentListFragment.cs" />
     <Compile Include="Fragments\StudentProfileFragment.cs" />

@@ -149,14 +149,14 @@ namespace StudentList.Fragments
             }
         }
 
-        private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
-        {
-            this.birthdateLayout.EditText.Text = e.Date.ToShortDateString();
-        }
-
         private void SaveButton_Click(object sender, EventArgs e)
         {
             this.Confirm();
+        }
+
+        private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
+        {
+            this.birthdateLayout.EditText.Text = e.Date.ToShortDateString();
         }
 
         private void Confirm()
@@ -168,7 +168,7 @@ namespace StudentList.Fragments
             string phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
                 : this.phoneLayout.EditText.Text.TrimEnd();
 
-            if (this.Validate(name, birthdate, group, uni))
+            if (!this.Validate(name, birthdate, group, uni))
             {
                 string id = Guid.NewGuid().ToString();
 
@@ -191,9 +191,9 @@ namespace StudentList.Fragments
                     this.studentRepository.ChangeStudentById(
                         this.StudentId, name, Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture), group, uni, phone);
                 }
-            }
 
-            this.Activity.OnBackPressed();
+                this.Activity.OnBackPressed();
+            }
         }
 
         private void DisplayHomeUp(bool trigger)
@@ -224,9 +224,9 @@ namespace StudentList.Fragments
             return validation;
         }
 
-        private void IsEmptyOrWhiteSpace(string name, TextInputLayout targetLayout, ref bool validation)
+        private void IsEmptyOrWhiteSpace(string targetText, TextInputLayout targetLayout, ref bool validation)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrEmpty(targetText) || string.IsNullOrWhiteSpace(targetText))
             {
                 targetLayout.Error = " ";
                 validation = true;

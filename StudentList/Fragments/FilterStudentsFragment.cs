@@ -22,7 +22,7 @@ namespace StudentList.Fragments
         private DatePickerDialog birthdatePickerDialog;
 
         private DateTime birthdate;
-        private StudentFilter studentFilter;
+        private readonly StudentFilter studentFilter;
 
         public FilterStudentsFragment(StudentFilter studentFilter)
         {
@@ -55,42 +55,27 @@ namespace StudentList.Fragments
             {
                 this.nameLayout.EditText.Text = this.studentFilter.Name;
                 this.groupLayout.EditText.Text = this.studentFilter.Group;
-                this.birthdateLayout.EditText.Text = this.studentFilter.Birthdate == default(DateTime) ? string.Empty : this.studentFilter.Birthdate.ToShortDateString();
+                this.birthdateLayout.EditText.Text = this.studentFilter.Birthdate == default(DateTime) ? string.Empty
+                    : this.studentFilter.Birthdate.ToShortDateString();
             }
 
-            ((AppCompatActivity)Activity).SupportActionBar.Title = GetString(Resource.String.filter_title);
+            ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.GetString(Resource.String.filter_title);
 
             this.groupDialog = new AlertDialog.Builder(this.Context);
             var adapter = ArrayAdapter.CreateFromResource(
-                this.Context,
-                Resource.Array.group_array,
-                Android.Resource.Layout.SimpleListItem1);
+                this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
 
             this.groupDialog.SetAdapter(adapter, this.OnItemClick);
 
             this.birthdatePickerDialog = new DatePickerDialog(
-                this.Context,
-                this.DateOfBirthDatePickerDialogDateSet,
-                DateTime.Now.Year,
-                DateTime.Now.Month - 1,
-                DateTime.Now.Day);
-        }
-
-        public override void OnStart()
-        {
-            base.OnStart();
-            this.birthdateLayout.EditText.Touch += this.BirthdateEditTextTouch;
-            this.birthdateLayout.EditText.FocusChange += this.BirthdateEditTextFocusChange;
-            this.confirmButton.Click += this.ConfirmButtonClick;
-            this.groupLayout.EditText.Touch += this.GroupEditTextTouch;
-            this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
-            this.DisplayHomeUp(true);
+                this.Context, this.DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             menu.Clear();
             inflater.Inflate(Resource.Menu.confirm_menu, menu);
+
             base.OnCreateOptionsMenu(menu, inflater);
         }
 
@@ -112,9 +97,23 @@ namespace StudentList.Fragments
             return base.OnOptionsItemSelected(item);
         }
 
+        public override void OnStart()
+        {
+            base.OnStart();
+
+            this.birthdateLayout.EditText.Touch += this.BirthdateEditTextTouch;
+            this.birthdateLayout.EditText.FocusChange += this.BirthdateEditTextFocusChange;
+            this.confirmButton.Click += this.ConfirmButtonClick;
+            this.groupLayout.EditText.Touch += this.GroupEditTextTouch;
+            this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
+
+            this.DisplayHomeUp(true);
+        }
+
         public override void OnStop()
         {
             base.OnStop();
+
             this.birthdateLayout.EditText.Touch -= this.BirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange -= this.BirthdateEditTextFocusChange;
             this.confirmButton.Click -= this.ConfirmButtonClick;
@@ -181,9 +180,9 @@ namespace StudentList.Fragments
             };
 
             this.FragmentManager
-                .BeginTransaction()
-                .Replace(Resource.Id.main_container, new StudentListFragment(studentFilter))
-                .Commit();
+                  .BeginTransaction()
+                  .Replace(Resource.Id.main_container, new StudentListFragment(studentFilter))
+                  .Commit();
         }
 
         private void DisplayHomeUp(bool trigger)

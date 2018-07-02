@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -46,18 +47,25 @@ namespace StudentList.Fragments
             this.studentFilter = studentFilter;
         }
 
+        public override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+
+            this.repository = new StudentsRepository();
+
+            this.HasOptionsMenu = true;
+        }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             var view = inflater.Inflate(Resource.Layout.recycle_holder, container, false);
 
-            recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
-            filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
-            loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
-            studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
+            this.recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
+            this.filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
+            this.loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
+            this.studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
 
-            HasOptionsMenu = true;
-
-            ((AppCompatActivity)Activity).SupportActionBar.Title = GetString(Resource.String.app_name);
+            ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.GetString(Resource.String.app_name);
 
             return view;
         }
@@ -66,13 +74,12 @@ namespace StudentList.Fragments
         {
             this.layoutManager = new LinearLayoutManager(this.Activity);
             this.studentAdapter = new StudentAdapter(this.recyclerView);
-            this.repository = new StudentsRepository();
 
             if (this.students == null)
             {
                 this.students = await this.repository.GetStudentsAsync(this.studentFilter);
             }
-            else if (newStudent)
+            else if (this.newStudent)
             {
                 this.students = await this.repository.GetStudentsAsync(null);
                 this.newStudent = false;
@@ -86,13 +93,28 @@ namespace StudentList.Fragments
             this.recyclerView.SetAdapter(this.studentAdapter);
 
             this.matchesFound = this.students.Count > 0 ? true : false;
-            this.filteringResultTextView.Visibility = !matchesFound ? ViewStates.Visible : ViewStates.Invisible;
-            this.studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
+            this.filteringResultTextView.Visibility = !this.matchesFound ? ViewStates.Visible : ViewStates.Invisible;
+            this.studentsCountTextView.Text = string.Format(CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.students.Count);
+        }
+
+        public override void OnStart()
+        {
+            base.OnStart();
+
+            this.studentAdapter.ItemClick += this.StudentAdapterItemClick;
+        }
+
+        public override void OnStop()
+        {
+            base.OnStop();
+
+            this.studentAdapter.ItemClick -= this.StudentAdapterItemClick;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
         {
             inflater.Inflate(Resource.Menu.top_menu, menu);
+
             base.OnCreateOptionsMenu(menu, inflater);
         }
 
@@ -101,46 +123,43 @@ namespace StudentList.Fragments
             switch (item.ItemId)
             {
                 case Resource.Id.menu_reset:
-                    Reset();
+                    this.Reset();
                     return true;
                 case Resource.Id.menu_add_student:
-                    ShowStudentInfo(string.Empty, true);
-                    newStudent = true;
+                    this.ShowStudentInfo(string.Empty, true);
+                    this.newStudent = true;
                     return true;
                 case Resource.Id.menu_search:
-                    FilterStudents();
+                    this.FilterStudents();
                     return true;
             }
 
             return base.OnOptionsItemSelected(item);
         }
 
-        public override void OnStart()
+
+        private void StudentAdapterItemClick(object sender, string e)
         {
-            base.OnStart();
-            studentAdapter.ItemClick += StudentAdapterItemClick;
+            this.ShowStudentInfo(e);
         }
 
-        public override void OnStop()
+        private async void Reset()
         {
-            base.OnStop();
-            studentAdapter.ItemClick -= StudentAdapterItemClick;
-        }
+            this.loadingProgressBar.Visibility = ViewStates.Visible;
+            this.filteringResultTextView.Visibility = ViewStates.Invisible;
 
-        public async void Reset()
-        {
-            loadingProgressBar.Visibility = ViewStates.Visible;
-            filteringResultTextView.Visibility = ViewStates.Invisible;
-            students = await repository.GetStudentsAsync(null);
-            studentsCountTextView.Text = string.Format(GetString(Resource.String.student_count_pattern), students.Count);
-            loadingProgressBar.Visibility = ViewStates.Invisible;
-            studentAdapter.SetItems(students);
+            this.students = await this.repository.GetStudentsAsync(null);
+            this.studentsCountTextView.Text = string.Format(
+                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.students.Count);
+
+            this.loadingProgressBar.Visibility = ViewStates.Invisible;
+            this.studentAdapter.SetItems(this.students);
         }
 
         private void FilterStudents()
         {
-            FilterStudentsFragment filterStudents = new FilterStudentsFragment(studentFilter);
-            FragmentManager
+            var filterStudents = new FilterStudentsFragment(this.studentFilter);
+            this.FragmentManager
                 .BeginTransaction()
                 .Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null)
                 .Commit();
@@ -149,20 +168,10 @@ namespace StudentList.Fragments
         private void ShowStudentInfo(string studentId, bool newStudent = false)
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
-            FragmentManager
+            this.FragmentManager
                 .BeginTransaction()
                 .Replace(Resource.Id.main_container, studentDetails)
                 .AddToBackStack(null).Commit();
-        }
-
-        private void StudentAdapterItemClick(object sender, string e)
-        {
-            ShowStudentInfo(e);
-        }
-
-        public override void OnDestroy()
-        {
-            System.Diagnostics.Debug.Write("destroy");
         }
     }
 }

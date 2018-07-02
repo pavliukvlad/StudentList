@@ -63,6 +63,7 @@
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentFilter.cs" />
+    <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="ViewHolders\StudentViewHolder.cs" />
     <Compile Include="Constants\IntentConstant.cs" />

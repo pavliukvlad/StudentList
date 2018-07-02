@@ -18,6 +18,7 @@ using Java.Lang;
 using StudentList;
 using StudentList.Constants;
 using StudentList.Model;
+using StudentList.Models;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
@@ -27,6 +28,8 @@ namespace StudentList.Fragments
         private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
 
         private bool NewStudent => this.Arguments.GetBoolean(IntentConstant.NewStudent, false);
+
+        private Dictionary<string, TextInputLayout> layouts;
 
         private IStudentRepository studentRepository;
 
@@ -51,6 +54,7 @@ namespace StudentList.Fragments
             base.OnCreate(savedInstanceState);
 
             this.studentRepository = new StudentsRepository();
+            this.layouts = new Dictionary<string, TextInputLayout>();
             this.HasOptionsMenu = true;
         }
 
@@ -64,6 +68,11 @@ namespace StudentList.Fragments
             this.universityLayout = view.FindViewById<TextInputLayout>(Resource.Id.uni_layout);
             this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
             this.phoneLayout = view.FindViewById<TextInputLayout>(Resource.Id.phone_layout);
+
+            layouts.Add("name", nameLayout);
+            layouts.Add("birthdate", birthdateLayout);
+            layouts.Add("group", groupLayout);
+            layouts.Add("uni", universityLayout);
 
             return view;
         }
@@ -95,7 +104,7 @@ namespace StudentList.Fragments
             switch (item.ItemId)
             {
                 case Resource.Id.action_confirm:
-                    this.Confirm();
+                    this.ConfirmAsync();
                     return true;
                 case Resource.Id.action_reset:
                     this.Reset();
@@ -112,7 +121,7 @@ namespace StudentList.Fragments
         {
             base.OnStart();
 
-            this.saveButton.Click += this.SaveButton_Click;
+            this.saveButton.Click += this.SaveButtonClick;
             this.birthdateLayout.EditText.Touch += this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange += this.OnBirthdateEditTextFocus;
             this.DisplayHomeUp(true);
@@ -122,7 +131,7 @@ namespace StudentList.Fragments
         {
             base.OnStop();
 
-            this.saveButton.Click -= this.SaveButton_Click;
+            this.saveButton.Click -= this.SaveButtonClick;
             this.birthdateLayout.Touch -= this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange -= this.OnBirthdateEditTextFocus;
             this.DisplayHomeUp(false);
@@ -149,9 +158,9 @@ namespace StudentList.Fragments
             }
         }
 
-        private void SaveButton_Click(object sender, EventArgs e)
+        private void SaveButtonClick(object sender, EventArgs e)
         {
-            this.Confirm();
+            this.ConfirmAsync();
         }
 
         private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
@@ -159,7 +168,7 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.Text = e.Date.ToShortDateString();
         }
 
-        private void Confirm()
+        private async Task ConfirmAsync()
         {
             string name = this.nameLayout.EditText.Text.TrimEnd();
             string birthdate = this.birthdateLayout.EditText.Text;
@@ -168,31 +177,38 @@ namespace StudentList.Fragments
             string phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
                 : this.phoneLayout.EditText.Text.TrimEnd();
 
-            if (!this.Validate(name, birthdate, group, uni))
+            if (this.NewStudent)
             {
-                string id = Guid.NewGuid().ToString();
+                var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni);
 
-                if (this.NewStudent)
-                {
-                    var student = new Student()
-                    {
-                        Id = id,
-                        Name = name,
-                        Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
-                        University = uni,
-                        GroupName = group,
-                        Phone = phone
-                    };
-
-                    this.studentRepository.AddNewStudent(student);
-                }
+                if (!validationResult.IsValid)
+                    this.SetErrors(validationResult);
                 else
-                {
-                    this.studentRepository.ChangeStudentById(
-                        this.StudentId, name, Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture), group, uni, phone);
-                }
+                    this.ShowStudentList();
+            }
+            else
+            {
+                var validationResult = await this.studentRepository.ChangeStudentById(
+                    this.StudentId, name, birthdate, group, uni, phone);
 
-                this.ShowStudentList();
+                if (!validationResult.IsValid)
+                    this.SetErrors(validationResult);
+                else
+                    this.ShowStudentList();
+            }
+        }
+
+        private void SetErrors(ValidationResult validationResult)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                foreach (var ctr in this.layouts)
+                {
+                    if (error.Key == ctr.Key)
+                    {
+                        ctr.Value.Error = " ";
+                    }
+                }
             }
         }
 

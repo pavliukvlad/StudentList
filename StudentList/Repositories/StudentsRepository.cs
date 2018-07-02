@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,6 +13,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using StudentList.Model;
+using StudentList.Models;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList
@@ -26,26 +28,72 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        public async Task AddNewStudent(Student student)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni)
         {
-            if (student != null)
+            var validationResult = new ValidationResult();
+
+            this.Validate(name, birthdate, group, uni, validationResult);
+
+            if (validationResult.IsValid)
             {
+                var student = new Student()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = name,
+                    Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
+                    GroupName = group,
+                    University = uni
+                };
+
                 students.Add(student);
+            }
+
+            return validationResult;
+        }
+
+        private void Validate(string name, string birthdate, string group, string uni, ValidationResult validationResult)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                validationResult.Errors.Add(nameof(name), new List<string>() { "Empty field" });
+            }
+
+            if (string.IsNullOrWhiteSpace(birthdate))
+            {
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { "Empty field" });
+            }
+
+            if (string.IsNullOrWhiteSpace(group))
+            {
+                validationResult.Errors.Add(nameof(group), new List<string>() { "Empty field" });
+            }
+
+            if (string.IsNullOrWhiteSpace(uni))
+            {
+                validationResult.Errors.Add(nameof(uni), new List<string>() { "Empty field" });
             }
         }
 
-        public async Task ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
         {
-            var student = students.Where(s => s.Id == studentId).FirstOrDefault();
+            var validationResult = new ValidationResult();
+            this.Validate(name, birthdate, group, uni, validationResult);
 
-            if (student != null)
+            if (validationResult.IsValid)
             {
-                student.Name = name;
-                student.Birthdate = birthdate;
-                student.GroupName = group;
-                student.University = uni;
-                student.Phone = phone;
+                var student = students.Where(s => s.Id == studentId).FirstOrDefault();
+
+                if (student != null)
+                {
+                    student.Name = name;
+                    student.Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture);
+                    student.GroupName = group;
+                    student.University = uni;
+                    student.Phone = phone;
+                }
             }
+
+            return validationResult;
         }
 
         public async Task<Student> GetStudentById(string id)

@@ -93,8 +93,12 @@ namespace StudentList.Fragments
             this.recyclerView.SetAdapter(this.studentAdapter);
 
             this.matchesFound = this.students.Count > 0 ? true : false;
-            this.filteringResultTextView.Visibility = !this.matchesFound ? ViewStates.Visible : ViewStates.Invisible;
-            this.studentsCountTextView.Text = string.Format(CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.students.Count);
+            this.filteringResultTextView.Visibility = !this.matchesFound ? ViewStates.Visible
+                : ViewStates.Invisible;
+
+            this.studentsCountTextView.Text = string.Format(
+                CultureInfo.InvariantCulture, this.GetString(
+                    Resource.String.student_count_pattern), this.students.Count);
         }
 
         public override void OnStart()
@@ -161,7 +165,8 @@ namespace StudentList.Fragments
             var filterStudents = new FilterStudentsFragment(this.studentFilter);
             this.FragmentManager
                 .BeginTransaction()
-                .Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null)
+                .Replace(Resource.Id.main_container, filterStudents)
+                .AddToBackStack(null)
                 .Commit();
         }
 
@@ -171,7 +176,8 @@ namespace StudentList.Fragments
             this.FragmentManager
                 .BeginTransaction()
                 .Replace(Resource.Id.main_container, studentDetails)
-                .AddToBackStack(null).Commit();
+                .AddToBackStack(null)
+                .Commit();
         }
     }
 }

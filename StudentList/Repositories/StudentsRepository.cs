@@ -28,23 +28,24 @@ namespace StudentList
 
         public async Task AddNewStudent(Student student)
         {
-            students.Add(student);
+            if (student != null)
+            {
+                students.Add(student);
+            }
         }
 
         public async Task ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone)
         {
             var student = students.Where(s => s.Id == studentId).FirstOrDefault();
 
-            if (student is null)
+            if (student != null)
             {
-                return;
+                student.Name = name;
+                student.Birthdate = birthdate;
+                student.GroupName = group;
+                student.University = uni;
+                student.Phone = phone;
             }
-
-            student.Name = name;
-            student.Birthdate = birthdate;
-            student.GroupName = group;
-            student.University = uni;
-            student.Phone = phone;
         }
 
         public async Task<Student> GetStudentById(string id)

@@ -15,24 +15,26 @@ namespace StudentList.Activities
 {
     public class StudentViewHolder : RecyclerView.ViewHolder
     {
-        public TextView Info { get; set; }
-        public ImageView phoneImage { get; set; }
-
-        public string Id { get; set; }
-        public string Phone { get; set; }
-
         public StudentViewHolder(View itemView, Action<string> listener)
             : base(itemView)
         {
-            Info = itemView.FindViewById<TextView>(Resource.Id.textView);
-            phoneImage = itemView.FindViewById<ImageView>(Resource.Id.phone_image);
+            this.Info = itemView.FindViewById<TextView>(Resource.Id.textView);
+            this.PhoneImage = itemView.FindViewById<ImageView>(Resource.Id.phone_image);
 
-            itemView.Click += (sender, e) => { listener(Id); };
+            itemView.Click += (sender, e) => { listener(this.Id); };
         }
 
         public void SetPhoneIconVisible(string phone)
         {
-            phoneImage.Visibility = phone == null ? ViewStates.Invisible : ViewStates.Visible;
+            this.PhoneImage.Visibility = phone == null ? ViewStates.Invisible : ViewStates.Visible;
         }
+
+        public TextView Info { get; set; }
+
+        public ImageView PhoneImage { get; set; }
+
+        public string Id { get; set; }
+
+        public string Phone { get; set; }
     }
 }

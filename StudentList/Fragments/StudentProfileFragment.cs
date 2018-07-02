@@ -219,7 +219,7 @@ namespace StudentList.Fragments
             this.IsEmptyOrWhiteSpace(name, this.nameLayout, ref validation);
             this.IsEmptyOrWhiteSpace(birthdate, this.birthdateLayout, ref validation);
             this.IsEmptyOrWhiteSpace(group, this.groupLayout, ref validation);
-            this.IsEmptyOrWhiteSpace(uni, this.universityLayout,  ref validation);
+            this.IsEmptyOrWhiteSpace(uni, this.universityLayout, ref validation);
 
             return validation;
         }

@@ -31,7 +31,7 @@ namespace StudentList
 
         private void ShowStudentList()
         {
-            var listFragment = new StudentListFragment();
+            var listFragment = new StudentListFragment(null);
             this.SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, listFragment).Commit();
         }
     }

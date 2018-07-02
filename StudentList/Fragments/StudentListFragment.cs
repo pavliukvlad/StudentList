@@ -37,10 +37,7 @@ namespace StudentList.Fragments
         private TextView studentsCountTextView;
         private ImageView phoneImageView;
 
-        private bool newStudent;
         private bool matchesFound;
-
-        public StudentListFragment() { }
 
         public StudentListFragment(StudentFilter studentFilter)
         {
@@ -78,11 +75,6 @@ namespace StudentList.Fragments
             if (this.students == null)
             {
                 this.students = await this.repository.GetStudentsAsync(this.studentFilter);
-            }
-            else if (this.newStudent)
-            {
-                this.students = await this.repository.GetStudentsAsync(null);
-                this.newStudent = false;
             }
 
             this.loadingProgressBar.Visibility = ViewStates.Invisible;
@@ -131,7 +123,6 @@ namespace StudentList.Fragments
                     return true;
                 case Resource.Id.menu_add_student:
                     this.ShowStudentInfo(string.Empty, true);
-                    this.newStudent = true;
                     return true;
                 case Resource.Id.menu_search:
                     this.FilterStudents();
@@ -140,7 +131,6 @@ namespace StudentList.Fragments
 
             return base.OnOptionsItemSelected(item);
         }
-
 
         private void StudentAdapterItemClick(object sender, string e)
         {

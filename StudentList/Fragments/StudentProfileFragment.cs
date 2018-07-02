@@ -192,8 +192,17 @@ namespace StudentList.Fragments
                         this.StudentId, name, Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture), group, uni, phone);
                 }
 
-                this.Activity.OnBackPressed();
+                this.ShowStudentList();
             }
+        }
+
+        private void ShowStudentList()
+        {
+            var studentList = new StudentListFragment(null);
+            this.FragmentManager
+                .BeginTransaction()
+                .Replace(Resource.Id.main_container, studentList)
+                .Commit();
         }
 
         private void DisplayHomeUp(bool trigger)

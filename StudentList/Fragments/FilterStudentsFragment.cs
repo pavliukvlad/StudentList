@@ -61,10 +61,19 @@ namespace StudentList.Fragments
             ((AppCompatActivity)Activity).SupportActionBar.Title = GetString(Resource.String.filter_title);
 
             this.groupDialog = new AlertDialog.Builder(this.Context);
-            var adapter = ArrayAdapter.CreateFromResource(this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
+            var adapter = ArrayAdapter.CreateFromResource(
+                this.Context,
+                Resource.Array.group_array,
+                Android.Resource.Layout.SimpleListItem1);
+
             this.groupDialog.SetAdapter(adapter, this.OnItemClick);
 
-            this.birthdatePickerDialog = new DatePickerDialog(this.Context, this.DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
+            this.birthdatePickerDialog = new DatePickerDialog(
+                this.Context,
+                this.DateOfBirthDatePickerDialogDateSet,
+                DateTime.Now.Year,
+                DateTime.Now.Month - 1,
+                DateTime.Now.Day);
         }
 
         public override void OnStart()
@@ -164,13 +173,23 @@ namespace StudentList.Fragments
 
         private void Confirm()
         {
-            StudentFilter studentFilter = new StudentFilter() { Name = this.nameLayout.EditText.Text, Group = this.groupLayout.EditText.Text, Birthdate = this.birthdate };
-            this.FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, new StudentListFragment(studentFilter)).Commit();
+            StudentFilter studentFilter = new StudentFilter()
+            {
+                Name = this.nameLayout.EditText.Text,
+                Group = this.groupLayout.EditText.Text,
+                Birthdate = this.birthdate
+            };
+
+            this.FragmentManager
+                .BeginTransaction()
+                .Replace(Resource.Id.main_container, new StudentListFragment(studentFilter))
+                .Commit();
         }
 
         private void DisplayHomeUp(bool trigger)
         {
-            ((AppCompatActivity)this.Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && this.Activity.SupportFragmentManager.BackStackEntryCount > 0);
+            ((AppCompatActivity)this.Activity).
+                SupportActionBar.SetDisplayHomeAsUpEnabled(trigger && this.Activity.SupportFragmentManager.BackStackEntryCount > 0);
         }
 
         private void Reset()

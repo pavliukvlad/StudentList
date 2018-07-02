@@ -26,32 +26,20 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        public IList<Student> Students => students;
-
-        public int Count => students.Count;
-
-        public Student this[string index]
-        {
-            get
-            {
-                return students.Where(s => s.Id == index).FirstOrDefault();
-            }
-
-            set
-            {
-                var student = students.Where(s => s.Id == index).FirstOrDefault();
-                student = value;
-            }
-        }
-
-        public void AddNewStudent(Student student)
+        public async Task AddNewStudent(Student student)
         {
             students.Add(student);
         }
 
-        public void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone)
+        public async Task ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone)
         {
             var student = students.Where(s => s.Id == studentId).FirstOrDefault();
+
+            if (student is null)
+            {
+                return;
+            }
+
             student.Name = name;
             student.Birthdate = birthdate;
             student.GroupName = group;
@@ -59,23 +47,35 @@ namespace StudentList
             student.Phone = phone;
         }
 
+        public async Task<Student> GetStudentById(string id)
+        {
+            return students.Where(s => s.Id == id).FirstOrDefault();
+        }
+
         public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
         {
             IEnumerable<Student> temp = students;
 
-            if (studentFilter == null)
+            if (studentFilter != null)
             {
-                await Task.Delay(1000);
-                return students;
+                if (!string.IsNullOrWhiteSpace(studentFilter.Name))
+                {
+                    temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
+                }
+
+                if (!string.IsNullOrWhiteSpace(studentFilter.Group))
+                {
+                    temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower() | studentFilter.Group == "Any");
+                }
+
+                if (studentFilter.Birthdate != default(DateTime))
+                {
+                    temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(studentFilter.Name))
-                temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
-            if (!string.IsNullOrWhiteSpace(studentFilter.Group))
-                temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower() | studentFilter.Group == "Any");
-            if (studentFilter.Birthdate != default(DateTime))
-                temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
             await Task.Delay(1000);
+
             return temp.ToList();
         }
     }

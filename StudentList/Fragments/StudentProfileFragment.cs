@@ -18,6 +18,7 @@ using StudentList;
 using StudentList.Constants;
 using StudentList.Model;
 using StudentList.Providers.Interfaces;
+using System.Threading.Tasks;
 
 namespace StudentList.Fragments
 {
@@ -64,17 +65,20 @@ namespace StudentList.Fragments
             return view;
         }
 
-        public override void OnViewCreated(View view, Bundle savedInstanceState)
+        public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
             studentRepository = new StudentsRepository();
+            var selectedStudent = await this.studentRepository.GetStudentById(StudentId);
 
-            ((AppCompatActivity)Activity).SupportActionBar.Title = NewStudent ? GetString(Resource.String.create_student_title) : GetString(Resource.String.edit_student_title) + "" + studentRepository[StudentId].Name;
+            ((AppCompatActivity)Activity).SupportActionBar.Title = NewStudent ? GetString(Resource.String.create_student_title) : 
+                GetString(Resource.String.edit_student_title) + "" + selectedStudent.Name;
+
             saveButton.Text = NewStudent ? GetString(Resource.String.add_new_student_text) : GetString(Resource.String.save_changes_text);
-            nameEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Name;
-            birthdateEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Birthdate.ToShortDateString();
-            universityEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].University;
-            groupEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].GroupName;
-            phoneEditText.EditText.Text = NewStudent ? "" : studentRepository[StudentId].Phone;
+            nameEditText.EditText.Text = NewStudent ? "" : selectedStudent.Name;
+            birthdateEditText.EditText.Text = NewStudent ? "" : selectedStudent.Birthdate.ToShortDateString();
+            universityEditText.EditText.Text = NewStudent ? "" : selectedStudent.University;
+            groupEditText.EditText.Text = NewStudent ? "" : selectedStudent.GroupName;
+            phoneEditText.EditText.Text = NewStudent ? "" : selectedStudent.Phone;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)

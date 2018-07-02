@@ -140,13 +140,19 @@ namespace StudentList.Fragments
         private void FilterStudents()
         {
             FilterStudentsFragment filterStudents = new FilterStudentsFragment(studentFilter);
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null).Commit();
+            FragmentManager
+                .BeginTransaction()
+                .Replace(Resource.Id.main_container, filterStudents).AddToBackStack(null)
+                .Commit();
         }
 
         private void ShowStudentInfo(string studentId, bool newStudent = false)
         {
             var studentDetails = StudentProfileFragment.NewInstance(studentId, newStudent);
-            FragmentManager.BeginTransaction().Replace(Resource.Id.main_container, studentDetails).AddToBackStack(null).Commit();
+            FragmentManager
+                .BeginTransaction()
+                .Replace(Resource.Id.main_container, studentDetails)
+                .AddToBackStack(null).Commit();
         }
 
         private void StudentAdapterItemClick(object sender, string e)

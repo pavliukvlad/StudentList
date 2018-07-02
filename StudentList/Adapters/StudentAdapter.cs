@@ -11,29 +11,27 @@ namespace StudentList.Adapters
 {
     public class StudentAdapter : RecyclerView.Adapter
     {
-        public event EventHandler<string> ItemClick;
-
-        private IList<Student> students;
-
-        private Context parentContext;
         private readonly RecyclerView recyclerView;
-
-        public override int ItemCount => this.students.Count;
+        private IList<Student> students;
+        private Context parentContext;
 
         public StudentAdapter(RecyclerView recyclerView)
         {
             this.recyclerView = recyclerView;
         }
 
+        public event EventHandler<string> ItemClick;
+
+        public override int ItemCount => this.students.Count;
+
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             StudentViewHolder vh = holder as StudentViewHolder;
 
-            var cultureSettings = new CultureInfo("en-Us");
             vh.Info.Text = string.Format(
-                cultureSettings,
+                CultureInfo.InvariantCulture,
                 this.parentContext.GetString(Resource.String.student_info_pattern),
-               this.students[position].Name,
+                this.students[position].Name,
                 this.students[position].Birthdate.ToShortDateString(),
                 this.students[position].University,
                 this.students[position].GroupName);

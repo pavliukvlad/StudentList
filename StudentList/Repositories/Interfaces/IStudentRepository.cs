@@ -15,12 +15,11 @@ namespace StudentList.Providers.Interfaces
 {
     public interface IStudentRepository
     {
-        IList<Student> Students { get; }
-        int Count { get; }
-        Student this[string index] { get; set; }
+        Task AddNewStudent(Student student);
 
-        void AddNewStudent(Student student);
-        void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone);
+        Task ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni, string phone);
+
+        Task<Student> GetStudentById(string id);
 
         Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter);
     }

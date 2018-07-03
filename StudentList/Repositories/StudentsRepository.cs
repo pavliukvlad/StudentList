@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -28,11 +29,9 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni, string phone)
         {
-            var validationResult = new ValidationResult();
-
-            this.Validate(name, birthdate, group, uni, validationResult);
+            var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
@@ -42,11 +41,13 @@ namespace StudentList
                     Name = name,
                     Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
                     GroupName = group,
-                    University = uni
+                    University = uni,
+                    Phone = phone
                 };
 
                 students.Add(student);
             }
+
 
             await Task.Delay(300);
 
@@ -55,8 +56,7 @@ namespace StudentList
 
         public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
         {
-            var validationResult = new ValidationResult();
-            this.Validate(name, birthdate, group, uni, validationResult);
+            var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
@@ -65,7 +65,7 @@ namespace StudentList
                 if (student != null)
                 {
                     student.Name = name;
-                    student.Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture);
+                    student.Birthdate = DateTime.ParseExact(birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     student.GroupName = group;
                     student.University = uni;
                     student.Phone = phone;
@@ -79,7 +79,8 @@ namespace StudentList
 
         public async Task<Student> GetStudentById(string id)
         {
-            await Task.Delay(500);
+            await Task.Delay(300);
+
             return students.Where(s => s.Id == id).FirstOrDefault();
         }
 
@@ -110,8 +111,10 @@ namespace StudentList
             return temp.ToList();
         }
 
-        private void Validate(string name, string birthdate, string group, string uni, ValidationResult validationResult)
+        private ValidationResult Validate(string name, string birthdate, string group, string uni, string phone)
         {
+            var validationResult = new ValidationResult();
+
             if (string.IsNullOrWhiteSpace(name))
             {
                 validationResult.Errors.Add(nameof(name), new List<string>() { "Empty field" });
@@ -131,6 +134,16 @@ namespace StudentList
             {
                 validationResult.Errors.Add(nameof(uni), new List<string>() { "Empty field" });
             }
+
+            if (!string.IsNullOrWhiteSpace(phone))
+            {
+                if (!Regex.Match(phone, @"^\+380\d{9}").Success)
+                {
+                    validationResult.Errors.Add(nameof(phone), new List<string> { "Wrong phone number format" });
+                }
+            }
+
+            return validationResult;
         }
     }
 }

@@ -14,11 +14,12 @@
    <string name="filter_textview">Filter by:</string>
    <string name="group_prompt">Choose a group:</string>
    <string-array name="group_array">
-     <item>Any</item>
+     <item>Group Any</item>
      <item>MN</item>
      <item>PZ</item>
      <item>KN</item>
    </string-array>
+  <string name="filter_group_txt">Group Any</string>
   <string name="birthdate_btn">Choose a birthdate</string>
   <string name="confirm_filter_btn">Confirm</string>
   <string name="show_date_textview">birthdate isn\'t selected</string>

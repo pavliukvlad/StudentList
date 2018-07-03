@@ -95,6 +95,13 @@
                 android:drawablePadding="@dimen/icon_padding" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/student_profile_progressbar" />
     <Button
         android:id="@+id/save_changes_btn"
         android:layout_width="match_parent"

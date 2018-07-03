@@ -25,17 +25,18 @@ namespace StudentList.Fragments
 {
     public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        private Dictionary<string, TextInputLayout> layouts;
         private IStudentRepository studentRepository;
+        private Dictionary<string, TextInputLayout> layouts;
 
         private Button saveButton;
+        private ProgressBar loadingProgressBar;
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
         private TextInputLayout universityLayout;
         private TextInputLayout groupLayout;
         private TextInputLayout phoneLayout;
 
-        private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
+         private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
 
         private bool NewStudent => this.Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
@@ -48,7 +49,7 @@ namespace StudentList.Fragments
             return obj;
         }
 
-        public override void OnCreate(Bundle savedInstanceState)
+        public override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
@@ -67,11 +68,13 @@ namespace StudentList.Fragments
             this.universityLayout = view.FindViewById<TextInputLayout>(Resource.Id.uni_layout);
             this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
             this.phoneLayout = view.FindViewById<TextInputLayout>(Resource.Id.phone_layout);
+            this.loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.student_profile_progressbar);
 
             this.layouts.Add("name", this.nameLayout);
             this.layouts.Add("birthdate", this.birthdateLayout);
             this.layouts.Add("group", this.groupLayout);
             this.layouts.Add("uni", this.universityLayout);
+            this.layouts.Add("phone", this.phoneLayout);
 
             return view;
         }
@@ -80,11 +83,14 @@ namespace StudentList.Fragments
         {
             var selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
 
+            this.loadingProgressBar.Visibility = ViewStates.Invisible;
+
+            this.saveButton.Text = this.NewStudent ? this.GetString(Resource.String.add_new_student_text)
+               : this.GetString(Resource.String.save_changes_text);
+
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.NewStudent ? this.GetString(Resource.String.create_student_title)
                 : this.GetString(Resource.String.edit_student_title) + " " + selectedStudent.Name;
 
-            this.saveButton.Text = this.NewStudent ? this.GetString(Resource.String.add_new_student_text)
-                : this.GetString(Resource.String.save_changes_text);
             this.nameLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.Name;
             this.birthdateLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.Birthdate.ToShortDateString();
             this.universityLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.University;
@@ -170,7 +176,7 @@ namespace StudentList.Fragments
         private async Task ConfirmAsync()
         {
             string name = this.nameLayout.EditText.Text.TrimEnd();
-            string birthdate = this.birthdateLayout.EditText.Text;
+            string birthdate = this.birthdateLayout.EditText.Text.TrimEnd();
             string uni = this.universityLayout.EditText.Text.TrimEnd();
             string group = this.groupLayout.EditText.Text.TrimEnd();
             string phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
@@ -178,17 +184,17 @@ namespace StudentList.Fragments
 
             if (this.NewStudent)
             {
-                await this.AddStudent(name, birthdate, uni, group).ConfigureAwait(false);
+                await this.AddStudent(name, birthdate, uni, group, phone).ConfigureAwait(false);
             }
             else
             {
-                await this.ChangeStudentById(this.StudentId, name, birthdate, group, uni, phone);
+                await this.ChangeStudentById(this.StudentId, name, birthdate, group, uni, phone).ConfigureAwait(false);
             }
         }
 
-        private async Task AddStudent(string name, string birthdate, string uni, string group)
+        private async Task AddStudent(string name, string birthdate, string uni, string group, string phone)
         {
-            var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni);
+            var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni, phone);
 
             if (!validationResult.IsValid)
             {
@@ -223,7 +229,10 @@ namespace StudentList.Fragments
                 {
                     if (error.Key == ctr.Key)
                     {
-                        ctr.Value.Error = " ";
+                        foreach (var message in error.Value)
+                        {
+                            ctr.Value.Error = message;
+                        }
                     }
                 }
             }
@@ -252,31 +261,6 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.Text = string.Empty;
             this.universityLayout.EditText.Text = string.Empty;
             this.phoneLayout.EditText.Text = string.Empty;
-        }
-
-        private bool Validate(string name, string birthdate, string group, string uni)
-        {
-            bool validation = false;
-
-            this.IsEmptyOrWhiteSpace(name, this.nameLayout, ref validation);
-            this.IsEmptyOrWhiteSpace(birthdate, this.birthdateLayout, ref validation);
-            this.IsEmptyOrWhiteSpace(group, this.groupLayout, ref validation);
-            this.IsEmptyOrWhiteSpace(uni, this.universityLayout, ref validation);
-
-            return validation;
-        }
-
-        private void IsEmptyOrWhiteSpace(string targetText, TextInputLayout targetLayout, ref bool validation)
-        {
-            if (string.IsNullOrWhiteSpace(targetText))
-            {
-                targetLayout.Error = null;
-                validation = true;
-            }
-            else
-            {
-                targetLayout.Error = string.Empty;
-            }
         }
     }
 }

@@ -88,8 +88,7 @@ namespace StudentList.Fragments
                 : ViewStates.Invisible;
 
             this.studentsCountTextView.Text = string.Format(
-                CultureInfo.InvariantCulture, this.GetString(
-                    Resource.String.student_count_pattern), this.students.Count);
+                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.students.Count);
         }
 
         public override void OnStart()

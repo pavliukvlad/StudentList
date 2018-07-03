@@ -16,7 +16,7 @@ namespace StudentList.Providers.Interfaces
 {
     public interface IStudentRepository
     {
-        Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni);
+        Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni, string phone);
 
         Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone);
 

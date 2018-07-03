@@ -24,11 +24,6 @@ namespace StudentList.Activities
             itemView.Click += (sender, e) => { listener(this.Id); };
         }
 
-        public void SetPhoneIconVisible(string phone)
-        {
-            this.PhoneImage.Visibility = phone == null ? ViewStates.Invisible : ViewStates.Visible;
-        }
-
         public TextView Info { get; set; }
 
         public ImageView PhoneImage { get; set; }
@@ -36,5 +31,10 @@ namespace StudentList.Activities
         public string Id { get; set; }
 
         public string Phone { get; set; }
+
+        public void SetPhoneIconVisible(string phone)
+        {
+            this.PhoneImage.Visibility = phone == null ? ViewStates.Invisible : ViewStates.Visible;
+        }
     }
 }

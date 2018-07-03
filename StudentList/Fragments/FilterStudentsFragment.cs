@@ -13,6 +13,8 @@ namespace StudentList.Fragments
 {
     public class FilterStudentsFragment : Android.Support.V4.App.Fragment
     {
+        private readonly StudentFilter studentFilter;
+
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
         private TextInputLayout groupLayout;
@@ -22,7 +24,6 @@ namespace StudentList.Fragments
         private DatePickerDialog birthdatePickerDialog;
 
         private DateTime birthdate;
-        private readonly StudentFilter studentFilter;
 
         public FilterStudentsFragment(StudentFilter studentFilter)
         {

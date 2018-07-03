@@ -14,13 +14,13 @@ namespace StudentList.Models
 {
     public class ValidationResult
     {
-        public bool IsValid => !this.Errors.Any();
-
-        public Dictionary<string, IEnumerable<string>> Errors { get; private set; }
-
         public ValidationResult()
         {
             this.Errors = new Dictionary<string, IEnumerable<string>>();
         }
+
+        public bool IsValid => !this.Errors.Any();
+
+        public Dictionary<string, IEnumerable<string>> Errors { get; private set; }
     }
 }

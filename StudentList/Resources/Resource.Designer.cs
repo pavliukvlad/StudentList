@@ -3488,11 +3488,11 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0010
 			public const int abc_toolbar_collapse_description = 2131427344;
 			
-			// aapt resource value: 0x7f0b003a
-			public const int action_confirm = 2131427386;
-			
 			// aapt resource value: 0x7f0b003b
-			public const int action_reset = 2131427387;
+			public const int action_confirm = 2131427387;
+			
+			// aapt resource value: 0x7f0b003c
+			public const int action_reset = 2131427388;
 			
 			// aapt resource value: 0x7f0b0028
 			public const int action_settings = 2131427368;
@@ -3506,8 +3506,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b001e
 			public const int appbar_scrolling_view_behavior = 2131427358;
 			
-			// aapt resource value: 0x7f0b0035
-			public const int birthdate_btn = 2131427381;
+			// aapt resource value: 0x7f0b0036
+			public const int birthdate_btn = 2131427382;
 			
 			// aapt resource value: 0x7f0b002a
 			public const int birthdate_hint = 2131427370;
@@ -3518,17 +3518,20 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0020
 			public const int character_counter_pattern = 2131427360;
 			
-			// aapt resource value: 0x7f0b0036
-			public const int confirm_filter_btn = 2131427382;
+			// aapt resource value: 0x7f0b0037
+			public const int confirm_filter_btn = 2131427383;
 			
-			// aapt resource value: 0x7f0b003d
-			public const int create_student_title = 2131427389;
+			// aapt resource value: 0x7f0b003e
+			public const int create_student_title = 2131427390;
 			
 			// aapt resource value: 0x7f0b0030
 			public const int edit_student_btn = 2131427376;
 			
-			// aapt resource value: 0x7f0b003e
-			public const int edit_student_title = 2131427390;
+			// aapt resource value: 0x7f0b003f
+			public const int edit_student_title = 2131427391;
+			
+			// aapt resource value: 0x7f0b0035
+			public const int filter_group_txt = 2131427381;
 			
 			// aapt resource value: 0x7f0b0032
 			public const int filter_students_btn = 2131427378;
@@ -3536,8 +3539,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0033
 			public const int filter_textview = 2131427379;
 			
-			// aapt resource value: 0x7f0b003f
-			public const int filter_title = 2131427391;
+			// aapt resource value: 0x7f0b0040
+			public const int filter_title = 2131427392;
 			
 			// aapt resource value: 0x7f0b002b
 			public const int group_hint = 2131427371;
@@ -3548,8 +3551,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0029
 			public const int name_hint = 2131427369;
 			
-			// aapt resource value: 0x7f0b0038
-			public const int no_match_found_txt = 2131427384;
+			// aapt resource value: 0x7f0b0039
+			public const int no_match_found_txt = 2131427385;
 			
 			// aapt resource value: 0x7f0b0021
 			public const int password_toggle_content_description = 2131427361;
@@ -3569,8 +3572,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b002d
 			public const int phone_hint = 2131427373;
 			
-			// aapt resource value: 0x7f0b0039
-			public const int reset_btn = 2131427385;
+			// aapt resource value: 0x7f0b003a
+			public const int reset_btn = 2131427386;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int save_changes_text = 2131427374;
@@ -3578,14 +3581,14 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0011
 			public const int search_menu_title = 2131427345;
 			
-			// aapt resource value: 0x7f0b0037
-			public const int show_date_textview = 2131427383;
+			// aapt resource value: 0x7f0b0038
+			public const int show_date_textview = 2131427384;
 			
 			// aapt resource value: 0x7f0b0026
 			public const int status_bar_notification_info_overflow = 2131427366;
 			
-			// aapt resource value: 0x7f0b003c
-			public const int student_count_pattern = 2131427388;
+			// aapt resource value: 0x7f0b003d
+			public const int student_count_pattern = 2131427389;
 			
 			// aapt resource value: 0x7f0b0031
 			public const int student_info_pattern = 2131427377;

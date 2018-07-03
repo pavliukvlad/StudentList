@@ -48,7 +48,6 @@ namespace StudentList
                 students.Add(student);
             }
 
-
             await Task.Delay(300);
 
             return validationResult;
@@ -65,7 +64,8 @@ namespace StudentList
                 if (student != null)
                 {
                     student.Name = name;
-                    student.Birthdate = DateTime.ParseExact(birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    student.Birthdate = DateTime.ParseExact(
+                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     student.GroupName = group;
                     student.University = uni;
                     student.Phone = phone;
@@ -97,7 +97,7 @@ namespace StudentList
 
                 if (!string.IsNullOrWhiteSpace(studentFilter.Group))
                 {
-                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant() | studentFilter.Group == "Any");
+                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant() | studentFilter.Group == "Group Any");
                 }
 
                 if (studentFilter.Birthdate != default(DateTime))

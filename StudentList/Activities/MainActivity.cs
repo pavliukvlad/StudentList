@@ -15,7 +15,7 @@ using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace StudentList
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/CustomTheme", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/CustomTheme", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)

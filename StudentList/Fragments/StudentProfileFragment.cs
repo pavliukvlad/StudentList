@@ -25,12 +25,7 @@ namespace StudentList.Fragments
 {
     public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
-
-        private bool NewStudent => this.Arguments.GetBoolean(IntentConstant.NewStudent, false);
-
         private Dictionary<string, TextInputLayout> layouts;
-
         private IStudentRepository studentRepository;
 
         private Button saveButton;
@@ -39,6 +34,10 @@ namespace StudentList.Fragments
         private TextInputLayout universityLayout;
         private TextInputLayout groupLayout;
         private TextInputLayout phoneLayout;
+
+        private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
+
+        private bool NewStudent => this.Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
         public static StudentProfileFragment NewInstance(string studentId, bool newStudent)
         {
@@ -69,10 +68,10 @@ namespace StudentList.Fragments
             this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
             this.phoneLayout = view.FindViewById<TextInputLayout>(Resource.Id.phone_layout);
 
-            layouts.Add("name", nameLayout);
-            layouts.Add("birthdate", birthdateLayout);
-            layouts.Add("group", groupLayout);
-            layouts.Add("uni", universityLayout);
+            this.layouts.Add("name", this.nameLayout);
+            this.layouts.Add("birthdate", this.birthdateLayout);
+            this.layouts.Add("group", this.groupLayout);
+            this.layouts.Add("uni", this.universityLayout);
 
             return view;
         }
@@ -121,7 +120,7 @@ namespace StudentList.Fragments
         {
             base.OnStart();
 
-            this.saveButton.Click += this.SaveButtonClick;
+            this.saveButton.Click += this.SaveButtonClickAsync;
             this.birthdateLayout.EditText.Touch += this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange += this.OnBirthdateEditTextFocus;
             this.DisplayHomeUp(true);
@@ -131,7 +130,7 @@ namespace StudentList.Fragments
         {
             base.OnStop();
 
-            this.saveButton.Click -= this.SaveButtonClick;
+            this.saveButton.Click -= this.SaveButtonClickAsync;
             this.birthdateLayout.Touch -= this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange -= this.OnBirthdateEditTextFocus;
             this.DisplayHomeUp(false);
@@ -158,9 +157,9 @@ namespace StudentList.Fragments
             }
         }
 
-        private void SaveButtonClick(object sender, EventArgs e)
+        private async void SaveButtonClickAsync(object sender, EventArgs e)
         {
-            this.ConfirmAsync();
+            await this.ConfirmAsync();
         }
 
         private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
@@ -179,22 +178,40 @@ namespace StudentList.Fragments
 
             if (this.NewStudent)
             {
-                var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni);
-
-                if (!validationResult.IsValid)
-                    this.SetErrors(validationResult);
-                else
-                    this.ShowStudentList();
+                await this.AddStudent(name, birthdate, uni, group).ConfigureAwait(false);
             }
             else
             {
-                var validationResult = await this.studentRepository.ChangeStudentById(
-                    this.StudentId, name, birthdate, group, uni, phone);
+                await this.ChangeStudentById(this.StudentId, name, birthdate, group, uni, phone);
+            }
+        }
 
-                if (!validationResult.IsValid)
-                    this.SetErrors(validationResult);
-                else
-                    this.ShowStudentList();
+        private async Task AddStudent(string name, string birthdate, string uni, string group)
+        {
+            var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni);
+
+            if (!validationResult.IsValid)
+            {
+                this.SetErrors(validationResult);
+            }
+            else
+            {
+                this.ShowStudentList();
+            }
+        }
+
+        private async Task ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
+        {
+            var validationResult = await this.studentRepository.ChangeStudentById(
+                this.StudentId, name, birthdate, group, uni, phone);
+
+            if (!validationResult.IsValid)
+            {
+                this.SetErrors(validationResult);
+            }
+            else
+            {
+                this.ShowStudentList();
             }
         }
 

@@ -48,7 +48,66 @@ namespace StudentList
                 students.Add(student);
             }
 
+            await Task.Delay(300);
+
             return validationResult;
+        }
+
+        public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
+        {
+            var validationResult = new ValidationResult();
+            this.Validate(name, birthdate, group, uni, validationResult);
+
+            if (validationResult.IsValid)
+            {
+                var student = students.Where(s => s.Id == studentId).FirstOrDefault();
+
+                if (student != null)
+                {
+                    student.Name = name;
+                    student.Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture);
+                    student.GroupName = group;
+                    student.University = uni;
+                    student.Phone = phone;
+                }
+            }
+
+            await Task.Delay(300);
+
+            return validationResult;
+        }
+
+        public async Task<Student> GetStudentById(string id)
+        {
+            await Task.Delay(500);
+            return students.Where(s => s.Id == id).FirstOrDefault();
+        }
+
+        public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
+        {
+            IEnumerable<Student> temp = students;
+
+            if (studentFilter != null)
+            {
+                if (!string.IsNullOrWhiteSpace(studentFilter.Name))
+                {
+                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant());
+                }
+
+                if (!string.IsNullOrWhiteSpace(studentFilter.Group))
+                {
+                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant() | studentFilter.Group == "Any");
+                }
+
+                if (studentFilter.Birthdate != default(DateTime))
+                {
+                    temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
+                }
+            }
+
+            await Task.Delay(1000);
+
+            return temp.ToList();
         }
 
         private void Validate(string name, string birthdate, string group, string uni, ValidationResult validationResult)
@@ -72,60 +131,6 @@ namespace StudentList
             {
                 validationResult.Errors.Add(nameof(uni), new List<string>() { "Empty field" });
             }
-        }
-
-        public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
-        {
-            var validationResult = new ValidationResult();
-            this.Validate(name, birthdate, group, uni, validationResult);
-
-            if (validationResult.IsValid)
-            {
-                var student = students.Where(s => s.Id == studentId).FirstOrDefault();
-
-                if (student != null)
-                {
-                    student.Name = name;
-                    student.Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture);
-                    student.GroupName = group;
-                    student.University = uni;
-                    student.Phone = phone;
-                }
-            }
-
-            return validationResult;
-        }
-
-        public async Task<Student> GetStudentById(string id)
-        {
-            return students.Where(s => s.Id == id).FirstOrDefault();
-        }
-
-        public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
-        {
-            IEnumerable<Student> temp = students;
-
-            if (studentFilter != null)
-            {
-                if (!string.IsNullOrWhiteSpace(studentFilter.Name))
-                {
-                    temp = temp.Where(s => s.Name.ToLower() == studentFilter.Name.ToLower());
-                }
-
-                if (!string.IsNullOrWhiteSpace(studentFilter.Group))
-                {
-                    temp = temp.Where(s => s.GroupName.ToLower() == studentFilter.Group.ToLower() | studentFilter.Group == "Any");
-                }
-
-                if (studentFilter.Birthdate != default(DateTime))
-                {
-                    temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
-                }
-            }
-
-            await Task.Delay(1000);
-
-            return temp.ToList();
         }
     }
 }

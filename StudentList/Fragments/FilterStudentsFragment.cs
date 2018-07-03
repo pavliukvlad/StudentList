@@ -33,6 +33,7 @@ namespace StudentList.Fragments
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             this.HasOptionsMenu = true;
         }
 
@@ -76,8 +77,6 @@ namespace StudentList.Fragments
         {
             menu.Clear();
             inflater.Inflate(Resource.Menu.confirm_menu, menu);
-
-            base.OnCreateOptionsMenu(menu, inflater);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -120,6 +119,7 @@ namespace StudentList.Fragments
             this.confirmButton.Click -= this.ConfirmButtonClick;
             this.groupLayout.EditText.Touch -= this.GroupEditTextTouch;
             this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
+
             this.DisplayHomeUp(false);
         }
 

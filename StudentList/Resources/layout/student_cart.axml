@@ -15,8 +15,7 @@
                 android:layout_height="@dimen/profile_photo_height_and_width"
                 android:layout_width="@dimen/profile_photo_height_and_width"
                 android:layout_marginTop="@dimen/cart_margin"
-                android:id="@+id/profile_photo"
-                android:src="@drawable/person_photo" />
+                android:id="@+id/profile_photo" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

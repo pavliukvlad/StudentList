@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using StudentList.Model;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
@@ -29,7 +20,7 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -37,6 +28,7 @@ namespace StudentList
             {
                 var student = new Student()
                 {
+                    ProfilePhoto = profilePhotoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
                     Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
@@ -53,7 +45,7 @@ namespace StudentList
             return validationResult;
         }
 
-        public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri profilePhotoUri, string name, string birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -63,6 +55,7 @@ namespace StudentList
 
                 if (student != null)
                 {
+                    student.ProfilePhoto = profilePhotoUri;
                     student.Name = name;
                     student.Birthdate = DateTime.ParseExact(
                         birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -88,7 +81,7 @@ namespace StudentList
         {
             IEnumerable<Student> temp = students;
 
-            if (studentFilter != null)
+            if (studentFilter != default(StudentFilter))
             {
                 if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 {
@@ -117,29 +110,29 @@ namespace StudentList
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                validationResult.Errors.Add(nameof(name), new List<string>() { "Empty field" });
+                validationResult.Errors.Add(nameof(name), new List<string>() { " Name cannot be empty" });
             }
 
             if (string.IsNullOrWhiteSpace(birthdate))
             {
-                validationResult.Errors.Add(nameof(birthdate), new List<string>() { "Empty field" });
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { " Birthdate cannot be empty" });
             }
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { "Empty field" });
+                validationResult.Errors.Add(nameof(group), new List<string>() { " Group name cannot be empty" });
             }
 
             if (string.IsNullOrWhiteSpace(uni))
             {
-                validationResult.Errors.Add(nameof(uni), new List<string>() { "Empty field" });
+                validationResult.Errors.Add(nameof(uni), new List<string>() { " University name cannot be empty" });
             }
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
                 if (!Regex.Match(phone, @"^\+380\d{9}").Success)
                 {
-                    validationResult.Errors.Add(nameof(phone), new List<string> { "Wrong phone number format" });
+                    validationResult.Errors.Add(nameof(phone), new List<string> { " Wrong phone number format"});
                 }
             }
 

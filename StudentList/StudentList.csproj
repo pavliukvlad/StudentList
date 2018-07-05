@@ -63,13 +63,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\StudentAdapter.cs" />
+    <Compile Include="Common\Intents\CommonIntents.cs" />
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentFilter.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
+    <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewHolders\StudentViewHolder.cs" />
-    <Compile Include="Constants\IntentConstant.cs" />
+    <Compile Include="Constants\IntentConstants.cs" />
     <Compile Include="Fragments\StudentListFragment.cs" />
     <Compile Include="Fragments\StudentProfileFragment.cs" />
     <Compile Include="Activities\MainActivity.cs" />
@@ -115,6 +117,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Refractored.Controls.CircleImageView">
+      <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.0.2</Version>
@@ -207,6 +212,15 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\uni_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\photo_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\camera_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\camera.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

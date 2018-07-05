@@ -53,7 +53,7 @@ namespace StudentList.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
 
-            if (this.studentFilter != null)
+            if (this.studentFilter != default(StudentFilter))
             {
                 this.nameLayout.EditText.Text = this.studentFilter.Name;
                 this.groupLayout.EditText.Text = this.studentFilter.Group;
@@ -92,9 +92,9 @@ namespace StudentList.Fragments
                 case Android.Resource.Id.Home:
                     this.Activity.OnBackPressed();
                     return true;
+                default:
+                    return false;
             }
-
-            return base.OnOptionsItemSelected(item);
         }
 
         public override void OnStart()
@@ -105,7 +105,7 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.FocusChange += this.BirthdateEditTextFocusChange;
             this.confirmButton.Click += this.ConfirmButtonClick;
             this.groupLayout.EditText.Touch += this.GroupEditTextTouch;
-            this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
+            //this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
 
             this.DisplayHomeUp(true);
         }
@@ -118,7 +118,7 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.FocusChange -= this.BirthdateEditTextFocusChange;
             this.confirmButton.Click -= this.ConfirmButtonClick;
             this.groupLayout.EditText.Touch -= this.GroupEditTextTouch;
-            this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
+            //this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
 
             this.DisplayHomeUp(false);
         }
@@ -139,13 +139,13 @@ namespace StudentList.Fragments
             }
         }
 
-        private void GroupEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
-        {
-            if (e.HasFocus)
-            {
-                this.groupDialog.Show();
-            }
-        }
+        //private void GroupEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
+        //{
+        //    if (e.HasFocus)
+        //    {
+        //        this.groupDialog.Show();
+        //    }
+        //}
 
         private void GroupEditTextTouch(object sender, View.TouchEventArgs e)
         {

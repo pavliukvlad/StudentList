@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
+﻿using Android.App;
 using Android.OS;
-using Android.Runtime;
-using Android.Support.V4.App;
 using Android.Support.V7.App;
-using Android.Views;
-using Android.Widget;
 using StudentList.Fragments;
-using StudentList.Providers.Interfaces;
+using StudentList.Model;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace StudentList
@@ -31,7 +23,7 @@ namespace StudentList
 
         private void ShowStudentList()
         {
-            var listFragment = new StudentListFragment(null);
+            var listFragment = new StudentListFragment(StudentFilter.Default);
             this.SupportFragmentManager.BeginTransaction().Add(Resource.Id.main_container, listFragment).Commit();
         }
     }

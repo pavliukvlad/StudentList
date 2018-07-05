@@ -29,7 +29,7 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -37,6 +37,7 @@ namespace StudentList
             {
                 var student = new Student()
                 {
+                    ProfilePhoto = profilePhotoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
                     Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
@@ -53,7 +54,7 @@ namespace StudentList
             return validationResult;
         }
 
-        public async Task<ValidationResult> ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri profilePhotoUri, string name, string birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -63,6 +64,7 @@ namespace StudentList
 
                 if (student != null)
                 {
+                    student.ProfilePhoto = profilePhotoUri;
                     student.Name = name;
                     student.Birthdate = DateTime.ParseExact(
                         birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);

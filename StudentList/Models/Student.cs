@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
-using Android.Widget;
+using Android.Media;
 
 namespace StudentList.Model
 {
@@ -25,5 +26,7 @@ namespace StudentList.Model
         public string University { get; set; }
 
         public string Phone { get; set; }
+
+        public Uri ProfilePhoto { get; set; }
     }
 }

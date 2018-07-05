@@ -20,6 +20,14 @@ using StudentList.Constants;
 using StudentList.Model;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
+using System.Drawing;
+using Android.Media;
+using Android.Graphics;
+using Android.Provider;
+using System.IO;
+using Java.IO;
+using Refractored.Controls;
+using StudentList.Services;
 
 namespace StudentList.Fragments
 {
@@ -27,16 +35,21 @@ namespace StudentList.Fragments
     {
         private IStudentRepository studentRepository;
         private Dictionary<string, TextInputLayout> layouts;
+        private Student selectedStudent;
+        private Uri profilePhotoPath;
+        private Bitmap image;
 
         private Button saveButton;
         private ProgressBar loadingProgressBar;
+        private CircleImageView profilePhoto;
         private TextInputLayout nameLayout;
+        private TextInputLayout photoLayout;
         private TextInputLayout birthdateLayout;
         private TextInputLayout universityLayout;
         private TextInputLayout groupLayout;
         private TextInputLayout phoneLayout;
 
-         private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
+        private string StudentId => this.Arguments.GetString(IntentConstant.StudentId, string.Empty);
 
         private bool NewStudent => this.Arguments.GetBoolean(IntentConstant.NewStudent, false);
 
@@ -55,6 +68,7 @@ namespace StudentList.Fragments
 
             this.studentRepository = new StudentsRepository();
             this.layouts = new Dictionary<string, TextInputLayout>();
+
             this.HasOptionsMenu = true;
         }
 
@@ -69,6 +83,7 @@ namespace StudentList.Fragments
             this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
             this.phoneLayout = view.FindViewById<TextInputLayout>(Resource.Id.phone_layout);
             this.loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.student_profile_progressbar);
+            this.profilePhoto = view.FindViewById<CircleImageView>(Resource.Id.profile_image);
 
             this.layouts.Add("name", this.nameLayout);
             this.layouts.Add("birthdate", this.birthdateLayout);
@@ -81,7 +96,7 @@ namespace StudentList.Fragments
 
         public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            var selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
+            this.selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
 
             this.loadingProgressBar.Visibility = ViewStates.Invisible;
 
@@ -89,13 +104,13 @@ namespace StudentList.Fragments
                : this.GetString(Resource.String.save_changes_text);
 
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.NewStudent ? this.GetString(Resource.String.create_student_title)
-                : this.GetString(Resource.String.edit_student_title) + " " + selectedStudent.Name;
+                : this.GetString(Resource.String.edit_student_title) + " " + this.selectedStudent.Name;
 
-            this.nameLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.Name;
-            this.birthdateLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.Birthdate.ToShortDateString();
-            this.universityLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.University;
-            this.groupLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.GroupName;
-            this.phoneLayout.EditText.Text = this.NewStudent ? string.Empty : selectedStudent.Phone;
+            this.nameLayout.EditText.Text = this.NewStudent ? string.Empty : this.selectedStudent.Name;
+            this.birthdateLayout.EditText.Text = this.NewStudent ? string.Empty : this.selectedStudent.Birthdate.ToShortDateString();
+            this.universityLayout.EditText.Text = this.NewStudent ? string.Empty : this.selectedStudent.University;
+            this.groupLayout.EditText.Text = this.NewStudent ? string.Empty : this.selectedStudent.GroupName;
+            this.phoneLayout.EditText.Text = this.NewStudent ? string.Empty : this.selectedStudent.Phone;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -117,9 +132,25 @@ namespace StudentList.Fragments
                 case Android.Resource.Id.Home:
                     this.Activity.OnBackPressed();
                     return true;
+                default:
+                    return true;
             }
+        }
 
-            return base.OnOptionsItemSelected(item);
+        public override void OnActivityResult(int requestCode, int resultCode, Intent data)
+        {
+            if (requestCode == 1000 && resultCode == (int)Result.Ok && data != null)
+            {
+                if (data.Data == null)
+                {
+                    this.image = (Bitmap)data.GetParcelableExtra("data");
+                    this.profilePhoto.SetImageBitmap(this.image);
+                }
+                else
+                {
+                    this.image = MediaStore.Images.Media.GetBitmap(this.Activity.ContentResolver, data.Data);
+                }
+            }
         }
 
         public override void OnStart()
@@ -129,6 +160,8 @@ namespace StudentList.Fragments
             this.saveButton.Click += this.SaveButtonClickAsync;
             this.birthdateLayout.EditText.Touch += this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange += this.OnBirthdateEditTextFocus;
+            this.profilePhoto.Touch += this.OnProfilePhotoTouch;
+
             this.DisplayHomeUp(true);
         }
 
@@ -139,7 +172,18 @@ namespace StudentList.Fragments
             this.saveButton.Click -= this.SaveButtonClickAsync;
             this.birthdateLayout.Touch -= this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange -= this.OnBirthdateEditTextFocus;
+            this.profilePhoto.Touch -= this.OnProfilePhotoTouch;
+
             this.DisplayHomeUp(false);
+        }
+
+        private void OnProfilePhotoTouch(object sender, View.TouchEventArgs e)
+        {
+            if (e.Event.Action == MotionEventActions.Down)
+            {
+                var chooserIntent = Common.Intents.CommonIntents.CreateImageChooserIntent(this.Activity);
+                this.StartActivityForResult(chooserIntent, 1000);
+            }
         }
 
         private void OnBirthdateEditTextTouch(object sender, View.TouchEventArgs e)
@@ -173,28 +217,33 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.Text = e.Date.ToShortDateString();
         }
 
+
         private async Task ConfirmAsync()
         {
-            string name = this.nameLayout.EditText.Text.TrimEnd();
-            string birthdate = this.birthdateLayout.EditText.Text.TrimEnd();
-            string uni = this.universityLayout.EditText.Text.TrimEnd();
-            string group = this.groupLayout.EditText.Text.TrimEnd();
-            string phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
+            var name = this.nameLayout.EditText.Text.TrimEnd();
+            var birthdate = this.birthdateLayout.EditText.Text.TrimEnd();
+            var uni = this.universityLayout.EditText.Text.TrimEnd();
+            var group = this.groupLayout.EditText.Text.TrimEnd();
+            var phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
                 : this.phoneLayout.EditText.Text.TrimEnd();
 
             if (this.NewStudent)
             {
-                await this.AddStudent(name, birthdate, uni, group, phone).ConfigureAwait(false);
+                await this.AddStudent(name, birthdate, uni, group, phone);
             }
             else
             {
-                await this.ChangeStudentById(this.StudentId, name, birthdate, group, uni, phone).ConfigureAwait(false);
+                await this.ChangeStudentById(this.StudentId, this.profilePhotoPath, name, birthdate, group, uni, phone);
             }
         }
 
         private async Task AddStudent(string name, string birthdate, string uni, string group, string phone)
         {
-            var validationResult = await this.studentRepository.AddNewStudentAsync(name, birthdate, group, uni, phone);
+            var profilePhotoUri = await PhotoService.SavePhotoAsync(
+               image, string.Format(
+                   CultureInfo.InvariantCulture, "{0}{1}_profile_photo.png", name.ToLowerInvariant(), GetHashCode()), Activity);
+
+            var validationResult = await this.studentRepository.AddNewStudentAsync(name, profilePhotoUri, birthdate, group, uni, phone);
 
             if (!validationResult.IsValid)
             {
@@ -206,10 +255,15 @@ namespace StudentList.Fragments
             }
         }
 
-        private async Task ChangeStudentById(string studentId, string name, string birthdate, string group, string uni, string phone)
+
+        private async Task ChangeStudentById(string studentId, Uri profilePhotoPath, string name, string birthdate, string group, string uni, string phone)
         {
+            var profilePhotoUri = await PhotoService.SavePhotoAsync(
+                image, string.Format(
+                    CultureInfo.InvariantCulture, "{0}{1}_profile_photo.png", name.ToLowerInvariant(), GetHashCode()), Activity);
+
             var validationResult = await this.studentRepository.ChangeStudentById(
-                this.StudentId, name, birthdate, group, uni, phone);
+                this.StudentId, profilePhotoUri, name, birthdate, group, uni, phone);
 
             if (!validationResult.IsValid)
             {

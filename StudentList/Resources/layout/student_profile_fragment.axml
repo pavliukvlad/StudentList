@@ -12,8 +12,8 @@
             android:orientation="vertical">
             <refractored.controls.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginTop="20dp"
                 android:src="@drawable/camera"
                 app:civ_border_width="2dp"

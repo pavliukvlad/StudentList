@@ -11,13 +11,11 @@ namespace StudentList.Services
     {
         public static async Task<Uri> SavePhotoAsync(Bitmap bitmap, string fileName, Context context)
         {
-            string path = string.Empty;
+            var root = context.GetDir("images", FileCreationMode.Private);
+            var file = new Java.IO.File(root, fileName);
 
             try
             {
-                var root = context.GetDir("Images", FileCreationMode.Private);
-                var file = new Java.IO.File(root, fileName);
-
                 using (var stream = new FileOutputStream(file))
                 {
                     byte[] arr;
@@ -29,7 +27,6 @@ namespace StudentList.Services
                     }
 
                     bitmap.Recycle();
-                    path = file.Path;
 
                     await stream.WriteAsync(arr);
                 }
@@ -39,7 +36,7 @@ namespace StudentList.Services
                 System.Diagnostics.Debug.WriteLine("Can't save a profile photo!");
             }
 
-            return new Uri(path);
+            return new Uri(file.Path);
         }
     }
 }

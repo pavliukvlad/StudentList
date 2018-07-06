@@ -28,7 +28,7 @@ namespace StudentList.Adapters
                 CultureInfo.InvariantCulture,
                 vh.ItemView.Context.GetString(Resource.String.student_info_pattern),
                 this.students[position].Name,
-                this.students[position].Birthdate.ToShortDateString(),
+                this.students[position].Birthdate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
                 this.students[position].University,
                 this.students[position].GroupName);
 

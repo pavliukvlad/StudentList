@@ -39,7 +39,7 @@ namespace StudentList.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = inflater.Inflate(Resource.Layout.filter_students, container, false);
+            var view = inflater.Inflate(Resource.Layout.filter_students_fragment, container, false);
 
             this.nameLayout = view.FindViewById<TextInputLayout>(Resource.Id.name_layout);
             this.groupLayout = view.FindViewById<TextInputLayout>(Resource.Id.group_layout);
@@ -105,7 +105,7 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.FocusChange += this.BirthdateEditTextFocusChange;
             this.confirmButton.Click += this.ConfirmButtonClick;
             this.groupLayout.EditText.Touch += this.GroupEditTextTouch;
-            //this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
+            this.groupLayout.EditText.FocusChange += this.GroupEditTextFocusChange;
 
             this.DisplayHomeUp(true);
         }
@@ -118,7 +118,7 @@ namespace StudentList.Fragments
             this.birthdateLayout.EditText.FocusChange -= this.BirthdateEditTextFocusChange;
             this.confirmButton.Click -= this.ConfirmButtonClick;
             this.groupLayout.EditText.Touch -= this.GroupEditTextTouch;
-            //this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
+            this.groupLayout.EditText.FocusChange -= this.GroupEditTextFocusChange;
 
             this.DisplayHomeUp(false);
         }
@@ -139,13 +139,13 @@ namespace StudentList.Fragments
             }
         }
 
-        //private void GroupEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
-        //{
-        //    if (e.HasFocus)
-        //    {
-        //        this.groupDialog.Show();
-        //    }
-        //}
+        private void GroupEditTextFocusChange(object sender, View.FocusChangeEventArgs e)
+        {
+            if (e.HasFocus)
+            {
+                this.groupDialog.Show();
+            }
+        }
 
         private void GroupEditTextTouch(object sender, View.TouchEventArgs e)
         {

@@ -30,6 +30,7 @@ namespace StudentList.Fragments
         private Button saveButton;
         private ProgressBar loadingProgressBar;
         private CircleImageView profilePhotoImageView;
+        private LinearLayout studentProfileLayout;
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
         private TextInputLayout universityLayout;
@@ -59,7 +60,7 @@ namespace StudentList.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = inflater.Inflate(Resource.Layout.student_profile, null);
+            var view = inflater.Inflate(Resource.Layout.student_profile_fragment, null);
 
             this.saveButton = view.FindViewById<Button>(Resource.Id.save_changes_btn);
             this.nameLayout = view.FindViewById<TextInputLayout>(Resource.Id.name_layout);
@@ -81,21 +82,28 @@ namespace StudentList.Fragments
 
         public override async void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            this.selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
-
-            this.loadingProgressBar.Visibility = ViewStates.Invisible;
-
-            this.saveButton.Text = this.StudentId == null ? this.GetString(Resource.String.add_new_student_text)
-               : this.GetString(Resource.String.save_changes_text);
+            if (!string.IsNullOrWhiteSpace(this.StudentId))
+            {
+                this.selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
+                if (this.selectedStudent.ProfilePhoto != null)
+                {
+                    this.profilePhotoImageView.SetImageBitmap(BitmapFactory.DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
+                }
+            }
 
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = string.IsNullOrWhiteSpace(this.StudentId) ? this.GetString(Resource.String.create_student_title)
                 : string.Format(CultureInfo.InvariantCulture, "{0} {1}", this.GetString(Resource.String.edit_student_title), this.selectedStudent.Name);
+
+            this.ShowProgressBar(false);
 
             this.nameLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Name;
             this.birthdateLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Birthdate.ToShortDateString();
             this.universityLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.University;
             this.groupLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.GroupName;
             this.phoneLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Phone;
+            this.saveButton.Text = this.StudentId == null ? this.GetString(Resource.String.add_new_student_btn)
+              : this.GetString(Resource.String.save_changes_btn);
+
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -144,7 +152,7 @@ namespace StudentList.Fragments
             base.OnStart();
 
             this.saveButton.Click += this.SaveButtonClickAsync;
-                    this.birthdateLayout.EditText.Touch += this.OnBirthdateEditTextTouch;
+            this.birthdateLayout.EditText.Touch += this.OnBirthdateEditTextTouch;
             this.birthdateLayout.EditText.FocusChange += this.OnBirthdateEditTextFocus;
             this.profilePhotoImageView.Touch += this.OnProfilePhotoTouch;
 
@@ -212,13 +220,17 @@ namespace StudentList.Fragments
             var phone = this.phoneLayout.EditText.Text.TrimEnd().Length == 0 ? null
                 : this.phoneLayout.EditText.Text.TrimEnd();
 
+            this.ShowProgressBar(true);
+
             if (string.IsNullOrWhiteSpace(this.StudentId))
             {
                 await this.AddStudent(name, birthdate, uni, group, phone);
+                this.ShowProgressBar(false);
             }
             else
             {
                 await this.ChangeStudentById(this.StudentId, name, birthdate, group, uni, phone);
+                this.ShowProgressBar(false);
             }
         }
 
@@ -246,7 +258,7 @@ namespace StudentList.Fragments
             var profilePhotoUri = await PhotoService.SavePhotoAsync(
                 this.profilePhoto,
                 string.Format(CultureInfo.InvariantCulture, "{0}{1}_profile_photo.png", name.ToLowerInvariant(), this.GetHashCode()),
-                this.Activity);
+                this.Activity); 
 
             var validationResult = await this.studentRepository.ChangeStudentById(
                 this.StudentId, profilePhotoUri, name, birthdate, group, uni, phone);
@@ -292,8 +304,23 @@ namespace StudentList.Fragments
                 .SetDisplayHomeAsUpEnabled(trigger && this.Activity.SupportFragmentManager.BackStackEntryCount > 0);
         }
 
+        private void ShowProgressBar(bool showing)
+        {
+            if (showing)
+            {
+                this.Activity.Window.AddFlags(WindowManagerFlags.NotTouchable);
+                this.loadingProgressBar.Visibility = ViewStates.Visible;
+            }
+            else
+            {
+                this.Activity.Window.ClearFlags(WindowManagerFlags.NotTouchable);
+                this.loadingProgressBar.Visibility = ViewStates.Invisible;
+            }
+        }
+
         private void Reset()
         {
+            this.profilePhotoImageView.SetImageResource(Resource.Drawable.camera);
             this.nameLayout.EditText.Text = string.Empty;
             this.groupLayout.EditText.Text = string.Empty;
             this.birthdateLayout.EditText.Text = string.Empty;

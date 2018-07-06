@@ -40,7 +40,7 @@ namespace StudentList.Fragments
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
-            var view = inflater.Inflate(Resource.Layout.recycle_holder, container, false);
+            var view = inflater.Inflate(Resource.Layout.student_list_fragment, container, false);
 
             this.recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             this.filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);

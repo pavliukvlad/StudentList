@@ -1,38 +1,47 @@
 <resources>
   <string name="app_name">Student List</string>
-  <string name="action_settings">Settings</string>
+  
+  <!--Hints for text fields-->
   <string name="name_hint">Name</string>
   <string name="birthdate_hint">Birthdate</string>
   <string name="group_hint">Group</string>
   <string name="uni_hint">University</string>
   <string name="phone_hint">Phone</string>
   <string name="photo_hint">Photo</string>
-  <string name="save_changes_text">Save changes</string>
-  <string name="add_new_student_text">Add new student</string>
+
+  <!--Some text-->
+  <string name="filter_group_txt">Group Any</string>
+  <string name="no_match_found_txt">No student match found...Try again</string>
+
+  <!--Titles for buttons-->
+  <string name="add_new_student_btn">Add new student</string>
   <string name="edit_student_btn">Edit student</string>
-  <string name="student_info_pattern">"Name:        {0} \nBirthdate:  {1} \nUniversity: {2}\nGroup:        {3}"</string>
+  <string name="save_changes_btn">Save changes</string>
   <string name="filter_students_btn">Filter Students</string>
-  <string name="filter_textview">Filter by:</string>
-  <string name="group_prompt">Choose a group:</string>
+  <string name="confirm_filter_btn">Confirm</string>
+  <string name="reset_btn">Reset</string>
+
+  <!--Titles for layouts-->
+  <string name="create_student_title">Create new student</string>
+  <string name="edit_student_title">Edit student </string>
+  <string name="filter_title">Filter students</string>
+  <string name="choose_picture_intent_title">Select picture</string>
+  
+  <!--Text patterns-->
+  <string name="student_info_pattern">"Name:        {0} \nBirthdate:  {1} \nUniversity: {2}\nGroup:        {3}"</string>
+  <string name="student_count_pattern">Students count: {0}</string>
+
+  <!--Hints for menu item-->
+  <string name="action_confirm">Confirm</string>
+  <string name="action_reset">Reset</string>
+  <string name="action_add_student">Add student</string>
+  <string name="action_search">Search</string>
+  
+  <!--Group array for adapter-->
   <string-array name="group_array">
     <item>Any</item>
     <item>MN</item>
     <item>PZ</item>
     <item>KN</item>
   </string-array>
-  <string name="filter_group_txt">Group Any</string>
-  <string name="birthdate_btn">Choose a birthdate</string>
-  <string name="confirm_filter_btn">Confirm</string>
-  <string name="show_date_textview">birthdate isn\'t selected</string>
-  <string name="no_match_found_txt">No student match found...Try again</string>
-  <string name="reset_btn">Reset</string>
-  <string name="action_confirm">Confirm</string>
-  <string name="action_reset">Reset</string>
-  <string name="student_count_pattern">Students count: {0}</string>
-
-  <string name="create_student_title">Create new student</string>
-  <string name="edit_student_title">Edit student </string>
-  <string name="filter_title">Filter students</string>
-
-  <string name="choose_picture_intent_title">Select picture</string>
 </resources>

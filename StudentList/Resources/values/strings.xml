@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">Student List</string>
   
-  <!--Hints for text fields-->
+  <!--Hint for text fields-->
   <string name="name_hint">Name</string>
   <string name="birthdate_hint">Birthdate</string>
   <string name="group_hint">Group</string>
@@ -13,7 +13,7 @@
   <string name="filter_group_txt">Group Any</string>
   <string name="no_match_found_txt">No student match found...Try again</string>
 
-  <!--Titles for buttons-->
+  <!--Title for buttons-->
   <string name="add_new_student_btn">Add new student</string>
   <string name="edit_student_btn">Edit student</string>
   <string name="save_changes_btn">Save changes</string>
@@ -31,7 +31,7 @@
   <string name="student_info_pattern">"Name:        {0} \nBirthdate:  {1} \nUniversity: {2}\nGroup:        {3}"</string>
   <string name="student_count_pattern">Students count: {0}</string>
 
-  <!--Hints for menu item-->
+  <!--Hint for menu items-->
   <string name="action_confirm">Confirm</string>
   <string name="action_reset">Reset</string>
   <string name="action_add_student">Add student</string>
@@ -44,4 +44,11 @@
     <item>PZ</item>
     <item>KN</item>
   </string-array>
+  
+  <!--Error messages-->
+  <string name="name_field_error">Name cannot be empty</string>
+  <string name="birthdate_field_error">Birthdate cannot be empty</string>
+  <string name="group_field_error">Group cannot be empty</string>
+  <string name="uni_field_error">University cannot be empty</string>
+  <string name="phone_field_error">Wrong phone number format</string>
 </resources>

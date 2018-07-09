@@ -33,7 +33,7 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
-            this.repository = new StudentsRepository();
+            this.repository = new StudentsRepository(this.Activity);
 
             this.HasOptionsMenu = true;
         }
@@ -61,9 +61,10 @@ namespace StudentList.Fragments
 
                 this.filteringResultTextView.Visibility = students.Count > 0 ? ViewStates.Invisible
                 : ViewStates.Visible;
-                this.studentsCountTextView.Text = string.Format(
-                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), students.Count);
             }
+
+            this.studentsCountTextView.Text = string.Format(
+                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
 
             this.loadingProgressBar.Visibility = ViewStates.Invisible;
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Android.App;
 using StudentList.Model;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
@@ -20,6 +22,13 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
+        private Activity activity;
+
+        public StudentsRepository(Activity activity)
+        {
+            this.activity = activity;
+        }
+
         public async Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
@@ -31,7 +40,8 @@ namespace StudentList
                     ProfilePhoto = profilePhotoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
-                    Birthdate = Convert.ToDateTime(birthdate, CultureInfo.InvariantCulture),
+                    Birthdate = DateTime.ParseExact(
+                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
                     GroupName = group,
                     University = uni,
                     Phone = phone
@@ -110,29 +120,29 @@ namespace StudentList
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                validationResult.Errors.Add(nameof(name), new List<string>() { " Name cannot be empty" });
+                validationResult.Errors.Add(nameof(name), new List<string>() { this.activity.GetString(Resource.String.name_field_error) });
             }
 
             if (string.IsNullOrWhiteSpace(birthdate))
             {
-                validationResult.Errors.Add(nameof(birthdate), new List<string>() { " Birthdate cannot be empty" });
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { this.activity.GetString(Resource.String.birthdate_field_error) });
             }
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { " Group name cannot be empty" });
+                validationResult.Errors.Add(nameof(group), new List<string>() { this.activity.GetString(Resource.String.group_field_error) });
             }
 
             if (string.IsNullOrWhiteSpace(uni))
             {
-                validationResult.Errors.Add(nameof(uni), new List<string>() { " University name cannot be empty" });
+                validationResult.Errors.Add(nameof(uni), new List<string>() { this.activity.GetString(Resource.String.uni_field_error) });
             }
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
                 if (!Regex.Match(phone, @"^\+380\d{9}").Success)
                 {
-                    validationResult.Errors.Add(nameof(phone), new List<string> { " Wrong phone number format"});
+                    validationResult.Errors.Add(nameof(phone), new List<string> { this.activity.GetString(Resource.String.phone_field_error) });
                 }
             }
 

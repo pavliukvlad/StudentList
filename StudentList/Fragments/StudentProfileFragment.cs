@@ -30,7 +30,6 @@ namespace StudentList.Fragments
         private Button saveButton;
         private ProgressBar loadingProgressBar;
         private CircleImageView profilePhotoImageView;
-        private LinearLayout studentProfileLayout;
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
         private TextInputLayout universityLayout;
@@ -52,7 +51,7 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
-            this.studentRepository = new StudentsRepository();
+            this.studentRepository = new StudentsRepository(this.Activity);
             this.layouts = new Dictionary<string, TextInputLayout>();
 
             this.HasOptionsMenu = true;
@@ -87,7 +86,8 @@ namespace StudentList.Fragments
                 this.selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
                 if (this.selectedStudent.ProfilePhoto != null)
                 {
-                    this.profilePhotoImageView.SetImageBitmap(BitmapFactory.DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
+                    this.profilePhotoImageView.SetImageBitmap(BitmapFactory
+                        .DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
                 }
             }
 
@@ -103,7 +103,6 @@ namespace StudentList.Fragments
             this.phoneLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Phone;
             this.saveButton.Text = this.StudentId == null ? this.GetString(Resource.String.add_new_student_btn)
               : this.GetString(Resource.String.save_changes_btn);
-
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -185,7 +184,7 @@ namespace StudentList.Fragments
             var datePicker = new DatePickerDialog(
                 this.Context, this.DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
 
-            if (e.Event.Action == MotionEventActions.Down)
+            if (e.Event.Action == MotionEventActions.ButtonPress)
             {
                 datePicker.Show();
             }
@@ -258,7 +257,7 @@ namespace StudentList.Fragments
             var profilePhotoUri = await PhotoService.SavePhotoAsync(
                 this.profilePhoto,
                 string.Format(CultureInfo.InvariantCulture, "{0}{1}_profile_photo.png", name.ToLowerInvariant(), this.GetHashCode()),
-                this.Activity); 
+                this.Activity);
 
             var validationResult = await this.studentRepository.ChangeStudentById(
                 this.StudentId, profilePhotoUri, name, birthdate, group, uni, phone);

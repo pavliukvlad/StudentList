@@ -3542,6 +3542,9 @@ namespace StudentList
 			// aapt resource value: 0x7f0b001e
 			public const int appbar_scrolling_view_behavior = 2131427358;
 			
+			// aapt resource value: 0x7f0b0041
+			public const int birthdate_field_error = 2131427393;
+			
 			// aapt resource value: 0x7f0b0029
 			public const int birthdate_hint = 2131427369;
 			
@@ -3575,8 +3578,14 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0038
 			public const int filter_title = 2131427384;
 			
+			// aapt resource value: 0x7f0b0042
+			public const int group_field_error = 2131427394;
+			
 			// aapt resource value: 0x7f0b002a
 			public const int group_hint = 2131427370;
+			
+			// aapt resource value: 0x7f0b0040
+			public const int name_field_error = 2131427392;
 			
 			// aapt resource value: 0x7f0b0028
 			public const int name_hint = 2131427368;
@@ -3598,6 +3607,9 @@ namespace StudentList
 			
 			// aapt resource value: 0x7f0b0025
 			public const int path_password_strike_through = 2131427365;
+			
+			// aapt resource value: 0x7f0b0044
+			public const int phone_field_error = 2131427396;
 			
 			// aapt resource value: 0x7f0b002c
 			public const int phone_hint = 2131427372;
@@ -3622,6 +3634,9 @@ namespace StudentList
 			
 			// aapt resource value: 0x7f0b003a
 			public const int student_info_pattern = 2131427386;
+			
+			// aapt resource value: 0x7f0b0043
+			public const int uni_field_error = 2131427395;
 			
 			// aapt resource value: 0x7f0b002b
 			public const int uni_hint = 2131427371;

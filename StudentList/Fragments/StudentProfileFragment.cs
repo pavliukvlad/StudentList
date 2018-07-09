@@ -184,7 +184,7 @@ namespace StudentList.Fragments
             var datePicker = new DatePickerDialog(
                 this.Context, this.DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
 
-            if (e.Event.Action == MotionEventActions.ButtonPress)
+            if (e.Event.Action == MotionEventActions.Down)
             {
                 datePicker.Show();
             }

@@ -39,6 +39,10 @@ namespace StudentList.Adapters
                 var profilePhoto = BitmapFactory.DecodeFile(this.students[position].ProfilePhoto.AbsolutePath);
                 vh.ProfilePhotoImage.SetImageBitmap(profilePhoto);
             }
+            else
+            {
+                vh.ProfilePhotoImage.SetImageResource(Resource.Drawable.person_photo);
+            }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Graphics;
 using StudentList.Model;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;

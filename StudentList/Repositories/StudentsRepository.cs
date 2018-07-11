@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Graphics;
-using StudentList.Model;
+using StudentList.Constants;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
 
@@ -25,25 +22,27 @@ namespace StudentList
         };
 
         private Activity activity;
+        private LoadingDelays delays;
 
-        public StudentsRepository(Activity activity)
+        public StudentsRepository(Activity activity, LoadingDelays loadingDelays)
         {
             this.activity = activity;
+            this.delays = loadingDelays;
         }
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, SavingPhotoResult photoResult, string birthdate, string group, string uni, string phone)
         {
-            var validationResult = this.Validate(name, birthdate, group, uni, phone);
+            var validationResult = this.Validate(photoResult, name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
                 var student = new Student()
                 {
-                    ProfilePhoto = profilePhotoUri,
+                    ProfilePhoto = photoResult.ProfilePhotoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
                     Birthdate = DateTime.ParseExact(
-                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                        birthdate, FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture),
                     GroupName = group,
                     University = uni,
                     Phone = phone
@@ -52,14 +51,14 @@ namespace StudentList
                 students.Add(student);
             }
 
-            await Task.Delay(300);
+            await Task.Delay(this.delays.AddStudentDelay);
 
             return validationResult;
         }
 
-        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri profilePhotoUri, string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, SavingPhotoResult photoResult, string name, string birthdate, string group, string uni, string phone)
         {
-            var validationResult = this.Validate(name, birthdate, group, uni, phone);
+            var validationResult = this.Validate(photoResult, name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
@@ -67,24 +66,24 @@ namespace StudentList
 
                 if (student != null)
                 {
-                    student.ProfilePhoto = profilePhotoUri;
+                    student.ProfilePhoto = photoResult.ProfilePhotoUri;
                     student.Name = name;
                     student.Birthdate = DateTime.ParseExact(
-                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                        birthdate, FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
                     student.GroupName = group;
                     student.University = uni;
                     student.Phone = phone;
                 }
             }
 
-            await Task.Delay(300);
+            await Task.Delay(this.delays.ChangeStudentDelay);
 
             return validationResult;
         }
 
         public async Task<Student> GetStudentById(string id)
         {
-            await Task.Delay(300);
+            await Task.Delay(this.delays.GetStudentDelay);
 
             return students.Where(s => s.Id == id).FirstOrDefault();
         }
@@ -93,7 +92,7 @@ namespace StudentList
         {
             IEnumerable<Student> temp = students;
 
-            if (studentFilter != default(StudentFilter))
+            if (studentFilter != StudentFilter.Default)
             {
                 if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 {
@@ -111,14 +110,19 @@ namespace StudentList
                 }
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(this.delays.GetStudentsDelay);
 
             return temp.ToList();
         }
 
-        private ValidationResult Validate(string name, string birthdate, string group, string uni, string phone)
+        private ValidationResult Validate(SavingPhotoResult photo, string name, string birthdate, string group, string uni, string phone)
         {
             var validationResult = new ValidationResult();
+
+            if (photo.IsError)
+            {
+                validationResult.Errors.Add(nameof(photo), new List<string> { this.activity.GetString(Resource.String.photo_toast_error) });
+            }
 
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -142,7 +146,7 @@ namespace StudentList
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
-                if (!Regex.Match(phone, @"^\+380\d{9}").Success)
+                if (!Regex.Match(phone, PatternConstants.PhoneNumber).Success)
                 {
                     validationResult.Errors.Add(nameof(phone), new List<string> { this.activity.GetString(Resource.String.phone_field_error) });
                 }

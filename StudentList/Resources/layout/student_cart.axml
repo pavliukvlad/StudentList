@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/cart_height"
+        app:cardElevation="@dimen/cart_evelation"
+        app:cardUseCompatPadding="true">
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+            <refractored.controls.CircleImageView
+                android:layout_height="@dimen/profile_photo_height_and_width"
+                android:layout_width="@dimen/profile_photo_height_and_width"
+                android:layout_marginTop="@dimen/profile_photo_marginTop"
+                android:layout_marginStart="@dimen/profile_photo_marginStart"
+                android:id="@+id/profile_photo"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FFFFFF" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/cart_text_color"
+                android:textSize="@dimen/cart_text_size"
+                android:id="@+id/textView"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@id/profile_photo"
+                android:layout_margin="@dimen/cart_margin" />
+            <ImageView
+                android:layout_width="@dimen/phone_icon_height_and_width"
+                android:layout_height="@dimen/phone_icon_height_and_width"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/phone_enabled_icon"
+                android:visibility="invisible"
+                android:id="@+id/phone_image" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</FrameLayout>

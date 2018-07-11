@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <Button
-        android:layout_height="wrap_content"
+    <TextView
         android:layout_width="match_parent"
-        android:text="@string/reset_btn"
-        android:id="@+id/reset_btn"
-        android:enabled="false" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/start_or_end_margin_txtview"
+        android:layout_marginTop="@dimen/top_margin_txtview"
+        android:id="@+id/students_count_textview" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/reset_btn" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/students_count_textview" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

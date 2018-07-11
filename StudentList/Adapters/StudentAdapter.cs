@@ -1,70 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+using System.Globalization;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
+using Android.Graphics;
 using Android.Support.V7.Widget;
 using Android.Views;
-using Android.Widget;
 using StudentList.Activities;
 using StudentList.Model;
-using StudentList.Providers.Interfaces;
 
 namespace StudentList.Adapters
 {
     public class StudentAdapter : RecyclerView.Adapter
     {
-        public event EventHandler<string> ItemClick;
-
         private IList<Student> students;
 
-        private Context parentContext;
-        private RecyclerView recyclerView;
-       
-        public override int ItemCount => students.Count;
+        public event EventHandler<Student> ItemClick;
 
-        public StudentAdapter(RecyclerView recyclerView)
-        {
-            this.recyclerView = recyclerView;
-        }
+        public override int ItemCount => this.students.Count;
+
+        public bool IsAnyStudents => this.students != null;
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             StudentViewHolder vh = holder as StudentViewHolder;
 
-            vh.Info.Text = string.Format(parentContext.GetString(Resource.String.student_info_pattern),
-                students[position].Name, 
-                students[position].Birthdate.ToShortDateString(),
-                students[position].University,
-                students[position].GroupName);
-            vh.Id = students[position].Id;
+            vh.Info.Text = string.Format(
+                CultureInfo.InvariantCulture,
+                vh.ItemView.Context.GetString(Resource.String.student_info_pattern),
+                this.students[position].Name,
+                this.students[position].Birthdate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                this.students[position].University,
+                this.students[position].GroupName);
+
+            vh.PhoneImage.Visibility = this.students[position].Phone == null ? ViewStates.Invisible : ViewStates.Visible;
+
+            if (this.students[position].ProfilePhoto != null)
+            {
+                var profilePhoto = BitmapFactory.DecodeFile(this.students[position].ProfilePhoto.AbsolutePath);
+                vh.ProfilePhotoImage.SetImageBitmap(profilePhoto);
+            }
+            else
+            {
+                vh.ProfilePhotoImage.SetImageResource(Resource.Drawable.person_photo);
+            }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            parentContext = parent.Context;
-            View itemView = LayoutInflater.From(parentContext).Inflate(Resource.Layout.student_list, parent, false);
-            StudentViewHolder viewHolder = new StudentViewHolder(itemView, OnClick);
+            var itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.student_cart, parent, false);
+            var viewHolder = new StudentViewHolder(itemView, this.OnItemClick);
+
             return viewHolder;
         }
 
         public void SetItems(IList<Student> items)
         {
-            if (items != null)
-                students = items;
-            NotifyDataSetChanged();
+            this.students = items;
+            this.NotifyDataSetChanged();
         }
 
-        private void OnClick(string id)
+        private void OnItemClick(int position)
         {
-            EventHandler<string> handler = ItemClick;
-
-            if (handler != null)
-                handler(this, id);
+            this.ItemClick?.Invoke(this, this.students[position]);
         }
     }
 }

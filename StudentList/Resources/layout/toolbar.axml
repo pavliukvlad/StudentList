@@ -6,4 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/toolbar"
-    app:titleTextColor="@android:color/background_light" />
+    app:titleTextColor="@android:color/background_light"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark" />

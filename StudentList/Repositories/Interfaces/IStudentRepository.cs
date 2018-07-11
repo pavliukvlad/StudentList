@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using StudentList.Model;
+using StudentList.Models;
 
 namespace StudentList.Providers.Interfaces
 {
-    interface IStudentRepository
+    public interface IStudentRepository
     {
-        IList<Student> Students { get; }
-        int Count { get; }
-        Student this[string index] { get; set; }
+        Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone);
 
-        void AddNewStudent(Student student);
-        void ChangeStudentById(string studentId, string name, DateTime birthdate, string group, string uni);
+        Task<ValidationResult> ChangeStudentById(string studentId, Uri profilePhotoUri, string name, string birthdate, string group, string uni, string phone);
+
+        Task<Student> GetStudentById(string id);
 
         Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter);
     }

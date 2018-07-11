@@ -1,15 +1,24 @@
 ﻿using Android.App;
+using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Android.Support.V7.App;
+using Plugin.Permissions;
 using StudentList.Fragments;
-using StudentList.Model;
+using StudentList.Models;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace StudentList
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/CustomTheme", MainLauncher = true, ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait)]
+    [Activity(Label = "@string/app_name", Theme = "@style/CustomTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : AppCompatActivity
     {
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

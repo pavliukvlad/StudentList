@@ -6,7 +6,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
-using StudentList.Model;
+using StudentList.Models;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 namespace StudentList.Fragments
@@ -14,6 +14,7 @@ namespace StudentList.Fragments
     public class FilterStudentsFragment : Android.Support.V4.App.Fragment
     {
         private readonly StudentFilter studentFilter;
+        private ArrayAdapter adapter;
 
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
@@ -34,6 +35,9 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
+            this.adapter = ArrayAdapter.CreateFromResource(
+                this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
+
             this.HasOptionsMenu = true;
         }
 
@@ -53,7 +57,7 @@ namespace StudentList.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
 
-            if (this.studentFilter != default(StudentFilter))
+            if (this.studentFilter != StudentFilter.Default)
             {
                 this.nameLayout.EditText.Text = this.studentFilter.Name;
                 this.groupLayout.EditText.Text = this.studentFilter.Group;
@@ -64,10 +68,8 @@ namespace StudentList.Fragments
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.GetString(Resource.String.filter_title);
 
             this.groupDialog = new AlertDialog.Builder(this.Context);
-            var adapter = ArrayAdapter.CreateFromResource(
-                this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
 
-            this.groupDialog.SetAdapter(adapter, this.OnItemClick);
+            this.groupDialog.SetAdapter(this.adapter, this.OnItemClick);
 
             this.birthdatePickerDialog = new DatePickerDialog(
                 this.Context, this.DateOfBirthDatePickerDialogDateSet, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);

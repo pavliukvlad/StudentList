@@ -13,5 +13,20 @@ namespace StudentList.Models
         public bool IsValid => !this.Errors.Any();
 
         public Dictionary<string, IEnumerable<string>> Errors { get; private set; }
+
+        public string GetErrorMessages(string key)
+        {
+            string message = string.Empty;
+
+            foreach (var error in this.Errors)
+            {
+                if (key == error.Key)
+                {
+                    message = string.Join(".", error.Value);
+                }
+            }
+
+            return message;
+        }
     }
 }

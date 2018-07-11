@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
 using Android.Views;
 using Android.Widget;
 using StudentList.Adapters;
-using StudentList.Model;
+using StudentList.Common.Dialogs;
+using StudentList.Extensions;
+using StudentList.Models;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
@@ -14,26 +17,29 @@ namespace StudentList.Fragments
     public class StudentListFragment : Android.Support.V4.App.Fragment
     {
         private readonly StudentFilter studentFilter;
-        private readonly StudentAdapter studentAdapter;
 
         private RecyclerView recyclerView;
+        private StudentAdapter studentAdapter;
         private IStudentRepository repository;
 
+        private LoadingDialog loadingDialog;
         private TextView filteringResultTextView;
-        private ProgressBar loadingProgressBar;
         private TextView studentsCountTextView;
 
         public StudentListFragment(StudentFilter studentFilter)
         {
             this.studentFilter = studentFilter;
-            this.studentAdapter = new StudentAdapter();
         }
 
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
-            this.repository = new StudentsRepository(this.Activity);
+            this.studentAdapter = new StudentAdapter();
+            this.loadingDialog = new LoadingDialog(this.Context);
+            this.repository = new StudentsRepository(
+                this.Activity,
+                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 });
 
             this.HasOptionsMenu = true;
         }
@@ -44,7 +50,6 @@ namespace StudentList.Fragments
 
             this.recyclerView = view.FindViewById<RecyclerView>(Resource.Id.recyclerView);
             this.filteringResultTextView = view.FindViewById<TextView>(Resource.Id.filter_result_textview);
-            this.loadingProgressBar = view.FindViewById<ProgressBar>(Resource.Id.loading_progress_bar);
             this.studentsCountTextView = view.FindViewById<TextView>(Resource.Id.students_count_textview);
 
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.GetString(Resource.String.app_name);
@@ -56,17 +61,11 @@ namespace StudentList.Fragments
         {
             if (!this.studentAdapter.IsAnyStudents)
             {
-                var students = await this.repository.GetStudentsAsync(this.studentFilter);
-                this.studentAdapter.SetItems(students);
-
-                this.filteringResultTextView.Visibility = students.Count > 0 ? ViewStates.Invisible
-                : ViewStates.Visible;
+                await this.Activity.RunMethodWithLoaderAsync(this.PutStudentsToAdapter(this.studentFilter));
             }
 
             this.studentsCountTextView.Text = string.Format(
-                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
-
-            this.loadingProgressBar.Visibility = ViewStates.Invisible;
+               CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
 
             var layoutManager = new LinearLayoutManager(this.Activity);
             this.recyclerView.SetLayoutManager(layoutManager);
@@ -119,15 +118,18 @@ namespace StudentList.Fragments
 
         private async void Reset()
         {
-            this.loadingProgressBar.Visibility = ViewStates.Visible;
-            this.filteringResultTextView.Visibility = ViewStates.Invisible;
-
-            var students = await this.repository.GetStudentsAsync(StudentFilter.Default);
+            await this.Activity.RunMethodWithLoaderAsync(this.PutStudentsToAdapter(StudentFilter.Default));
             this.studentsCountTextView.Text = string.Format(
-                CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), students.Count);
+               CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
+        }
 
-            this.loadingProgressBar.Visibility = ViewStates.Invisible;
+        private async Task PutStudentsToAdapter(StudentFilter studentFilter)
+        {
+            var students = await this.repository.GetStudentsAsync(studentFilter);
             this.studentAdapter.SetItems(students);
+
+            this.filteringResultTextView.Visibility = students.Count > 0 ? ViewStates.Invisible
+            : ViewStates.Visible;
         }
 
         private void FilterStudents()

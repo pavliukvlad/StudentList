@@ -289,7 +289,7 @@ namespace StudentList.Fragments
 
         private async Task GetSelectedStudentAsync(string studentId)
         {
-            this.selectedStudent = await this.studentRepository.GetStudentById(this.StudentId);
+            this.selectedStudent = await this.studentRepository.GetStudentById(studentId);
         }
 
         private void ShowStudentList()

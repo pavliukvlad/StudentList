@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Android.Content;
 using Android.Content.PM;
 using Android.Provider;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 
 namespace StudentList.Common.Intents
 {
-    public static class CommonIntents
+    public static class PhotoIntent
     {
-        public static Intent CreateImageChooserIntent(Context context, params Intent[] options)
+        public static async Task<Intent> CreateImageChooserIntentAsync(Context context, params Intent[] options)
         {
             if (options == null || !options.Any())
             {
@@ -19,9 +22,9 @@ namespace StudentList.Common.Intents
                     optionsList.Add(CreateGaleryPickIntent());
                 }
 
-                if (IsCameraAppsInstalled(context))
+                if (await IsCameraAppsInstalledAsync(context))
                 {
-                    optionsList.Add(IsCameraPickIntent());
+                    optionsList.Add(CreateCameraPickIntent());
                 }
 
                 options = optionsList.ToArray();
@@ -37,7 +40,7 @@ namespace StudentList.Common.Intents
             return intent;
         }
 
-        private static Intent IsCameraPickIntent()
+        private static Intent CreateCameraPickIntent()
         {
             var intent = new Intent(MediaStore.ActionImageCapture);
             return intent;
@@ -49,12 +52,18 @@ namespace StudentList.Common.Intents
             return intent;
         }
 
-        private static bool IsCameraAppsInstalled(Context context)
+        private static async Task<bool> IsCameraAppsInstalledAsync(Context context)
         {
-            var intent = new Intent(MediaStore.ActionImageCapture);
-            var availableActivities = context.PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly);
+            var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+            if (status == PermissionStatus.Granted)
+            {
+                var intent = new Intent(MediaStore.ActionImageCapture);
+                var availableActivities = context.PackageManager.QueryIntentActivities(intent, PackageInfoFlags.MatchDefaultOnly);
 
-            return availableActivities != null && availableActivities.Any();
+                return availableActivities != null && availableActivities.Any();
+            }
+
+            return false;
         }
 
         private static bool IsGaleryAppsInstalled(Context context)

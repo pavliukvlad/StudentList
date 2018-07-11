@@ -52,6 +52,9 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <CodeAnalysisRuleSet>..\ca.ruleset</CodeAnalysisRuleSet>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,15 +66,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\StudentAdapter.cs" />
-    <Compile Include="Common\Intents\CommonIntents.cs" />
+    <Compile Include="Common\Dialogs\LoadingDialog.cs" />
+    <Compile Include="Common\Intents\PhotoIntent.cs" />
+    <Compile Include="Constants\StudentListDirNames.cs" />
+    <Compile Include="Constants\FormatConstants.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Constants\IntentConstants.cs" />
+    <Compile Include="Constants\StudentProfileKeys.cs" />
+    <Compile Include="Constants\PatternConstants.cs" />
+    <Compile Include="Common\Extensions\ActivityExtensions.cs" />
     <Compile Include="Fragments\FilterStudentsFragment.cs" />
+    <Compile Include="MainApplication.cs" />
+    <Compile Include="Models\LoadingDelays.cs" />
+    <Compile Include="Models\SavingPhotoResult.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentFilter.cs" />
     <Compile Include="Models\ValidationResult.cs" />
+    <Compile Include="Providers\Interfaces\IUserPhotoProvider.cs" />
+    <Compile Include="Providers\PhotoProvider.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewHolders\StudentViewHolder.cs" />
-    <Compile Include="Constants\IntentConstants.cs" />
     <Compile Include="Fragments\StudentListFragment.cs" />
     <Compile Include="Fragments\StudentProfileFragment.cs" />
     <Compile Include="Activities\MainActivity.cs" />
@@ -117,6 +133,12 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
+    </PackageReference>
+    <PackageReference Include="Plugin.Permissions">
+      <Version>3.0.0.12</Version>
     </PackageReference>
     <PackageReference Include="Refractored.Controls.CircleImageView">
       <Version>1.0.1</Version>

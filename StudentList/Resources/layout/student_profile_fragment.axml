@@ -108,15 +108,8 @@
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/student_profile_progressbar" />
     <Button
-        android:id="@+id/save_changes_btn"
+        android:id="@+id/confirm_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/confirm_btn_height"
         android:layout_alignParentBottom="true"

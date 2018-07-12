@@ -20,7 +20,10 @@ namespace StudentList.Services
                     var root = context.GetDir(StudentListDirNames.Image, FileCreationMode.Private);
                     var file = new Java.IO.File(root, fileName);
 
-                    file.Delete();
+                    if (file.Exists())
+                    {
+                        file.Delete();
+                    }
 
                     using (var fileStream = new FileOutputStream(file))
                     {

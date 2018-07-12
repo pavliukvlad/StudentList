@@ -57,18 +57,14 @@ namespace StudentList.Fragments
         {
             base.OnViewCreated(view, savedInstanceState);
 
-            if (this.studentFilter != StudentFilter.Default)
-            {
-                this.nameLayout.EditText.Text = this.studentFilter.Name;
-                this.groupLayout.EditText.Text = this.studentFilter.Group;
-                this.birthdateLayout.EditText.Text = this.studentFilter.Birthdate == default(DateTime) ? string.Empty
-                    : this.studentFilter.Birthdate.ToShortDateString();
-            }
+            this.nameLayout.EditText.Text = this.studentFilter.Name;
+            this.groupLayout.EditText.Text = this.studentFilter.Group ?? this.GetString(Resource.String.filter_group_txt);
+            this.birthdateLayout.EditText.Text = this.studentFilter.Birthdate == default(DateTime) ? string.Empty
+                : this.studentFilter.Birthdate.ToShortDateString();
 
             ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.GetString(Resource.String.filter_title);
 
             this.groupDialog = new AlertDialog.Builder(this.Context);
-
             this.groupDialog.SetAdapter(this.adapter, this.OnItemClick);
 
             this.birthdatePickerDialog = new DatePickerDialog(
@@ -197,7 +193,7 @@ namespace StudentList.Fragments
         private void Reset()
         {
             this.nameLayout.EditText.Text = string.Empty;
-            this.groupLayout.EditText.Text = string.Empty;
+            this.groupLayout.EditText.Text = this.GetString(Resource.String.filter_group_txt);
             this.birthdateLayout.EditText.Text = string.Empty;
         }
     }

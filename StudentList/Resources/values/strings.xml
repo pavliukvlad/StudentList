@@ -10,7 +10,7 @@
   <string name="photo_hint">Photo</string>
 
   <!--Some text-->
-  <string name="filter_group_txt">Group Any</string>
+  <string name="filter_group_txt">Any group</string>
   <string name="no_match_found_txt">No student match found...Try again</string>
 
   <!--Title for buttons-->
@@ -39,7 +39,7 @@
   
   <!--Group array for adapter-->
   <string-array name="group_array">
-    <item>Any</item>
+    <item>Any group</item>
     <item>MN</item>
     <item>PZ</item>
     <item>KN</item>

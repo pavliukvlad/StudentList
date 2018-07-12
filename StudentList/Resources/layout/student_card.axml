@@ -34,6 +34,8 @@
                 android:layout_height="@dimen/phone_icon_height_and_width"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
+                android:layout_marginBottom="@dimen/phone_icon_margin_right_and_bottom"
+                android:layout_marginRight="@dimen/phone_icon_margin_right_and_bottom"
                 android:src="@drawable/phone_enabled_icon"
                 android:visibility="invisible"
                 android:id="@+id/phone_image" />

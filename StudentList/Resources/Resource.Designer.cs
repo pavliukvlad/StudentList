@@ -2053,6 +2053,9 @@ namespace StudentList
 			// aapt resource value: 0x7f0700a9
 			public const int phone_icon_height_and_width = 2131165353;
 			
+			// aapt resource value: 0x7f0700ad
+			public const int phone_icon_margin_right_and_bottom = 2131165357;
+			
 			// aapt resource value: 0x7f0700aa
 			public const int profile_photo_height_and_width = 2131165354;
 			
@@ -3357,7 +3360,7 @@ namespace StudentList
 			public const int select_dialog_singlechoice_material = 2130968636;
 			
 			// aapt resource value: 0x7f04003d
-			public const int student_cart = 2130968637;
+			public const int student_card = 2130968637;
 			
 			// aapt resource value: 0x7f04003e
 			public const int student_list_fragment = 2130968638;

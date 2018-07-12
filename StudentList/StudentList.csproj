@@ -168,7 +168,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\student_cart.axml">
+    <AndroidResource Include="Resources\layout\student_card.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Support.V7.Widget;
@@ -38,7 +36,6 @@ namespace StudentList.Fragments
             this.studentAdapter = new StudentAdapter();
             this.loadingDialog = new LoadingDialog(this.Context);
             this.repository = new StudentsRepository(
-                this.Activity,
                 new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 });
 
             this.HasOptionsMenu = true;
@@ -61,7 +58,12 @@ namespace StudentList.Fragments
         {
             if (!this.studentAdapter.IsAnyStudents)
             {
-                await this.Activity.RunMethodWithLoaderAsync(this.PutStudentsToAdapter(this.studentFilter));
+                var students = await this.Activity.RunMethodWithLoaderAsync(
+                    this.repository.GetStudentsAsync(this.studentFilter));
+                this.studentAdapter.SetItems(students);
+
+                this.filteringResultTextView.Visibility = students.Count > 0 ? ViewStates.Invisible
+                : ViewStates.Visible;
             }
 
             this.studentsCountTextView.Text = string.Format(
@@ -118,18 +120,13 @@ namespace StudentList.Fragments
 
         private async void Reset()
         {
-            await this.Activity.RunMethodWithLoaderAsync(this.PutStudentsToAdapter(StudentFilter.Default));
-            this.studentsCountTextView.Text = string.Format(
-               CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
-        }
-
-        private async Task PutStudentsToAdapter(StudentFilter studentFilter)
-        {
-            var students = await this.repository.GetStudentsAsync(studentFilter);
+            var students = await this.Activity.RunMethodWithLoaderAsync(this.repository.GetStudentsAsync(StudentFilter.Default));
             this.studentAdapter.SetItems(students);
 
             this.filteringResultTextView.Visibility = students.Count > 0 ? ViewStates.Invisible
             : ViewStates.Visible;
+            this.studentsCountTextView.Text = string.Format(
+               CultureInfo.InvariantCulture, this.GetString(Resource.String.student_count_pattern), this.studentAdapter.ItemCount);
         }
 
         private void FilterStudents()

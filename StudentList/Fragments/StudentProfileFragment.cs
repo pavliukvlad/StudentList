@@ -26,7 +26,7 @@ namespace StudentList.Fragments
 {
     public class StudentProfileFragment : Android.Support.V4.App.Fragment
     {
-        private IStudentRepository studentRepository;
+        private IStudentRepository repository;
         private Dictionary<string, TextInputLayout> layouts;
         private Student selectedStudent;
         private Bitmap profilePhoto;
@@ -56,9 +56,8 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
-            this.studentRepository = new StudentsRepository(
-                this.Activity,
-                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 });
+            this.repository = new StudentsRepository(
+                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 500, GetStudentsDelay = 1000 });
             this.layouts = new Dictionary<string, TextInputLayout>();
             this.loadingDialog = new LoadingDialog(this.Context);
 
@@ -90,7 +89,8 @@ namespace StudentList.Fragments
         {
             if (!string.IsNullOrWhiteSpace(this.StudentId))
             {
-                await this.Activity.RunMethodWithLoaderAsync(this.GetSelectedStudentAsync(this.StudentId));
+                this.selectedStudent = await this.Activity.RunMethodWithLoaderAsync(
+                    this.repository.GetStudentById(this.StudentId));
                 if (this.selectedStudent.ProfilePhoto != null)
                 {
                     this.profilePhotoImageView.SetImageBitmap(BitmapFactory
@@ -141,15 +141,14 @@ namespace StudentList.Fragments
                 if (data.Data == null)
                 {
                     this.profilePhoto = (Bitmap)data.GetParcelableExtra("data");
-                    this.profilePhotoGuid = Guid.NewGuid();
-                    this.profilePhotoImageView.SetImageBitmap(this.profilePhoto);
                 }
                 else
                 {
                     this.profilePhoto = MediaStore.Images.Media.GetBitmap(this.Activity.ContentResolver, data.Data);
-                    this.profilePhotoGuid = Guid.NewGuid();
-                    this.profilePhotoImageView.SetImageBitmap(this.profilePhoto);
                 }
+
+                this.profilePhotoGuid = Guid.NewGuid();
+                this.profilePhotoImageView.SetImageBitmap(this.profilePhoto);
             }
         }
 
@@ -220,31 +219,42 @@ namespace StudentList.Fragments
 
         private async Task ConfirmAsync()
         {
-            var name = this.nameLayout.EditText.Text.TrimEnd();
-            var birthdate = this.birthdateLayout.EditText.Text.TrimEnd();
-            var uni = this.universityLayout.EditText.Text.TrimEnd();
-            var group = this.groupLayout.EditText.Text.TrimEnd();
+            var name = this.nameLayout.EditText.Text.Trim();
+            var uni = this.universityLayout.EditText.Text.Trim();
+            var group = this.groupLayout.EditText.Text.Trim();
             var phone = string.IsNullOrWhiteSpace(this.phoneLayout.EditText.Text) ? null
-                : this.phoneLayout.EditText.Text.TrimEnd();
+                : this.phoneLayout.EditText.Text.Trim();
+
+            if (!DateTime.TryParse(this.birthdateLayout.EditText.Text, out DateTime birthdate))
+            {
+                birthdate = DateTime.MinValue;
+            }
 
             var savingPhotoResult = await PhotoService.SavePhotoAsync(
                this.profilePhoto,
                string.Format(CultureInfo.InvariantCulture, PatternConstants.PhotoName, this.profilePhotoGuid.ToString()),
                this.Activity);
 
-            if (string.IsNullOrWhiteSpace(this.StudentId))
+            if (!savingPhotoResult.IsError || savingPhotoResult == null)
             {
-                await this.AddStudent(savingPhotoResult, name, birthdate, uni, group, phone);
+                if (string.IsNullOrWhiteSpace(this.StudentId))
+                {
+                    await this.AddStudent(savingPhotoResult.ProfilePhotoUri, name, birthdate, uni, group, phone);
+                }
+                else
+                {
+                    await this.ChangeStudentById(this.StudentId, savingPhotoResult.ProfilePhotoUri, name, birthdate, group, uni, phone);
+                }
             }
             else
             {
-                await this.ChangeStudentById(this.StudentId, savingPhotoResult, name, birthdate, group, uni, phone);
+                Toast.MakeText(this.Activity, Resource.String.photo_toast_error, ToastLength.Short).Show();
             }
         }
 
-        private async Task AddStudent(SavingPhotoResult savingPhotoResult, string name, string birthdate, string uni, string group, string phone)
+        private async Task AddStudent(Uri photoUri, string name, DateTime birthdate, string uni, string group, string phone)
         {
-            var validationResult = await this.studentRepository.AddNewStudentAsync(name, savingPhotoResult, birthdate, group, uni, phone);
+            var validationResult = await this.repository.AddNewStudentAsync(name, photoUri, birthdate, group, uni, phone);
 
             if (!validationResult.IsValid)
             {
@@ -256,10 +266,10 @@ namespace StudentList.Fragments
             }
         }
 
-        private async Task ChangeStudentById(string studentId, SavingPhotoResult savingPhotoResult, string name, string birthdate, string group, string uni, string phone)
+        private async Task ChangeStudentById(string studentId, Uri photoUri, string name, DateTime birthdate, string group, string uni, string phone)
         {
-            var validationResult = await this.studentRepository.ChangeStudentById(
-                this.StudentId, savingPhotoResult, name, birthdate, group, uni, phone);
+            var validationResult = await this.repository.ChangeStudentById(
+                this.StudentId, photoUri, name, birthdate, group, uni, phone);
 
             if (!validationResult.IsValid)
             {
@@ -278,18 +288,8 @@ namespace StudentList.Fragments
                 foreach (var ctr in this.layouts)
                 {
                     ctr.Value.Error = validationResult.GetErrorMessages(ctr.Key);
-
-                    if (error.Key == StudentProfileKeys.Photo)
-                    {
-                        Toast.MakeText(this.Context, string.Join(".", error.Value), ToastLength.Short).Show();
-                    }
                 }
             }
-        }
-
-        private async Task GetSelectedStudentAsync(string studentId)
-        {
-            this.selectedStudent = await this.studentRepository.GetStudentById(studentId);
         }
 
         private void ShowStudentList()

@@ -21,28 +21,25 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        private Activity activity;
         private LoadingDelays delays;
 
-        public StudentsRepository(Activity activity, LoadingDelays loadingDelays)
+        public StudentsRepository(LoadingDelays loadingDelays)
         {
-            this.activity = activity;
             this.delays = loadingDelays;
         }
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, SavingPhotoResult photoResult, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri photoUri, DateTime birthdate, string group, string uni, string phone)
         {
-            var validationResult = this.Validate(photoResult, name, birthdate, group, uni, phone);
+            var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
                 var student = new Student()
                 {
-                    ProfilePhoto = photoResult.ProfilePhotoUri,
+                    ProfilePhoto = photoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
-                    Birthdate = DateTime.ParseExact(
-                        birthdate, FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture),
+                    Birthdate = birthdate,
                     GroupName = group,
                     University = uni,
                     Phone = phone
@@ -56,9 +53,9 @@ namespace StudentList
             return validationResult;
         }
 
-        public async Task<ValidationResult> ChangeStudentById(string studentId, SavingPhotoResult photoResult, string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri photoUri, string name, DateTime birthdate, string group, string uni, string phone)
         {
-            var validationResult = this.Validate(photoResult, name, birthdate, group, uni, phone);
+            var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
             if (validationResult.IsValid)
             {
@@ -66,10 +63,9 @@ namespace StudentList
 
                 if (student != null)
                 {
-                    student.ProfilePhoto = photoResult.ProfilePhotoUri;
+                    student.ProfilePhoto = photoUri;
                     student.Name = name;
-                    student.Birthdate = DateTime.ParseExact(
-                        birthdate, FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
+                    student.Birthdate = birthdate;
                     student.GroupName = group;
                     student.University = uni;
                     student.Phone = phone;
@@ -115,40 +111,35 @@ namespace StudentList
             return temp.ToList();
         }
 
-        private ValidationResult Validate(SavingPhotoResult photo, string name, string birthdate, string group, string uni, string phone)
+        private ValidationResult Validate(string name, DateTime birthdate, string group, string uni, string phone)
         {
             var validationResult = new ValidationResult();
 
-            if (photo.IsError)
-            {
-                validationResult.Errors.Add(nameof(photo), new List<string> { this.activity.GetString(Resource.String.photo_toast_error) });
-            }
-
             if (string.IsNullOrWhiteSpace(name))
             {
-                validationResult.Errors.Add(nameof(name), new List<string>() { this.activity.GetString(Resource.String.name_field_error) });
+                validationResult.Errors.Add(nameof(name), new List<string>() { "Name cannot be empty" });
             }
 
-            if (string.IsNullOrWhiteSpace(birthdate))
+            if (birthdate == DateTime.MinValue)
             {
-                validationResult.Errors.Add(nameof(birthdate), new List<string>() { this.activity.GetString(Resource.String.birthdate_field_error) });
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { "Birthdate cannot be empty" });
             }
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { this.activity.GetString(Resource.String.group_field_error) });
+                validationResult.Errors.Add(nameof(group), new List<string>() { "Group cannot be empty" });
             }
 
             if (string.IsNullOrWhiteSpace(uni))
             {
-                validationResult.Errors.Add(nameof(uni), new List<string>() { this.activity.GetString(Resource.String.uni_field_error) });
+                validationResult.Errors.Add(nameof(uni), new List<string>() { "University cannot be empty" });
             }
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
                 if (!Regex.Match(phone, PatternConstants.PhoneNumber).Success)
                 {
-                    validationResult.Errors.Add(nameof(phone), new List<string> { this.activity.GetString(Resource.String.phone_field_error) });
+                    validationResult.Errors.Add(nameof(phone), new List<string> { "Wrong phone number format" });
                 }
             }
 

@@ -16,17 +16,7 @@ namespace StudentList.Models
 
         public string GetErrorMessages(string key)
         {
-            string message = string.Empty;
-
-            foreach (var error in this.Errors)
-            {
-                if (key == error.Key)
-                {
-                    message = string.Join(".", error.Value);
-                }
-            }
-
-            return message;
+            return string.Join(".", this.Errors.Where(e => e.Key == key).SelectMany(e => e.Value));
         }
     }
 }

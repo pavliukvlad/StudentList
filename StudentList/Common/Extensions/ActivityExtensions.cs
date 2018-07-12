@@ -14,5 +14,16 @@ namespace StudentList.Extensions
             await task;
             loadingDialog.Hide();
         }
+
+        public static async Task<T> RunMethodWithLoaderAsync<T>(this Activity activity, Task<T> task)
+        {
+            var loadingDialog = new LoadingDialog(activity);
+
+            loadingDialog.Show();
+            var result = await task;
+            loadingDialog.Hide();
+
+            return result;
+        }
     }
 }

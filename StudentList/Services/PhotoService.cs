@@ -4,44 +4,53 @@ using System.Threading.Tasks;
 using Android.Content;
 using Android.Graphics;
 using Java.IO;
+using StudentList.Constants;
+using StudentList.Models;
 
 namespace StudentList.Services
 {
     public static class PhotoService
     {
-        public static async Task<Uri> SavePhotoAsync(Bitmap bitmap, string fileName, Context context)
+        public static async Task<SavingPhotoResult> SavePhotoAsync(Bitmap bitmap, string fileName, Context context)
         {
             if (bitmap != null)
             {
                 try
                 {
-                    var root = context.GetDir("images", FileCreationMode.Private);
+                    var root = context.GetDir(StudentListDirNames.Image, FileCreationMode.Private);
                     var file = new Java.IO.File(root, fileName);
 
-                    using (var stream = new FileOutputStream(file))
+                    if (file.Exists())
+                    {
+                        file.Delete();
+                    }
+
+                    using (var fileStream = new FileOutputStream(file))
                     {
                         byte[] arr;
 
-                        using (var stream2 = new MemoryStream())
+                        using (var memoryStream = new MemoryStream())
                         {
-                            await bitmap.CompressAsync(Bitmap.CompressFormat.Png, 100, stream2);
-                            arr = stream2.ToArray();
+                            await bitmap.CompressAsync(Bitmap.CompressFormat.Png, 100, memoryStream);
+                            arr = memoryStream.ToArray();
                         }
 
-                        bitmap.Recycle();
+                        await fileStream.WriteAsync(arr);
 
-                        await stream.WriteAsync(arr);
-
-                        return new Uri(file.Path);
+                        return new SavingPhotoResult()
+                        {
+                            ProfilePhotoUri = new Uri(file.Path),
+                            IsPhotoSelected = true
+                        };
                     }
                 }
                 catch
                 {
-                    System.Diagnostics.Debug.WriteLine("Can't save a profile photo!");
+                    return new SavingPhotoResult() { IsError = true };
                 }
             }
 
-            return null;
+            return new SavingPhotoResult() { IsPhotoSelected = false };
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Graphics;
-using StudentList.Model;
+using Android.Content.Res;
+using StudentList.Constants;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
 
@@ -24,14 +22,16 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        private Activity activity;
+        private readonly LoadingDelays delays;
+        private readonly IStringProvider stringProvider;
 
-        public StudentsRepository(Activity activity)
+        public StudentsRepository(LoadingDelays loadingDelays, IStringProvider stringProvider)
         {
-            this.activity = activity;
+            this.delays = loadingDelays;
+            this.stringProvider = stringProvider;
         }
 
-        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri profilePhotoUri, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> AddNewStudentAsync(string name, Uri photoUri, DateTime birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -39,11 +39,10 @@ namespace StudentList
             {
                 var student = new Student()
                 {
-                    ProfilePhoto = profilePhotoUri,
+                    ProfilePhoto = photoUri,
                     Id = Guid.NewGuid().ToString(),
                     Name = name,
-                    Birthdate = DateTime.ParseExact(
-                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    Birthdate = birthdate,
                     GroupName = group,
                     University = uni,
                     Phone = phone
@@ -52,12 +51,12 @@ namespace StudentList
                 students.Add(student);
             }
 
-            await Task.Delay(300);
+            await Task.Delay(this.delays.AddStudentDelay);
 
             return validationResult;
         }
 
-        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri profilePhotoUri, string name, string birthdate, string group, string uni, string phone)
+        public async Task<ValidationResult> ChangeStudentById(string studentId, Uri photoUri, string name, DateTime birthdate, string group, string uni, string phone)
         {
             var validationResult = this.Validate(name, birthdate, group, uni, phone);
 
@@ -67,24 +66,23 @@ namespace StudentList
 
                 if (student != null)
                 {
-                    student.ProfilePhoto = profilePhotoUri;
+                    student.ProfilePhoto = photoUri;
                     student.Name = name;
-                    student.Birthdate = DateTime.ParseExact(
-                        birthdate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    student.Birthdate = birthdate;
                     student.GroupName = group;
                     student.University = uni;
                     student.Phone = phone;
                 }
             }
 
-            await Task.Delay(300);
+            await Task.Delay(this.delays.ChangeStudentDelay);
 
             return validationResult;
         }
 
         public async Task<Student> GetStudentById(string id)
         {
-            await Task.Delay(300);
+            await Task.Delay(this.delays.GetStudentDelay);
 
             return students.Where(s => s.Id == id).FirstOrDefault();
         }
@@ -93,16 +91,18 @@ namespace StudentList
         {
             IEnumerable<Student> temp = students;
 
-            if (studentFilter != default(StudentFilter))
+            if (studentFilter != StudentFilter.Default)
             {
                 if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 {
-                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant());
+                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant()
+                    || s.Name.ToUpperInvariant().Contains(studentFilter.Name.ToUpperInvariant()));
                 }
 
                 if (!string.IsNullOrWhiteSpace(studentFilter.Group))
                 {
-                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant() | studentFilter.Group == "Group Any");
+                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant()
+                    || studentFilter.Group == this.stringProvider.GroupFilter);
                 }
 
                 if (studentFilter.Birthdate != default(DateTime))
@@ -111,40 +111,40 @@ namespace StudentList
                 }
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(this.delays.GetStudentsDelay);
 
             return temp.ToList();
         }
 
-        private ValidationResult Validate(string name, string birthdate, string group, string uni, string phone)
+        private ValidationResult Validate(string name, DateTime birthdate, string group, string uni, string phone)
         {
             var validationResult = new ValidationResult();
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                validationResult.Errors.Add(nameof(name), new List<string>() { this.activity.GetString(Resource.String.name_field_error) });
+                validationResult.Errors.Add(nameof(name), new List<string>() { this.stringProvider.NameError });
             }
 
-            if (string.IsNullOrWhiteSpace(birthdate))
+            if (birthdate == DateTime.MinValue)
             {
-                validationResult.Errors.Add(nameof(birthdate), new List<string>() { this.activity.GetString(Resource.String.birthdate_field_error) });
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { this.stringProvider.BirthdateError });
             }
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { this.activity.GetString(Resource.String.group_field_error) });
+                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError});
             }
 
             if (string.IsNullOrWhiteSpace(uni))
             {
-                validationResult.Errors.Add(nameof(uni), new List<string>() { this.activity.GetString(Resource.String.uni_field_error) });
+                validationResult.Errors.Add(nameof(uni), new List<string>() { this.stringProvider.UniversityError });
             }
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
-                if (!Regex.Match(phone, @"^\+380\d{9}").Success)
+                if (!Regex.Match(phone, PatternConstants.PhoneNumber).Success)
                 {
-                    validationResult.Errors.Add(nameof(phone), new List<string> { this.activity.GetString(Resource.String.phone_field_error) });
+                    validationResult.Errors.Add(nameof(phone), new List<string> { this.stringProvider.PhoneError });
                 }
             }
 

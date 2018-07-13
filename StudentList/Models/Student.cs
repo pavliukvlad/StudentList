@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StudentList.Model
+namespace StudentList.Models
 {
     public class Student
     {

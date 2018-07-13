@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <refractored.controls.CircleImageView
                 android:id="@+id/profile_image"
@@ -24,6 +24,7 @@
                 android:layout_marginTop="@dimen/top_margin"
                 android:layout_marginStart="@dimen/start_or_end_margin"
                 android:layout_marginEnd="@dimen/start_or_end_margin"
+                android:layout_below="@id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true">
@@ -41,6 +42,7 @@
                 android:id="@+id/birthdate_layout"
                 android:layout_marginStart="@dimen/start_or_end_margin"
                 android:layout_marginEnd="@dimen/start_or_end_margin"
+                android:layout_below="@id/name_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true">
@@ -59,6 +61,7 @@
                 android:id="@+id/uni_layout"
                 android:layout_marginStart="@dimen/start_or_end_margin"
                 android:layout_marginEnd="@dimen/start_or_end_margin"
+                android:layout_below="@id/birthdate_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true">
@@ -76,6 +79,7 @@
                 android:id="@+id/group_layout"
                 android:layout_marginStart="@dimen/start_or_end_margin"
                 android:layout_marginEnd="@dimen/start_or_end_margin"
+                android:layout_below="@id/uni_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true">
@@ -93,6 +97,7 @@
                 android:id="@+id/phone_layout"
                 android:layout_marginStart="@dimen/start_or_end_margin"
                 android:layout_marginEnd="@dimen/start_or_end_margin"
+                android:layout_below="@id/group_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true">
@@ -106,21 +111,14 @@
                     android:drawableLeft="@drawable/phone_icon"
                     android:drawablePadding="@dimen/icon_padding" />
             </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/confirm_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/confirm_btn_height"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/start_or_end_margin"
+                android:backgroundTint="@color/colorSaveButton"
+                android:textColor="@color/textColor" />
         </LinearLayout>
     </ScrollView>
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:id="@+id/student_profile_progressbar" />
-    <Button
-        android:id="@+id/save_changes_btn"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/confirm_btn_height"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/start_or_end_margin"
-        android:backgroundTint="@color/colorSaveButton"
-        android:textColor="@color/textColor" />
 </RelativeLayout>

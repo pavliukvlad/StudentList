@@ -83,8 +83,10 @@
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentFilter.cs" />
     <Compile Include="Models\ValidationResult.cs" />
+    <Compile Include="Providers\Interfaces\IStringProvider.cs" />
     <Compile Include="Providers\Interfaces\IUserPhotoProvider.cs" />
     <Compile Include="Providers\PhotoProvider.cs" />
+    <Compile Include="Providers\StringProvider.cs" />
     <Compile Include="Repositories\Interfaces\IStudentRepository.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewHolders\StudentViewHolder.cs" />

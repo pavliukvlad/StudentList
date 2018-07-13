@@ -8,6 +8,7 @@ using StudentList.Adapters;
 using StudentList.Common.Dialogs;
 using StudentList.Extensions;
 using StudentList.Models;
+using StudentList.Providers;
 using StudentList.Providers.Interfaces;
 
 namespace StudentList.Fragments
@@ -36,7 +37,8 @@ namespace StudentList.Fragments
             this.studentAdapter = new StudentAdapter();
             this.loadingDialog = new LoadingDialog(this.Context);
             this.repository = new StudentsRepository(
-                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 });
+                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 },
+                new StringProvider(this.Context));
 
             this.HasOptionsMenu = true;
         }

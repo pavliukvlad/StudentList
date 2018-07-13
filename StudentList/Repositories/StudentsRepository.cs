@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content.Res;
 using StudentList.Constants;
 using StudentList.Models;
 using StudentList.Providers.Interfaces;
@@ -21,11 +22,13 @@ namespace StudentList
             new Student() { Id = Guid.NewGuid().ToString(), Birthdate = new DateTime(1998, 11, 17), Name = "Taras", GroupName = "MN", University = "Lviv Polytechnic", Phone = "+380987573264" }
         };
 
-        private LoadingDelays delays;
+        private readonly LoadingDelays delays;
+        private readonly IStringProvider stringProvider;
 
-        public StudentsRepository(LoadingDelays loadingDelays)
+        public StudentsRepository(LoadingDelays loadingDelays, IStringProvider stringProvider)
         {
             this.delays = loadingDelays;
+            this.stringProvider = stringProvider;
         }
 
         public async Task<ValidationResult> AddNewStudentAsync(string name, Uri photoUri, DateTime birthdate, string group, string uni, string phone)
@@ -92,12 +95,14 @@ namespace StudentList
             {
                 if (!string.IsNullOrWhiteSpace(studentFilter.Name))
                 {
-                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant());
+                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant()
+                    || s.Name.ToUpperInvariant().Contains(studentFilter.Name.ToUpperInvariant()));
                 }
 
                 if (!string.IsNullOrWhiteSpace(studentFilter.Group))
                 {
-                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant() | studentFilter.Group == "Group Any");
+                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant()
+                    || studentFilter.Group == this.stringProvider.GroupFilter);
                 }
 
                 if (studentFilter.Birthdate != default(DateTime))
@@ -117,29 +122,29 @@ namespace StudentList
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                validationResult.Errors.Add(nameof(name), new List<string>() { "Name cannot be empty" });
+                validationResult.Errors.Add(nameof(name), new List<string>() { this.stringProvider.NameError });
             }
 
             if (birthdate == DateTime.MinValue)
             {
-                validationResult.Errors.Add(nameof(birthdate), new List<string>() { "Birthdate cannot be empty" });
+                validationResult.Errors.Add(nameof(birthdate), new List<string>() { this.stringProvider.BirthdateError });
             }
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { "Group cannot be empty" });
+                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError});
             }
 
             if (string.IsNullOrWhiteSpace(uni))
             {
-                validationResult.Errors.Add(nameof(uni), new List<string>() { "University cannot be empty" });
+                validationResult.Errors.Add(nameof(uni), new List<string>() { this.stringProvider.UniversityError });
             }
 
             if (!string.IsNullOrWhiteSpace(phone))
             {
                 if (!Regex.Match(phone, PatternConstants.PhoneNumber).Success)
                 {
-                    validationResult.Errors.Add(nameof(phone), new List<string> { "Wrong phone number format" });
+                    validationResult.Errors.Add(nameof(phone), new List<string> { this.stringProvider.PhoneError });
                 }
             }
 

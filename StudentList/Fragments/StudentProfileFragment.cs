@@ -19,6 +19,7 @@ using StudentList.Common.Intents;
 using StudentList.Constants;
 using StudentList.Extensions;
 using StudentList.Models;
+using StudentList.Providers;
 using StudentList.Providers.Interfaces;
 using StudentList.Services;
 
@@ -57,7 +58,8 @@ namespace StudentList.Fragments
             base.OnCreate(savedInstanceState);
 
             this.repository = new StudentsRepository(
-                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 500, GetStudentsDelay = 1000 });
+                new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 500, GetStudentsDelay = 1000 },
+                new StringProvider(this.Context));
             this.layouts = new Dictionary<string, TextInputLayout>();
             this.loadingDialog = new LoadingDialog(this.Context);
 
@@ -102,12 +104,13 @@ namespace StudentList.Fragments
                 : string.Format(CultureInfo.InvariantCulture, PatternConstants.AppBarTitle, this.GetString(Resource.String.edit_student_title), this.selectedStudent.Name);
 
             this.nameLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Name;
-            this.birthdateLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Birthdate.ToShortDateString();
+            this.birthdateLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty
+                : this.selectedStudent.Birthdate.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
             this.universityLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.University;
             this.groupLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.GroupName;
             this.phoneLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Phone;
             this.confirmButton.Text = this.StudentId == null ? this.GetString(Resource.String.add_new_student_btn)
-              : this.GetString(Resource.String.save_changes_btn);
+                : this.GetString(Resource.String.save_changes_btn);
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -190,7 +193,6 @@ namespace StudentList.Fragments
         {
             var datePicker = new DatePickerDialog(
                 this.Context, this.DataSetPickerDialog, DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day);
-
             if (e.Event.Action == MotionEventActions.Down)
             {
                 datePicker.Show();
@@ -214,7 +216,7 @@ namespace StudentList.Fragments
 
         private void DataSetPickerDialog(object sender, DatePickerDialog.DateSetEventArgs e)
         {
-            this.birthdateLayout.EditText.Text = e.Date.ToShortDateString();
+            this.birthdateLayout.EditText.Text = e.Date.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
         }
 
         private async Task ConfirmAsync()

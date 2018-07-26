@@ -21,13 +21,14 @@ namespace StudentList.Fragments
         private StudentAdapter studentAdapter;
         private IStudentRepository repository;
 
-        private LoadingDialog loadingDialog;
         private TextView filteringResultTextView;
         private TextView studentsCountTextView;
 
         public StudentListFragment(StudentFilter studentFilter)
         {
             this.studentFilter = studentFilter;
+
+
         }
 
         public override void OnCreate(Bundle savedInstanceState)
@@ -35,7 +36,6 @@ namespace StudentList.Fragments
             base.OnCreate(savedInstanceState);
 
             this.studentAdapter = new StudentAdapter();
-            this.loadingDialog = new LoadingDialog(this.Context);
             this.repository = new StudentsRepository(
                 new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 300, GetStudentsDelay = 1000 },
                 new StringProvider(this.Context));

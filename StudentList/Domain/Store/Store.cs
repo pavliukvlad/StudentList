@@ -16,8 +16,6 @@ namespace StudentList.Domain.Store
             this.dispatcher = this.ApplyDispatcherToMiddleware(this.InitialDispatcher, middlewares);
         }
 
-        public TState State { get; private set; }
-
         public TState GetState()
         {
             if (this.subjectState.IsDisposed)
@@ -47,8 +45,7 @@ namespace StudentList.Domain.Store
 
         public object Dispatch(object action)
         {
-            this.State = this.reducer(this.State, action);
-            return action;
+            return this.dispatcher(action);
         }
 
         public void Dispose()

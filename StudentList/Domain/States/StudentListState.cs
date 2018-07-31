@@ -9,7 +9,7 @@ namespace StudentList.Domain.States
         {
             this.Students = students;
         }
-
+      
         public IEnumerable<Student> Students { get; }
     }
 }

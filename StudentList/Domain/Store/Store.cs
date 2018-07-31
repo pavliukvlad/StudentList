@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Subjects;
 
 namespace StudentList.Domain.Store
@@ -29,6 +29,7 @@ namespace StudentList.Domain.Store
         public object InitialDispatcher(object action)
         {
             this.subjectState.OnNext(this.reducer(this.GetState(), action));
+
             return action;
         }
 
@@ -75,3 +76,4 @@ namespace StudentList.Domain.Store
         }
     }
 }
+

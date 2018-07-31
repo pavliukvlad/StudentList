@@ -37,6 +37,8 @@ namespace StudentList.Fragments
         public StudentListFragment(StudentFilter studentFilter)
         {
             this.studentFilter = studentFilter;
+
+
         }
 
         public override void OnCreate(Bundle savedInstanceState)

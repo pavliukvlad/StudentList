@@ -296,7 +296,7 @@ namespace StudentList.Fragments
 
         private void ShowStudentList()
         {
-            this.store.Dispatch(new StudentListUpdated());
+            this.store.Dispatch(new StudentListChanged());
             this.Activity.OnBackPressed();
         }
 

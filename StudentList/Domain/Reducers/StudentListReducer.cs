@@ -12,7 +12,7 @@ namespace StudentList.Domain.Reducers
             {
                 case StudentReceived studentReceivedAction:
                     return Reduce(studentReceivedAction);
-                case StudentListUpdated studentListUpdated:
+                case StudentListChanged studentListUpdated:
                     return null;
                 default:
                     return state;

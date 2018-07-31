@@ -15,14 +15,14 @@ namespace StudentList.Domain.Reducers
                     return Reduce(filterApplied);
                 case ResetAppliedFilters resetAppliedFilters:
                     return Reduce(resetAppliedFilters);
-                case StudentListUpdated studentListUpdated:
+                case StudentListChanged studentListUpdated:
                     return Reduce(studentListUpdated);
                 default:
                     return state;
             }
         }
 
-        private static FilterStudentsState Reduce(StudentListUpdated studentListUpdated)
+        private static FilterStudentsState Reduce(StudentListChanged studentListUpdated)
         {
             return new FilterStudentsState(StudentFilter.Default);
         }

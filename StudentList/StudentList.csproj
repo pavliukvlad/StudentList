@@ -80,7 +80,7 @@
     <Compile Include="Domain\Actions\AddNewStudent.cs" />
     <Compile Include="Domain\Actions\FiltersApplied.cs" />
     <Compile Include="Domain\Actions\ResetAppliedFilters.cs" />
-    <Compile Include="Domain\Actions\StudentListUpdated.cs" />
+    <Compile Include="Domain\Actions\StudentListChanged.cs" />
     <Compile Include="Domain\Actions\StudentReceived.cs" />
     <Compile Include="Domain\Actions\StudentSelected.cs" />
     <Compile Include="Domain\Actions\ThunkActions\EditStudentAction.cs" />

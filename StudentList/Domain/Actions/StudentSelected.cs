@@ -2,7 +2,7 @@
 
 namespace StudentList.Domain.Actions
 {
-    public class StudentCreated
+    public class StudentSelected
     {
         public Student Student { get; set; }
     }

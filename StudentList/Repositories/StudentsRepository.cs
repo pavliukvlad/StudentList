@@ -132,7 +132,7 @@ namespace StudentList
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError});
+                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError });
             }
 
             if (string.IsNullOrWhiteSpace(uni))

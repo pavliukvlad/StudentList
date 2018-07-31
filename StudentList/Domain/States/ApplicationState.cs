@@ -1,20 +1,31 @@
-﻿namespace StudentList.Domain.States
+﻿using System.Collections.Generic;
+using StudentList.Models;
+
+namespace StudentList.Domain.States
 {
     public class ApplicationState
     {
+        public ApplicationState()
+            : this(
+                filterStudentsState: new FilterStudentsState(StudentFilter.Default),
+                studentList: null,
+                studentProfileState: new StudentProfileState(new Student()))
+        {
+        }
+
         public ApplicationState(
             FilterStudentsState filterStudentsState,
-            StudentListState studentListState,
+            IEnumerable<Student> studentList,
             StudentProfileState studentProfileState)
         {
             this.FilterStudentState = filterStudentsState;
-            this.StudentListState = studentListState;
+            this.StudentList = studentList;
             this.StudentProfileState = studentProfileState;
         }
 
         public FilterStudentsState FilterStudentState { get; }
 
-        public StudentListState StudentListState { get; }
+        public IEnumerable<Student> StudentList { get; }
 
         public StudentProfileState StudentProfileState { get; }
     }

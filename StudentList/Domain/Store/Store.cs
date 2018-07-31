@@ -29,7 +29,6 @@ namespace StudentList.Domain.Store
         public object InitialDispatcher(object action)
         {
             this.subjectState.OnNext(this.reducer(this.GetState(), action));
-
             return action;
         }
 

@@ -5,11 +5,11 @@ namespace StudentList.Domain.States
 {
     public class StudentListState
     {
-        public StudentListState(ICollection<Student> students)
+        public StudentListState(IEnumerable<Student> students)
         {
             this.Students = students;
         }
 
-        public ICollection<Student> Students { get; }
+        public IEnumerable<Student> Students { get; }
     }
 }

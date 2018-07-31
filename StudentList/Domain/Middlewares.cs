@@ -14,7 +14,7 @@ namespace StudentList.Domain
                     return thunkAction;
                 }
 
-                return action;
+                return next(action);
             };
         }
     }

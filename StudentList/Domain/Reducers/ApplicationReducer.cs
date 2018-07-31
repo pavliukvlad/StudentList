@@ -1,12 +1,16 @@
-﻿using StudentList.Domain.States;
+﻿using StudentList.Domain.Reducers;
+using StudentList.Domain.States;
 
 namespace StudentList.Domain
 {
     public static class ApplicationReducer
     {
-        public static ApplicationState Reduce(ApplicationState state, object action)
+        public static ApplicationState Reducer(ApplicationState state, object action)
         {
-            return null;
+            return new ApplicationState(
+                FilterStudentReducer.Reduce(state.FilterStudentState, action),
+                StudentListReducer.Reduce(state.StudentList, action),
+                StudentProfileReducer.Reduce(state.StudentProfileState, action));
         }
     }
 }

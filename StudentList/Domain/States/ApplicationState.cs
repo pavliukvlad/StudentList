@@ -8,14 +8,14 @@ namespace StudentList.Domain.States
         public ApplicationState()
             : this(
                 filterStudentsState: new FilterStudentsState(StudentFilter.Default),
-                studentList: null,
-                studentProfileState: new StudentProfileState(new Student()))
+                studentList: new List<StudentImmutable>(),
+                studentProfileState: new StudentProfileState(new StudentImmutable()))
         {
         }
 
         public ApplicationState(
             FilterStudentsState filterStudentsState,
-            IEnumerable<Student> studentList,
+            IEnumerable<StudentImmutable> studentList,
             StudentProfileState studentProfileState)
         {
             this.FilterStudentState = filterStudentsState;
@@ -25,7 +25,7 @@ namespace StudentList.Domain.States
 
         public FilterStudentsState FilterStudentState { get; }
 
-        public IEnumerable<Student> StudentList { get; }
+        public IEnumerable<StudentImmutable> StudentList { get; }
 
         public StudentProfileState StudentProfileState { get; }
     }

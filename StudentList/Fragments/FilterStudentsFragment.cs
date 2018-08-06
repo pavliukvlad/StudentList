@@ -176,12 +176,8 @@ namespace StudentList.Fragments
 
         private void Confirm()
         {
-            StudentFilter studentFilter = new StudentFilter()
-            {
-                Name = this.nameLayout.EditText.Text,
-                Group = this.groupLayout.EditText.Text,
-                Birthdate = this.birthdate
-            };
+            StudentFilter studentFilter = new StudentFilter(
+                this.nameLayout.EditText.Text, this.groupLayout.EditText.Text, this.birthdate);
 
             this.store.Dispatch(new FiltersApplied() { Filters = studentFilter });
             this.Activity.OnBackPressed();

@@ -32,7 +32,7 @@ namespace StudentList.Fragments
     {
         private IStudentRepository repository;
         private Dictionary<string, TextInputLayout> layouts;
-        private Student selectedStudent;
+        private StudentImmutable selectedStudent;
         private Bitmap profilePhoto;
         private Guid profilePhotoGuid;
         private IStore<ApplicationState> store;
@@ -103,14 +103,12 @@ namespace StudentList.Fragments
                     .DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
             }
 
-            this.nameLayout.EditText.Text = this.selectedStudent == null ? string.Empty : this.selectedStudent.Name;
-            this.birthdateLayout.EditText.Text = this.selectedStudent == null ? string.Empty
-                : this.selectedStudent.Birthdate.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
-            this.universityLayout.EditText.Text = this.selectedStudent == null ? string.Empty : this.selectedStudent.University;
-            this.groupLayout.EditText.Text = this.selectedStudent == null ? string.Empty : this.selectedStudent.GroupName;
-            this.phoneLayout.EditText.Text = this.selectedStudent == null ? string.Empty : this.selectedStudent.Phone;
-            this.confirmButton.Text = this.selectedStudent == null ? this.GetString(Resource.String.add_new_student_btn)
-                : this.GetString(Resource.String.save_changes_btn);
+            this.nameLayout.EditText.Text = this.selectedStudent?.Name;
+            this.birthdateLayout.EditText.Text = this.selectedStudent?.Birthdate == DateTime.MinValue ? string.Empty 
+                : this.selectedStudent?.Birthdate.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
+            this.universityLayout.EditText.Text = this.selectedStudent?.University;
+            this.groupLayout.EditText.Text = this.selectedStudent?.GroupName;
+            this.phoneLayout.EditText.Text = this.selectedStudent?.Phone;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -239,7 +237,7 @@ namespace StudentList.Fragments
 
             if (!savingPhotoResult.IsError || savingPhotoResult == null)
             {
-                if (this.selectedStudent == null)
+                if (string.IsNullOrEmpty(this.selectedStudent?.Id))
                 {
                     await this.AddStudent(savingPhotoResult.ProfilePhotoUri, name, birthdate, uni, group, phone);
                 }

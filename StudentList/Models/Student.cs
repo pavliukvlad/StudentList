@@ -17,5 +17,11 @@ namespace StudentList.Models
         public string Phone { get; set; }
 
         public Uri ProfilePhoto { get; set; }
+
+        public StudentImmutable ToStudentImmutable()
+        {
+            return new StudentImmutable(
+                this.Id, this.Birthdate, this.Name, this.GroupName, this.University, this.Phone, this.ProfilePhoto);
+        }
     }
 }

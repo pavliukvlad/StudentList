@@ -4,17 +4,32 @@ namespace StudentList.Models
 {
     public class StudentFilter
     {
-        public static StudentFilter Default => new StudentFilter()
+        public StudentFilter(string name, string group, DateTime birthdate)
         {
-            Name = null,
-            Group = null,
-            Birthdate = DateTime.MinValue
-        };
+            this.Name = name;
+            this.Group = group;
+            this.Birthdate = birthdate;
+        }
 
-        public string Name { get; set; }
+        public static StudentFilter Default => new StudentFilter(
+            null, null, DateTime.MinValue);
 
-        public string Group { get; set; }
+        public string Name { get; }
 
-        public DateTime Birthdate { get; set; }
+        public string Group { get; }
+
+        public DateTime Birthdate { get; }
+
+        public bool IsDefault()
+        {
+            return this.Name == Default.Name
+                && this.Birthdate == Default.Birthdate
+                && this.Group == Default.Group;
+        }
+
+        public StudentFilter Clone()
+        {
+            return (StudentFilter)this.MemberwiseClone();
+        }
     }
 }

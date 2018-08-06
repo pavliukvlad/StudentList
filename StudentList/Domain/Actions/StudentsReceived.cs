@@ -3,7 +3,7 @@ using StudentList.Models;
 
 namespace StudentList.Domain.Actions
 {
-    public class StudentReceived
+    public class StudentsReceived
     {
         public IEnumerable<Student> StudentList { get; set; }
     }

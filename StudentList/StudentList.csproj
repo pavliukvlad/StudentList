@@ -67,7 +67,6 @@
   <ItemGroup>
     <Compile Include="Adapters\StudentAdapter.cs" />
     <Compile Include="Common\Dialogs\LoadingDialog.cs" />
-    <Compile Include="Common\Extensions\StudentFilterExtensions.cs" />
     <Compile Include="Common\Intents\PhotoIntent.cs" />
     <Compile Include="Constants\StudentListDirNames.cs" />
     <Compile Include="Constants\FormatConstants.cs">
@@ -81,9 +80,11 @@
     <Compile Include="Domain\Actions\FiltersApplied.cs" />
     <Compile Include="Domain\Actions\ResetAppliedFilters.cs" />
     <Compile Include="Domain\Actions\StudentListChanged.cs" />
-    <Compile Include="Domain\Actions\StudentReceived.cs" />
+    <Compile Include="Domain\Actions\StudentListUpdated.cs" />
+    <Compile Include="Domain\Actions\StudentsReceived.cs" />
     <Compile Include="Domain\Actions\StudentSelected.cs" />
-    <Compile Include="Domain\Actions\ThunkActions\EditStudentAction.cs" />
+    <Compile Include="Domain\Actions\ThunkActions\StudentEditRequestedAction.cs" />
+    <Compile Include="Domain\Actions\ThunkActions\StudentsReceivedAction.cs" />
     <Compile Include="Domain\Dispatcher.cs" />
     <Compile Include="Domain\IStore.cs" />
     <Compile Include="Domain\Middleware.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Models\SavingPhotoResult.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\StudentFilter.cs" />
+    <Compile Include="Models\StudentImmutable.cs" />
     <Compile Include="Models\StudentListModel.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Providers\Interfaces\IStringProvider.cs" />

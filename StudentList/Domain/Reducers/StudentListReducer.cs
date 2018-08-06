@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using StudentList.Domain.Actions;
 using StudentList.Models;
 
@@ -6,22 +8,27 @@ namespace StudentList.Domain.Reducers
 {
     public static class StudentListReducer
     {
-        public static IEnumerable<Student> Reduce(IEnumerable<Student> state, object action)
+        public static IEnumerable<StudentImmutable> Reduce(IEnumerable<StudentImmutable> state, object action)
         {
             switch (action)
             {
-                case StudentReceived studentReceivedAction:
+                case StudentsReceived studentReceivedAction:
                     return Reduce(studentReceivedAction);
                 case StudentListChanged studentListUpdated:
-                    return null;
+                    return Reduce();
                 default:
                     return state;
             }
         }
 
-        private static IEnumerable<Student> Reduce(StudentReceived studentReceivedAction)
+        private static IEnumerable<StudentImmutable> Reduce()
         {
-            return studentReceivedAction.StudentList;
+            return new List<StudentImmutable>();
+        }
+
+        private static IEnumerable<StudentImmutable> Reduce(StudentsReceived studentReceivedAction)
+        {
+            return studentReceivedAction.StudentList.Select(s => s.ToStudentImmutable()).ToList();
         }
     }
 }

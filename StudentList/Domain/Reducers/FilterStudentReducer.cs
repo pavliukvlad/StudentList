@@ -1,5 +1,4 @@
-﻿using System;
-using StudentList.Domain.Actions;
+﻿using StudentList.Domain.Actions;
 using StudentList.Domain.States;
 using StudentList.Models;
 
@@ -14,27 +13,22 @@ namespace StudentList.Domain.Reducers
                 case FiltersApplied filterApplied:
                     return Reduce(filterApplied);
                 case ResetAppliedFilters resetAppliedFilters:
-                    return Reduce(resetAppliedFilters);
-                case StudentListChanged studentListUpdated:
-                    return Reduce(studentListUpdated);
+                    return Reduce();
+                case StudentListChanged studentListChanged:
+                    return Reduce();
                 default:
                     return state;
             }
         }
 
-        private static FilterStudentsState Reduce(StudentListChanged studentListUpdated)
-        {
-            return new FilterStudentsState(StudentFilter.Default);
-        }
-
-        private static FilterStudentsState Reduce(ResetAppliedFilters resetAppliedFilters)
+        private static FilterStudentsState Reduce()
         {
             return new FilterStudentsState(StudentFilter.Default);
         }
 
         private static FilterStudentsState Reduce(FiltersApplied filterApplied)
         {
-            return new FilterStudentsState(filterApplied.Filters);
+            return new FilterStudentsState(filterApplied.Filters.Clone());
         }
     }
 }

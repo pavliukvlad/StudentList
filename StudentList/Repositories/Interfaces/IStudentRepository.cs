@@ -13,6 +13,6 @@ namespace StudentList.Providers.Interfaces
 
         Task<Student> GetStudentById(string id);
 
-        Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter);
+        Task<IList<Student>> GetStudentsAsync();
     }
 }

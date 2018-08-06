@@ -3518,17 +3518,17 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0010
 			public const int abc_toolbar_collapse_description = 2131427344;
 			
-			// aapt resource value: 0x7f0b003e
-			public const int action_add_student = 2131427390;
-			
-			// aapt resource value: 0x7f0b003c
-			public const int action_confirm = 2131427388;
+			// aapt resource value: 0x7f0b003f
+			public const int action_add_student = 2131427391;
 			
 			// aapt resource value: 0x7f0b003d
-			public const int action_reset = 2131427389;
+			public const int action_confirm = 2131427389;
 			
-			// aapt resource value: 0x7f0b003f
-			public const int action_search = 2131427391;
+			// aapt resource value: 0x7f0b003e
+			public const int action_reset = 2131427390;
+			
+			// aapt resource value: 0x7f0b0040
+			public const int action_search = 2131427392;
 			
 			// aapt resource value: 0x7f0b0030
 			public const int add_new_student_btn = 2131427376;
@@ -3539,8 +3539,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b001e
 			public const int appbar_scrolling_view_behavior = 2131427358;
 			
-			// aapt resource value: 0x7f0b0041
-			public const int birthdate_field_error = 2131427393;
+			// aapt resource value: 0x7f0b0042
+			public const int birthdate_field_error = 2131427394;
 			
 			// aapt resource value: 0x7f0b0029
 			public const int birthdate_hint = 2131427369;
@@ -3551,20 +3551,23 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0020
 			public const int character_counter_pattern = 2131427360;
 			
-			// aapt resource value: 0x7f0b0039
-			public const int choose_picture_intent_title = 2131427385;
+			// aapt resource value: 0x7f0b003a
+			public const int choose_picture_intent_title = 2131427386;
 			
 			// aapt resource value: 0x7f0b0034
 			public const int confirm_filter_btn = 2131427380;
 			
-			// aapt resource value: 0x7f0b0036
-			public const int create_student_title = 2131427382;
+			// aapt resource value: 0x7f0b0035
+			public const int confirm_student_btn = 2131427381;
+			
+			// aapt resource value: 0x7f0b0037
+			public const int create_student_title = 2131427383;
 			
 			// aapt resource value: 0x7f0b0031
 			public const int edit_student_btn = 2131427377;
 			
-			// aapt resource value: 0x7f0b0037
-			public const int edit_student_title = 2131427383;
+			// aapt resource value: 0x7f0b0038
+			public const int edit_student_title = 2131427384;
 			
 			// aapt resource value: 0x7f0b002e
 			public const int filter_group_txt = 2131427374;
@@ -3572,17 +3575,17 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0033
 			public const int filter_students_btn = 2131427379;
 			
-			// aapt resource value: 0x7f0b0038
-			public const int filter_title = 2131427384;
+			// aapt resource value: 0x7f0b0039
+			public const int filter_title = 2131427385;
 			
-			// aapt resource value: 0x7f0b0042
-			public const int group_field_error = 2131427394;
+			// aapt resource value: 0x7f0b0043
+			public const int group_field_error = 2131427395;
 			
 			// aapt resource value: 0x7f0b002a
 			public const int group_hint = 2131427370;
 			
-			// aapt resource value: 0x7f0b0040
-			public const int name_field_error = 2131427392;
+			// aapt resource value: 0x7f0b0041
+			public const int name_field_error = 2131427393;
 			
 			// aapt resource value: 0x7f0b0028
 			public const int name_hint = 2131427368;
@@ -3605,8 +3608,8 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0025
 			public const int path_password_strike_through = 2131427365;
 			
-			// aapt resource value: 0x7f0b0044
-			public const int phone_field_error = 2131427396;
+			// aapt resource value: 0x7f0b0045
+			public const int phone_field_error = 2131427397;
 			
 			// aapt resource value: 0x7f0b002c
 			public const int phone_hint = 2131427372;
@@ -3614,11 +3617,11 @@ namespace StudentList
 			// aapt resource value: 0x7f0b002d
 			public const int photo_hint = 2131427373;
 			
-			// aapt resource value: 0x7f0b0045
-			public const int photo_toast_error = 2131427397;
+			// aapt resource value: 0x7f0b0046
+			public const int photo_toast_error = 2131427398;
 			
-			// aapt resource value: 0x7f0b0035
-			public const int reset_btn = 2131427381;
+			// aapt resource value: 0x7f0b0036
+			public const int reset_btn = 2131427382;
 			
 			// aapt resource value: 0x7f0b0032
 			public const int save_changes_btn = 2131427378;
@@ -3629,14 +3632,14 @@ namespace StudentList
 			// aapt resource value: 0x7f0b0026
 			public const int status_bar_notification_info_overflow = 2131427366;
 			
+			// aapt resource value: 0x7f0b003c
+			public const int student_count_pattern = 2131427388;
+			
 			// aapt resource value: 0x7f0b003b
-			public const int student_count_pattern = 2131427387;
+			public const int student_info_pattern = 2131427387;
 			
-			// aapt resource value: 0x7f0b003a
-			public const int student_info_pattern = 2131427386;
-			
-			// aapt resource value: 0x7f0b0043
-			public const int uni_field_error = 2131427395;
+			// aapt resource value: 0x7f0b0044
+			public const int uni_field_error = 2131427396;
 			
 			// aapt resource value: 0x7f0b002b
 			public const int uni_hint = 2131427371;

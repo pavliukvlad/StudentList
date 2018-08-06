@@ -19,6 +19,7 @@ namespace StudentList.Adapters
         public StudentAdapter()
         {
             this.photoProvider = new PhotoProvider();
+            this.students = new List<Student>();
         }
 
         public event EventHandler<Student> ItemClick;

@@ -4,11 +4,11 @@ namespace StudentList.Domain.States
 {
     public class StudentProfileState
     {
-        public StudentProfileState(Student selectedStudent)
+        public StudentProfileState(StudentImmutable selectedStudent)
         {
             this.SelectedStudent = selectedStudent;
         }
 
-        public Student SelectedStudent { get; }
+        public StudentImmutable SelectedStudent { get; }
     }
 }

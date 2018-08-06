@@ -1,6 +1,6 @@
-﻿using System;
-using StudentList.Domain.Actions;
+﻿using StudentList.Domain.Actions;
 using StudentList.Domain.States;
+using StudentList.Models;
 
 namespace StudentList.Domain.Reducers
 {
@@ -19,14 +19,14 @@ namespace StudentList.Domain.Reducers
             }
         }
 
-        private static StudentProfileState Reduce(AddNewStudent addNewStudent)
+        private static StudentProfileState Reduce(AddNewStudent action)
         {
-            return new StudentProfileState(null);
+            return new StudentProfileState(action.Student.ToStudentImmutable());
         }
 
-        private static StudentProfileState Reduce(StudentSelected studentSelected)
+        private static StudentProfileState Reduce(StudentSelected action)
         {
-            return new StudentProfileState(studentSelected.Student);
+            return new StudentProfileState(action.Student.ToStudentImmutable());
         }
     }
 }

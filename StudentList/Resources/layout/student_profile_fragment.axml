@@ -118,7 +118,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/start_or_end_margin"
                 android:backgroundTint="@color/colorSaveButton"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"
+                android:text="@string/confirm_student_btn" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

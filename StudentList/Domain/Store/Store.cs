@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reactive.Subjects;
 
 namespace StudentList.Domain.Store
@@ -15,8 +15,6 @@ namespace StudentList.Domain.Store
             this.subjectState = new BehaviorSubject<TState>(state);
             this.dispatcher = this.ApplyDispatcherToMiddleware(this.InitialDispatcher, middlewares);
         }
-
-        public TState State { get; private set; }
 
         public TState GetState()
         {
@@ -47,8 +45,7 @@ namespace StudentList.Domain.Store
 
         public object Dispatch(object action)
         {
-            this.State = this.reducer(this.State, action);
-            return action;
+            return this.dispatcher(action);
         }
 
         public void Dispose()
@@ -79,3 +76,4 @@ namespace StudentList.Domain.Store
         }
     }
 }
+

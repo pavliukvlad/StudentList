@@ -2,6 +2,9 @@
 using Android.App;
 using Android.Runtime;
 using Plugin.CurrentActivity;
+using StudentList.Domain;
+using StudentList.Domain.States;
+using StudentList.Domain.Store;
 
 namespace StudentList
 {
@@ -12,6 +15,8 @@ namespace StudentList
 #endif
     public class MainApplication : Application
     {
+        public static IStore<ApplicationState> Store { get; private set; }
+
         public MainApplication(IntPtr handle, JniHandleOwnership transer)
           : base(handle, transer)
         {
@@ -21,6 +26,11 @@ namespace StudentList
         {
             base.OnCreate();
             CrossCurrentActivity.Current.Init(this);
+
+            Store = new Store<ApplicationState>(
+                ApplicationReducer.Reducer,
+                new ApplicationState(),
+                Middlewares.ThunkMiddleware);
         }
     }
 }

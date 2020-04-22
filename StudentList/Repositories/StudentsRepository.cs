@@ -87,29 +87,29 @@ namespace StudentList
             return students.Where(s => s.Id == id).FirstOrDefault();
         }
 
-        public async Task<IList<Student>> GetStudentsAsync(StudentFilter studentFilter)
+        public async Task<IList<Student>> GetStudentsAsync()
         {
             IEnumerable<Student> temp = students;
 
-            if (studentFilter != StudentFilter.Default)
-            {
-                if (!string.IsNullOrWhiteSpace(studentFilter.Name))
-                {
-                    temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant()
-                    || s.Name.ToUpperInvariant().Contains(studentFilter.Name.ToUpperInvariant()));
-                }
+            //if (studentFilter != StudentFilter.Default)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(studentFilter.Name))
+            //    {
+            //        temp = temp.Where(s => s.Name.ToUpperInvariant() == studentFilter.Name.ToUpperInvariant()
+            //        || s.Name.ToUpperInvariant().Contains(studentFilter.Name.ToUpperInvariant()));
+            //    }
 
-                if (!string.IsNullOrWhiteSpace(studentFilter.Group))
-                {
-                    temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant()
-                    || studentFilter.Group == this.stringProvider.GroupFilter);
-                }
+            //    if (!string.IsNullOrWhiteSpace(studentFilter.Group))
+            //    {
+            //        temp = temp.Where(s => s.GroupName.ToUpperInvariant() == studentFilter.Group.ToUpperInvariant()
+            //        || studentFilter.Group == this.stringProvider.GroupFilter);
+            //    }
 
-                if (studentFilter.Birthdate != default(DateTime))
-                {
-                    temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
-                }
-            }
+            //    if (studentFilter.Birthdate != default(DateTime))
+            //    {
+            //        temp = temp.Where(s => s.Birthdate == studentFilter.Birthdate);
+            //    }
+            //}
 
             await Task.Delay(this.delays.GetStudentsDelay);
 
@@ -132,7 +132,7 @@ namespace StudentList
 
             if (string.IsNullOrWhiteSpace(group))
             {
-                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError});
+                validationResult.Errors.Add(nameof(group), new List<string>() { this.stringProvider.GroupError });
             }
 
             if (string.IsNullOrWhiteSpace(uni))

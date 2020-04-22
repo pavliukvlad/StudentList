@@ -6,6 +6,9 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using StudentList.Domain;
+using StudentList.Domain.Actions;
+using StudentList.Domain.States;
 using StudentList.Models;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
 
@@ -15,6 +18,7 @@ namespace StudentList.Fragments
     {
         private readonly StudentFilter studentFilter;
         private ArrayAdapter adapter;
+        private IStore<ApplicationState> store;
 
         private TextInputLayout nameLayout;
         private TextInputLayout birthdateLayout;
@@ -35,6 +39,7 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
+            this.store = MainApplication.Store;
             this.adapter = ArrayAdapter.CreateFromResource(
                 this.Context, Resource.Array.group_array, Android.Resource.Layout.SimpleListItem1);
 
@@ -171,17 +176,11 @@ namespace StudentList.Fragments
 
         private void Confirm()
         {
-            StudentFilter studentFilter = new StudentFilter()
-            {
-                Name = this.nameLayout.EditText.Text,
-                Group = this.groupLayout.EditText.Text,
-                Birthdate = this.birthdate
-            };
+            StudentFilter studentFilter = new StudentFilter(
+                this.nameLayout.EditText.Text, this.groupLayout.EditText.Text, this.birthdate);
 
-            this.FragmentManager
-                  .BeginTransaction()
-                  .Replace(Resource.Id.main_container, new StudentListFragment(studentFilter))
-                  .Commit();
+            this.store.Dispatch(new FiltersApplied() { Filters = studentFilter });
+            this.Activity.OnBackPressed();
         }
 
         private void DisplayHomeUp(bool trigger)

@@ -13,8 +13,8 @@ namespace StudentList.Domain
                     thunkAction?.Invoke(next, store.GetState);
                     return thunkAction;
                 }
-
-                return action;
+              
+                return next(action);
             };
         }
     }

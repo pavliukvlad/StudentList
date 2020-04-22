@@ -17,6 +17,9 @@ using Refractored.Controls;
 using StudentList.Common.Dialogs;
 using StudentList.Common.Intents;
 using StudentList.Constants;
+using StudentList.Domain;
+using StudentList.Domain.Actions;
+using StudentList.Domain.States;
 using StudentList.Extensions;
 using StudentList.Models;
 using StudentList.Providers;
@@ -29,9 +32,10 @@ namespace StudentList.Fragments
     {
         private IStudentRepository repository;
         private Dictionary<string, TextInputLayout> layouts;
-        private Student selectedStudent;
+        private StudentImmutable selectedStudent;
         private Bitmap profilePhoto;
         private Guid profilePhotoGuid;
+        private IStore<ApplicationState> store;
 
         private Button confirmButton;
         private LoadingDialog loadingDialog;
@@ -44,12 +48,9 @@ namespace StudentList.Fragments
 
         private string StudentId => this.Arguments.GetString(IntentConstants.StudentId, string.Empty);
 
-        public static StudentProfileFragment NewInstance(string studentId)
+        public static StudentProfileFragment NewInstance()
         {
-            var bundle = new Bundle();
-            bundle.PutString(IntentConstants.StudentId, studentId);
-            var studentProfileFragment = new StudentProfileFragment() { Arguments = bundle };
-
+            var studentProfileFragment = new StudentProfileFragment();
             return studentProfileFragment;
         }
 
@@ -57,9 +58,13 @@ namespace StudentList.Fragments
         {
             base.OnCreate(savedInstanceState);
 
+            this.store = MainApplication.Store;
+            this.selectedStudent = this.store.GetState().StudentProfileState.SelectedStudent;
+
             this.repository = new StudentsRepository(
                 new LoadingDelays { AddStudentDelay = 300, ChangeStudentDelay = 300, GetStudentDelay = 500, GetStudentsDelay = 1000 },
                 new StringProvider(this.Context));
+
             this.layouts = new Dictionary<string, TextInputLayout>();
             this.loadingDialog = new LoadingDialog(this.Context);
 
@@ -87,30 +92,23 @@ namespace StudentList.Fragments
             return view;
         }
 
-        public override async void OnViewCreated(View view, Bundle savedInstanceState)
+        public override void OnViewCreated(View view, Bundle savedInstanceState)
         {
-            if (!string.IsNullOrWhiteSpace(this.StudentId))
+            ((AppCompatActivity)this.Activity).SupportActionBar.Title = this.selectedStudent == null ? this.GetString(Resource.String.create_student_title)
+               : string.Format(CultureInfo.InvariantCulture, PatternConstants.AppBarTitle, this.GetString(Resource.String.edit_student_title), this.selectedStudent.Name);
+
+            if (this.selectedStudent != null && this.selectedStudent.ProfilePhoto != null)
             {
-                this.selectedStudent = await this.Activity.RunMethodWithLoaderAsync(
-                    this.repository.GetStudentById(this.StudentId));
-                if (this.selectedStudent.ProfilePhoto != null)
-                {
-                    this.profilePhotoImageView.SetImageBitmap(BitmapFactory
-                        .DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
-                }
+                this.profilePhotoImageView.SetImageBitmap(BitmapFactory
+                    .DecodeFile(this.selectedStudent.ProfilePhoto.AbsolutePath));
             }
 
-            ((AppCompatActivity)this.Activity).SupportActionBar.Title = string.IsNullOrWhiteSpace(this.StudentId) ? this.GetString(Resource.String.create_student_title)
-                : string.Format(CultureInfo.InvariantCulture, PatternConstants.AppBarTitle, this.GetString(Resource.String.edit_student_title), this.selectedStudent.Name);
-
-            this.nameLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Name;
-            this.birthdateLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty
-                : this.selectedStudent.Birthdate.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
-            this.universityLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.University;
-            this.groupLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.GroupName;
-            this.phoneLayout.EditText.Text = string.IsNullOrWhiteSpace(this.StudentId) ? string.Empty : this.selectedStudent.Phone;
-            this.confirmButton.Text = this.StudentId == null ? this.GetString(Resource.String.add_new_student_btn)
-                : this.GetString(Resource.String.save_changes_btn);
+            this.nameLayout.EditText.Text = this.selectedStudent?.Name;
+            this.birthdateLayout.EditText.Text = this.selectedStudent?.Birthdate == DateTime.MinValue ? string.Empty 
+                : this.selectedStudent?.Birthdate.ToString(FormatConstants.DateTimeFormat, CultureInfo.InvariantCulture);
+            this.universityLayout.EditText.Text = this.selectedStudent?.University;
+            this.groupLayout.EditText.Text = this.selectedStudent?.GroupName;
+            this.phoneLayout.EditText.Text = this.selectedStudent?.Phone;
         }
 
         public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
@@ -239,13 +237,13 @@ namespace StudentList.Fragments
 
             if (!savingPhotoResult.IsError || savingPhotoResult == null)
             {
-                if (string.IsNullOrWhiteSpace(this.StudentId))
+                if (string.IsNullOrEmpty(this.selectedStudent?.Id))
                 {
                     await this.AddStudent(savingPhotoResult.ProfilePhotoUri, name, birthdate, uni, group, phone);
                 }
                 else
                 {
-                    await this.ChangeStudentById(this.StudentId, savingPhotoResult.ProfilePhotoUri, name, birthdate, group, uni, phone);
+                    await this.ChangeStudentById(this.selectedStudent.Id, savingPhotoResult.ProfilePhotoUri, name, birthdate, group, uni, phone);
                 }
             }
             else
@@ -258,28 +256,28 @@ namespace StudentList.Fragments
         {
             var validationResult = await this.repository.AddNewStudentAsync(name, photoUri, birthdate, group, uni, phone);
 
-            if (!validationResult.IsValid)
+            if (validationResult.IsValid)
             {
-                this.SetErrors(validationResult);
+                this.ShowStudentList();
             }
             else
             {
-                this.ShowStudentList();
+                this.SetErrors(validationResult);
             }
         }
 
         private async Task ChangeStudentById(string studentId, Uri photoUri, string name, DateTime birthdate, string group, string uni, string phone)
         {
             var validationResult = await this.repository.ChangeStudentById(
-                this.StudentId, photoUri, name, birthdate, group, uni, phone);
+                studentId, photoUri, name, birthdate, group, uni, phone);
 
-            if (!validationResult.IsValid)
+            if (validationResult.IsValid)
             {
-                this.SetErrors(validationResult);
+                this.ShowStudentList();
             }
             else
             {
-                this.ShowStudentList();
+                this.SetErrors(validationResult);
             }
         }
 
@@ -296,11 +294,8 @@ namespace StudentList.Fragments
 
         private void ShowStudentList()
         {
-            var studentList = new StudentListFragment(StudentFilter.Default);
-            this.FragmentManager
-                .BeginTransaction()
-                .Replace(Resource.Id.main_container, studentList)
-                .Commit();
+            this.store.Dispatch(new StudentListChanged());
+            this.Activity.OnBackPressed();
         }
 
         private void DisplayHomeUp(bool trigger)

@@ -19,6 +19,7 @@
   <string name="save_changes_btn">Save changes</string>
   <string name="filter_students_btn">Filter Students</string>
   <string name="confirm_filter_btn">Confirm</string>
+  <string name="confirm_student_btn">Confirm</string>
   <string name="reset_btn">Reset</string>
 
   <!--Titles for layouts-->
